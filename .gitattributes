@@ -2,3 +2,4 @@
 *.json eol=lf
 *.jsx eol=lf
 *.ts eol=lf
+*.md eol=lf
