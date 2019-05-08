@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git@gitee.com:xuelingkang/react-demo.git"
   },
+  "license": "MIT",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
