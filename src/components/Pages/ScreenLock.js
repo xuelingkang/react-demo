@@ -47,8 +47,8 @@ class ScreenLock extends PureComponent {
           <div className="container">
             <div className="pattern-logo">
               <img src={logoImg} alt="logo" />
-              <b>LANIF</b>
-              <span>Admin</span>
+              <b>REACT</b>
+              <span>Demo</span>
             </div>
             <div className="patter-container">
               <div className="patter-title">{title || '欢迎您回来'}</div>

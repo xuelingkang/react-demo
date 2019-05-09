@@ -36,8 +36,8 @@ class Login extends Component {
             <Form onSubmit={this.handleSubmit} className="login-form">
               <div className="user-img">
                 <img src={logoImg} alt="logo" />
-                <b>LANIF</b>
-                <span>Admin</span>
+                <b>REACT</b>
+                <span>Demo</span>
               </div>
               <FormItem>
                 {getFieldDecorator('userName', {
