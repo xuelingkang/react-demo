@@ -162,7 +162,7 @@ class NavBar extends PureComponent {
             >
               <a className="dropdown-toggle">
                 <Badge dot>
-                  <Avatar src={require('assets/images/avatar.jpg')}>
+                  <Avatar src={require('assets/images/avatar.png')}>
                     {user.userName}
                   </Avatar>
                 </Badge>

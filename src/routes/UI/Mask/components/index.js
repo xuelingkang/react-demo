@@ -4,7 +4,7 @@ import { Layout, Button } from 'antd';
 import BaseComponent from 'components/BaseComponent';
 import Panel from 'components/Panel';
 import Mask from 'components/Mask';
-import avatar from 'assets/images/avatar.jpg';
+import avatar from 'assets/images/avatar.png';
 const { Content } = Layout;
 
 @connect()
