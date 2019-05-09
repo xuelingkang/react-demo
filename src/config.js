@@ -40,13 +40,13 @@ export default {
      */
     afterResponse: response => {
       const { status, message } = response;
-      if (status) {
-        return response;
-      } else {
-        throw new Error(message);
+      if (!status) {
+        notice.error(message);
       }
+      return response;
     },
     errorHandle: err => {
+      console.log(err);
       // 请求错误全局拦截
       if (err.name === 'RequestError') {
         notice.error(err.text || err.message);
