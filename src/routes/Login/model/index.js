@@ -1,6 +1,9 @@
 import { routerRedux } from 'dva/router';
-import { login } from '../service';
 import $$ from 'cmn-utils';
+
+import { login } from '../service';
+import cache from '@/utils/cache';
+import { TOKEN, AUTHORITIES } from '@/utils/cache-keys';
 
 export default {
   namespace: 'login',
@@ -23,9 +26,11 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const { status, message, data } = yield call(login, payload);
-      if (status) {
-        $$.setStore('user', data);
+      const { code, data, message } = yield call(login, payload);
+      console.log({ code, data, message });
+      if (code === 200) {
+        cache.set(TOKEN, data.token);
+        cache.set(AUTHORITIES, data.authorities);
         yield put(routerRedux.replace('/'));
       } else {
         yield put({

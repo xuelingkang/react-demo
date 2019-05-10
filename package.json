@@ -18,6 +18,7 @@
   "dependencies": {
     "@antv/data-set": "^0.8.9",
     "antd": "^3.13.0",
+    "axios": "^0.18.0",
     "bizcharts": "^3.1.5",
     "classnames": "^2.2.5",
     "cmn-utils": "^1.0.7",
@@ -31,6 +32,7 @@
     "masonry-layout": "^4.2.1",
     "object.omit": "^3.0.0",
     "path-to-regexp": "^2.2.1",
+    "qs": "^6.7.0",
     "react": "^16.2.1",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.2.1",
@@ -57,5 +59,6 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 10"
-  ]
+  ],
+  "proxy": "http://server01/"
 }

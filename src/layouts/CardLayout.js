@@ -9,6 +9,8 @@ import $$ from 'cmn-utils';
 import cx from 'classnames';
 import SkinToolbox from 'components/SkinToolbox';
 import Icon from 'components/Icon';
+import cache from '@/utils/cache';
+import { TOKEN, AUTHORITIES } from '@/utils/cache-keys';
 import './styles/card.less';
 const { Content, Header } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -51,8 +53,9 @@ export default class CardLayout extends React.PureComponent {
 
   componentWillMount() {
     // 检查有户是否登录
-    const user = $$.getStore('user');
-    if (!user) {
+    const token = cache.get(TOKEN);
+    const authorities = cache.get(AUTHORITIES);
+    if (!token || !authorities) {
       this.props.dispatch(routerRedux.replace('/sign/login'));
     }
   }

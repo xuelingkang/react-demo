@@ -41,12 +41,10 @@ const passwordProgressMap = {
 @Form.create()
 export default class Register extends Component {
   state = {
-    count: 0,
-    confirmDirty: false,
-    visible: false,
-    help: '',
-    prefix: '86',
-    registerSuccess: false
+    username: '',
+    password: '',
+    confirm: '',
+    email: ''
   };
 
   componentWillReceiveProps(nextProps) {
@@ -89,14 +87,10 @@ export default class Register extends Component {
     e.preventDefault();
     const { form, dispatch } = this.props;
     form.validateFields({ force: true }, (err, values) => {
-      const { prefix } = this.state;
       if (!err) {
         dispatch({
           type: 'register/submit',
-          payload: {
-            ...values,
-            prefix
-          }
+          payload: values
         });
       }
     });
@@ -146,12 +140,6 @@ export default class Register extends Component {
     }
   };
 
-  changePrefix = value => {
-    this.setState({
-      prefix: value
-    });
-  };
-
   renderPasswordProgress = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -185,18 +173,18 @@ export default class Register extends Component {
               <span>Demo</span>
             </div>
             <FormItem>
-              {getFieldDecorator('mail', {
+              {getFieldDecorator('username', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入邮箱地址！'
+                    message: '请输入用户名！'
                   },
                   {
-                    type: 'email',
-                    message: '邮箱地址格式错误！'
+                    pattern: /^\w{5,10}$/,
+                    message: '用户名最少5位，最多10位！'
                   }
                 ]
-              })(<Input size="large" placeholder="邮箱" />)}
+              })(<Input size="large" placeholder="用户名" />)}
             </FormItem>
             <FormItem help={help}>
               <Popover
@@ -242,59 +230,18 @@ export default class Register extends Component {
               })(<Input size="large" type="password" placeholder="确认密码" />)}
             </FormItem>
             <FormItem>
-              <InputGroup compact>
-                <Select
-                  size="large"
-                  value={prefix}
-                  onChange={this.changePrefix}
-                  style={{ width: '20%' }}
-                >
-                  <Option value="86">+86</Option>
-                  <Option value="87">+87</Option>
-                </Select>
-                {getFieldDecorator('mobile', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入手机号！'
-                    },
-                    {
-                      pattern: /^1\d{10}$/,
-                      message: '手机号格式错误！'
-                    }
-                  ]
-                })(
-                  <Input
-                    size="large"
-                    style={{ width: '80%' }}
-                    placeholder="11位手机号"
-                  />
-                )}
-              </InputGroup>
-            </FormItem>
-            <FormItem>
-              <Row gutter={8}>
-                <Col span={16}>
-                  {getFieldDecorator('captcha', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入验证码！'
-                      }
-                    ]
-                  })(<Input size="large" placeholder="验证码" />)}
-                </Col>
-                <Col span={8}>
-                  <Button
-                    className="getCaptcha"
-                    size="large"
-                    disabled={count}
-                    onClick={this.onGetCaptcha}
-                  >
-                    {count ? `${count} s` : '获取验证码'}
-                  </Button>
-                </Col>
-              </Row>
+              {getFieldDecorator('email', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入邮箱！'
+                  },
+                  {
+                    type: 'email',
+                    message: '邮箱地址格式错误！'
+                  }
+                ]
+              })(<Input size="large" placeholder="邮箱" />)}
             </FormItem>
             <FormItem>
               <Button

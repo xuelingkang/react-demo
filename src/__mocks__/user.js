@@ -20,9 +20,9 @@ export default ({fetchMock, delay, mock, toSuccess, toError}) => {
     '/api/user/login': (options) => {
       if (options.body) {
         const user = JSON.parse(options.body);
-        if (user.userName === 'admin' && user.password === 'admin') {
+        if (user.username === 'admin' && user.password === 'admin') {
           return toSuccess(mock({
-            'userName': 'admin',                // 用户名
+            'username': 'admin',                // 用户名
             'name': '@cname',                   // 中文名称
             'age|1-100': 100,                   // 100以内随机整数
             'birthday': '@date("yyyy-MM-dd")',  // 日期
