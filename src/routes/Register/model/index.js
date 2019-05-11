@@ -5,17 +5,18 @@ export default modelEnhance({
   namespace: 'register',
 
   state: {
-    status: undefined,
+    success: false,
   },
 
   effects: {
     *submit({ payload }, { call, put }) {
-      console.log(payload)
-      const response = yield call(register, payload);
-      yield put({
-        type: 'registerHandle',
-        payload: response,
-      });
+      const { code } = yield call(register, payload);
+      if (code===200) {
+        yield put({
+          type: 'registerHandle',
+          payload: true,
+        });
+      }
     },
   },
 
@@ -23,7 +24,7 @@ export default modelEnhance({
     registerHandle(state, { payload }) {
       return {
         ...state,
-        status: payload.status,
+        success: payload
       };
     },
   },

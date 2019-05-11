@@ -1,5 +1,4 @@
 import { routerRedux } from 'dva/router';
-import $$ from 'cmn-utils';
 
 import { login } from '../service';
 import cache from '@/utils/cache';
@@ -9,16 +8,17 @@ export default {
   namespace: 'login',
 
   state: {
-    loggedIn: false,
-    message: '',
-    user: {},
+    username: '',
+    password: '',
+    remember: false
   },
 
   subscriptions: {
     setup({ history, dispatch }) {
       return history.listen(({ pathname }) => {
         if (pathname.indexOf('/sign/login') !== -1) {
-          $$.removeStore('user');
+          cache.remove(TOKEN);
+          cache.remove(AUTHORITIES);
         }
       });
     }

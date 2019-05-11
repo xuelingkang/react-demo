@@ -5,9 +5,6 @@ import {
   Form,
   Input,
   Button,
-  Select,
-  Row,
-  Col,
   Popover,
   Progress,
   Layout
@@ -19,8 +16,6 @@ import Success from './Success';
 const { Content } = Layout;
 
 const FormItem = Form.Item;
-const { Option } = Select;
-const InputGroup = Input.Group;
 
 const passwordStatusMap = {
   ok: <div style={{ color: '#52c41a' }}>强度：强</div>,
@@ -55,22 +50,6 @@ export default class Register extends Component {
     }
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  onGetCaptcha = () => {
-    let count = 59;
-    this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
-      }
-    }, 1000);
-  };
-
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -94,12 +73,6 @@ export default class Register extends Component {
         });
       }
     });
-  };
-
-  handleConfirmBlur = e => {
-    const { value } = e.target;
-    const { confirmDirty } = this.state;
-    this.setState({ confirmDirty: confirmDirty || !!value });
   };
 
   checkConfirm = (rule, value, callback) => {
@@ -156,11 +129,11 @@ export default class Register extends Component {
   };
 
   render() {
-    const { form, submitting } = this.props;
+    const { register, form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible, registerSuccess } = this.state;
+    const { help, visible, registerSuccess } = this.state;
 
-    if (registerSuccess) {
+    if (register.success) {
       return <Success />;
     }
     return (
@@ -180,8 +153,8 @@ export default class Register extends Component {
                     message: '请输入用户名！'
                   },
                   {
-                    pattern: /^\w{5,10}$/,
-                    message: '用户名最少5位，最多10位！'
+                    pattern: /^\w{5,20}$/,
+                    message: '用户名最少5位，最多20位！'
                   }
                 ]
               })(<Input size="large" placeholder="用户名" />)}

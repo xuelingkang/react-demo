@@ -26,8 +26,7 @@ class Login extends Component {
   };
 
   render() {
-    console.log(this.props);
-    const { loading, form } = this.props;
+    const { login, loading, form } = this.props;
     const { getFieldDecorator } = form;
 
     return (
@@ -42,7 +41,7 @@ class Login extends Component {
               </div>
               <FormItem>
                 {getFieldDecorator('username', {
-                  initialValue: 'admin',
+                  initialValue: login.username,
                   rules: [{ required: true, message: '请输入您的用户名，示例admin' }]
                 })(
                   <Input
@@ -54,7 +53,7 @@ class Login extends Component {
               </FormItem>
               <FormItem>
                 {getFieldDecorator('password', {
-                  initialValue: 'admin',
+                  initialValue: login.password,
                   rules: [{ required: true, message: '请输入您的密码，示例admin' }]
                 })(
                   <Input
@@ -68,7 +67,7 @@ class Login extends Component {
               <FormItem>
                 {getFieldDecorator('remember', {
                   valuePropName: 'checked',
-                  initialValue: true
+                  initialValue: login.remember
                 })(<Checkbox>记住我</Checkbox>)}
                 <Link className="login-form-forgot" to="#">
                   忘记密码

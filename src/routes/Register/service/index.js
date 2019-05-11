@@ -1,5 +1,5 @@
-import $$ from 'cmn-utils';
+import { axiosPost } from '@/utils/axios';
 
 export async function register(payload) {
-  return $$.post('/user/register', payload);
+  return axiosPost('/userinfo', payload);
 }
