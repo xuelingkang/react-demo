@@ -71,21 +71,21 @@ class Cache {
         // 非法缓存名过滤
         if (key === undefined || key === '' || typeof key === 'object') {
             console.error('读取的缓存名不合法！')
-            return false
+            return null
         }
 
         // 获取localStorage中要读取的缓存名
         let cacheName = this.prefix + '-[' + key.toString() + ']'
         try {
             const cacheData = JSON.parse(window.localStorage.getItem(cacheName))
-            // 判断判断缓存是否过期
+            // 判断缓存是否过期
             if (cacheData.expires < currentTime) {
-                return false
+                return null
             }
             return cacheData.value
         } catch (err) {
             console.error('读取数据失败：' + JSON.stringify(err))
-            return false
+            return null
         }
     }
 
