@@ -2,7 +2,7 @@ import { dynamicWrapper, createRoute } from '@/utils/core';
 
 const routesConfig = (app) => ({
   path: '/sign/login',
-  title: 'Login',
+  title: '登录',
   component: dynamicWrapper(app, [import('./model')], () => import('./components'))
 });
 
