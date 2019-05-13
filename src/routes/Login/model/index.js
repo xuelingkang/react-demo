@@ -27,7 +27,6 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const { code, data, message } = yield call(login, payload);
-      console.log({ code, data, message });
       if (code === 200) {
         cache.set(TOKEN, data.token);
         cache.set(AUTHORITIES, data.authorities);
