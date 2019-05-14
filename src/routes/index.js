@@ -1,4 +1,4 @@
-import { createRoutes } from '@/utils/core';
+import {createRoutes} from '@/utils/core';
 import BasicLayout from '@/layouts/BasicLayout';
 import UserLayout from '@/layouts/UserLayout';
 import Page403 from './Pages/403';
@@ -11,6 +11,7 @@ import Result from './Widgets/Result';
 import LevelRoute from './Widgets/LevelRoute';
 import Login from './Login';
 import Register from './Register';
+import RetrievePassword from './RetrievePassword';
 import Dashboard from './Dashboard';
 import Blank from './Blank';
 import Toolbar from './Widgets/Toolbar';
@@ -34,7 +35,7 @@ import CRUD from './Business/CRUD';
 
 /**
  * 主路由配置
- * 
+ *
  * path 路由地址
  * component 组件
  * indexRoute 默认显示路由
@@ -42,53 +43,54 @@ import CRUD from './Business/CRUD';
  * NotFound 路由要放到最下面，当所有路由当没匹配到时会进入这个页面
  */
 const routesConfig = app => [
-  {
-    path: '/sign',
-    title: '登录',
-    indexRoute: '/sign/login',
-    component: UserLayout,
-    childRoutes: [
-      Login(app),
-      Register(app),
-      NotFound()
-    ]
-  },
-  {
-    path: '/',
-    title: '系统中心',
-    component: BasicLayout,
-    indexRoute: '/dashboard',
-    childRoutes: [
-      Dashboard(app),
-      Blank(app),
-      Toolbar(app),
-      Column(),
-      SearchBar(),
-      EC(app),
-      G2(app),
-      Icon(),
-      Mask(),
-      Editor(),
-      CSSAnimate(),
-      Alerts(),
-      Button(),
-      DataTable(app),
-      Form(app),
-      TransferTree(app),
-      BaseComponent(),
-      CRUD(app),
-      Coming(),
-      ScreenLock(),
-      Gallery(),
-      Result(),
-      Page403(),
-      Page500(),
-      Print(),
-      Banner(app),
-      LevelRoute(app),
-      NotFound()
-    ]
-  }
+    {
+        path: '/sign',
+        title: '登录',
+        indexRoute: '/sign/login',
+        component: UserLayout,
+        childRoutes: [
+            Login(app),
+            Register(app),
+            RetrievePassword(app),
+            NotFound()
+        ]
+    },
+    {
+        path: '/',
+        title: '系统中心',
+        component: BasicLayout,
+        indexRoute: '/dashboard',
+        childRoutes: [
+            Dashboard(app),
+            Blank(app),
+            Toolbar(app),
+            Column(),
+            SearchBar(),
+            EC(app),
+            G2(app),
+            Icon(),
+            Mask(),
+            Editor(),
+            CSSAnimate(),
+            Alerts(),
+            Button(),
+            DataTable(app),
+            Form(app),
+            TransferTree(app),
+            BaseComponent(),
+            CRUD(app),
+            Coming(),
+            ScreenLock(),
+            Gallery(),
+            Result(),
+            Page403(),
+            Page500(),
+            Print(),
+            Banner(app),
+            LevelRoute(app),
+            NotFound()
+        ]
+    }
 ];
 
 export default app => createRoutes(app, routesConfig);

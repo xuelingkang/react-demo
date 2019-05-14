@@ -30,7 +30,9 @@ instance.interceptors.request.use((config) => {
 
 // 全局异常处理
 instance.interceptors.response.use(response => {
-    if (response.data.code !== 200) {
+    if (response.data.code === 200) {
+        notice.info(response.data.message);
+    } else {
         notice.error(response.data.message);
     }
     return response.data;

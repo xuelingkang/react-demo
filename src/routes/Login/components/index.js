@@ -79,7 +79,7 @@ class Login extends Component {
                                     valuePropName: 'checked',
                                     initialValue: remember
                                 })(<Checkbox>记住我</Checkbox>)}
-                                <Link className="login-form-forgot" to="#">
+                                <Link className="login-form-forgot" to="/sign/retrievePassword">
                                     忘记密码
                                 </Link>
                                 <Button
