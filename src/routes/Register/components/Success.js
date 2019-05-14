@@ -29,8 +29,6 @@ export default class extends Component {
         });
     }
     handleClick = () => {
-        console.log(this.state);
-        console.log(this.props);
         clearInterval(this.state.timerId);
         this.props.dispatch(routerRedux.replace('/'));
     }
