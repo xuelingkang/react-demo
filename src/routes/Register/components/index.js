@@ -131,7 +131,7 @@ export default class Register extends Component {
             <div className="user-img">
               <img src={logoImg} alt="logo" />
               <b>REACT</b>
-              <span>Demo</span>
+              <span>中后台</span>
             </div>
             <FormItem>
               {getFieldDecorator('username', {

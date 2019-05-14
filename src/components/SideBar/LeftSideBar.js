@@ -282,7 +282,7 @@ class LeftSideBar extends PureComponent {
           <div className="navbar-brand">
             <img src={logoImg} alt="logo" />
             <b>REACT</b>
-            Demo
+            中后台
           </div>
           <span className="toggle_sidemenu_l" onClick={onCollapse}>
             <Icon type="lines" />

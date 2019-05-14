@@ -88,7 +88,7 @@ class NavBar extends PureComponent {
           <Link className="navbar-brand" to="/">
             <img src={logoImg} alt="logo" />
             <b>REACT</b>
-            Demo
+            中后台
           </Link>
           <span className="toggle_sidemenu_l" onClick={onCollapseLeftSide}>
             <Icon type="lines" />

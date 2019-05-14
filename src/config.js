@@ -14,7 +14,7 @@ export default {
   /**
    * HTML的title模板
    */
-  htmlTitle: 'REACT DEMO - {title}',
+  htmlTitle: 'REACT中后台 - {title}',
   
   /**
    * 系统通知
