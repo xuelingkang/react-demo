@@ -1,5 +1,3 @@
-import {routerRedux} from 'dva/router';
-
 import {login} from '../service';
 import {cacheAuth, removeAuth} from '@/utils/authentication';
 
