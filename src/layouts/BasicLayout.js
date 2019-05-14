@@ -12,8 +12,7 @@ import TabsLayout from './TabsLayout';
 import './styles/basic.less';
 import $$ from 'cmn-utils';
 import cx from 'classnames';
-import cache from '@/utils/cache';
-import { TOKEN, AUTHORITIES } from '@/utils/cache-keys';
+import { getAuth } from '@/utils/authentication';
 const { Content, Header } = Layout;
 
 /**
@@ -70,8 +69,7 @@ export default class BasicLayout extends React.PureComponent {
 
   componentWillMount() {
     // 检查有户是否登录
-    const token = cache.get(TOKEN);
-    const authorities = cache.get(AUTHORITIES);
+    const {token, authorities} = getAuth();
     if (!token || !authorities) {
       this.props.dispatch(routerRedux.replace('/sign/login'));
     }

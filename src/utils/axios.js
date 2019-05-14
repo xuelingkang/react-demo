@@ -1,8 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-import cache from '@/utils/cache';
-import { TOKEN } from '@/utils/cache-keys';
+import { getAuth } from '@/utils/authentication';
 import { normal } from '../components/Notification';
 
 const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -20,7 +19,7 @@ let instance = axios.create({
 // 请求拦截处理
 instance.interceptors.request.use((config) => {
     // 请求头增加token
-    config.headers['token'] = cache.get(TOKEN);
+    config.headers['token'] = getAuth().token;
     // form表单格式提交
     if (config.headers['Content-Type']===FORM_CONTENT_TYPE) {
         // 对表单格式的数据进行处理
@@ -39,7 +38,8 @@ instance.interceptors.response.use(response => {
     const code = error.response.data.code || error.response.status;
     const message = error.response.data.message || error.response.statusText;
     notice.error('错误码：'+code+'，错误信息：'+message);
-    return Promise.reject(error);
+    // return Promise.reject(error);
+    return {code, message};
 });
 
 async function axiosGet(url, params, config) {
