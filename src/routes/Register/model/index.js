@@ -1,33 +1,62 @@
 import modelEnhance from '@/utils/modelEnhance';
-import { register } from '../service';
-import { cacheAuth } from '@/utils/authentication';
+import {register} from '../service';
+import {cacheAuth, removeAuth} from '@/utils/authentication';
 
 export default modelEnhance({
-  namespace: 'register',
+    namespace: 'register',
 
-  state: {
-    success: false,
-  },
-
-  effects: {
-    *submit({ payload }, { call, put }) {
-      const { code, data } = yield call(register, payload);
-      if (code===200) {
-        cacheAuth(data.token, data.authorities);
-        yield put({
-          type: 'registerHandle',
-          payload: true,
-        });
-      }
+    state: {
+        username: '',
+        password: '',
+        confirm: '',
+        email: '',
+        code: undefined,
+        message: ''
     },
-  },
 
-  reducers: {
-    registerHandle(state, { payload }) {
-      return {
-        ...state,
-        success: payload
-      };
+    subscriptions: {
+        setup({history, dispatch}) {
+            return history.listen(({pathname}) => {
+                if (pathname.indexOf('/sign/register') !== -1) {
+                    removeAuth();
+                }
+            });
+        }
     },
-  },
+
+    effects: {
+        *submit({payload}, {call, put}) {
+            const {code, data, message} = yield call(register, payload);
+            if (code === 200) {
+                cacheAuth(data.token, data.authorities, window.localStorage);
+                yield put({
+                    type: 'registerSuccess',
+                    payload,
+                    code
+                });
+            } else {
+                yield put({
+                    type: 'registerFailure',
+                    payload,
+                    code,
+                    message
+                });
+            }
+        },
+    },
+
+    reducers: {
+        registerSuccess(state, {payload}) {
+            return {
+                ...state,
+                ...payload
+            };
+        },
+        registerFailure(state, {payload}) {
+            return {
+                ...state,
+                ...payload
+            };
+        }
+    },
 });

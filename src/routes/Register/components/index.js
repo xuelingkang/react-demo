@@ -13,6 +13,7 @@ import './index.less';
 import '../../Login/components/index.less';
 import logoImg from 'assets/images/logo1.png';
 import Success from './Success';
+import {getAuth} from "@/utils/authentication"
 const { Content } = Layout;
 
 const FormItem = Form.Item;
@@ -35,21 +36,7 @@ const passwordProgressMap = {
 }))
 @Form.create()
 export default class Register extends Component {
-  state = {
-    username: '',
-    password: '',
-    confirm: '',
-    email: ''
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.register.status) {
-      this.setState({
-        registerSuccess: true
-      });
-    }
-  }
-
+  state = {};
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -131,9 +118,10 @@ export default class Register extends Component {
   render() {
     const { register, form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { help, visible, registerSuccess } = this.state;
+    const { help, visible } = this.state;
 
-    if (register.success) {
+    const {token, authorities} = getAuth();
+    if (token && authorities) {
       return <Success />;
     }
     return (
