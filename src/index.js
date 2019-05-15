@@ -25,7 +25,6 @@ const app = dva({
 
 // -> 插件
 app.use(createLoading());
-app.use({ onError: config.exception.global });
 
 // -> 请求
 request.config(config.request);

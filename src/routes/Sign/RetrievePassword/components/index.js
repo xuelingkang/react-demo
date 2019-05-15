@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
 import {Form, Layout, Button, Input, Popover, Progress} from 'antd';
-import { normal } from 'components/Notification';
+import config from '@/config';
 import Success from './Success';
 import logoImg from 'assets/images/logo1.png';
 import '../../Login/components/index.less';
 
-const notice = normal;
+const notice = config.notice;
 const {Content} = Layout;
 const FormItem = Form.Item;
 

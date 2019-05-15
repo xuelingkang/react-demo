@@ -183,6 +183,10 @@ class LeftSideBar extends PureComponent {
     } = this.props;
 
     const {user} = getAuth();
+    let nickname;
+    if (user) {
+      nickname = user.nickname;
+    }
 
     const classnames = cx('sidebar-left', 'sidebar-default', {
       affix: !!fixed,
@@ -221,7 +225,7 @@ class LeftSideBar extends PureComponent {
             <div className="userlogged clearfix">
               <Icon type="man" />
               <div className="user-details">
-                <span>{user.nickname}</span>
+                <span>{nickname}</span>
                 <div className="dropdown">
                   <Select
                     size="small"

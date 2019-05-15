@@ -54,20 +54,6 @@ export default {
     }
   },
 
-  // 全局异常
-  exception: {
-    global: (err, dispatch) => {
-      const errName = err.name;
-      // RequestError为拦截请求异常
-      if (errName === 'RequestError') {
-        notice.error(err.message);
-        console.error(err); 
-      } else {
-        console.error(err);
-      }
-    },
-  },
-
   // 分页助手
   pageHelper: {
     // 格式化要发送到后端的数据

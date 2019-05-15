@@ -44,6 +44,7 @@ export default modelEnhance({
         // 获取分页数据
         *getPageInfo({ payload }, { call, put }) {
             const { pageData } = payload;
+            console.log(pageData);
             yield put({
                 type: '@request',
                 payload: {

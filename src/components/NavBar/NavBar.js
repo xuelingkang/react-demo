@@ -77,6 +77,10 @@ class NavBar extends PureComponent {
     } = this.props;
 
     const {user} = getAuth();
+    let nickname;
+    if (user) {
+      nickname = user.nickname;
+    }
 
     const classnames = cx('navbar', {
       'navbar-fixed-top': !!fixed,
@@ -157,7 +161,7 @@ class NavBar extends PureComponent {
           <li className="dropdown">
             <Popover
               placement="bottomRight"
-              title={`WELCOME ${user.nickname}`}
+              title={`WELCOME ${nickname}`}
               overlayClassName={cx('navbar-popup', { [theme]: !!theme })}
               content={<UserDropDown />}
               trigger="click"
@@ -165,7 +169,7 @@ class NavBar extends PureComponent {
               <a className="dropdown-toggle">
                 <Badge dot>
                   <Avatar src={require('assets/images/avatar.png')}>
-                    {user.nickname}
+                    {nickname}
                   </Avatar>
                 </Badge>
               </a>
