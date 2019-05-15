@@ -33,7 +33,7 @@ class BaseComponent extends React.Component {
 
   /**
    * 修改
-   * @param {object} 表单记录
+   * @param {object} record 表单记录
    */
   onUpdate = record => {
     this.setState({
@@ -44,7 +44,7 @@ class BaseComponent extends React.Component {
 
   /**
    * 删除
-   * @param {object | array} 表单记录, 批量删除时为数组
+   * @param {object | array} record 表单记录, 批量删除时为数组
    */
   onDelete = record => {
     if (!record) return;

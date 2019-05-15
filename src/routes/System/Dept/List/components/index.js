@@ -26,7 +26,7 @@ export default class extends BaseComponent {
         const { rows } = this.state;
 
         this.props.dispatch({
-            type: 'crud/remove',
+            type: 'deptlist/remove',
             payload: {
                 records,
                 success: () => {
@@ -51,7 +51,7 @@ export default class extends BaseComponent {
             columns,
             onSearch: values => {
                 dispatch({
-                    type: 'crud/getPageInfo',
+                    type: 'deptlist/getPageInfo',
                     payload: {
                         pageData: pageData.filter(values).jumpPage(1, 10)
                     }
@@ -70,7 +70,7 @@ export default class extends BaseComponent {
             selectedRowKeys: rows.map(item => item.rowKey),
             onChange: ({ pageNum, pageSize }) => {
                 dispatch({
-                    type: 'crud/getPageInfo',
+                    type: 'deptlist/getPageInfo',
                     payload: {
                         pageData: pageData.jumpPage(pageNum, pageSize)
                     }
@@ -97,7 +97,7 @@ export default class extends BaseComponent {
             // 可以使用主键或是否有record来区分状态
             onSubmit: values => {
                 dispatch({
-                    type: 'crud/save',
+                    type: 'deptlist/save',
                     payload: {
                         values,
                         success: () => {
@@ -110,6 +110,9 @@ export default class extends BaseComponent {
                 });
             }
         };
+        console.log('searchBarProps', searchBarProps);
+        console.log('dataTableProps', dataTableProps);
+        console.log('modalFormProps', modalFormProps);
 
         return (
             <Layout className="full-layout crud-page">
