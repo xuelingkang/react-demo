@@ -110,9 +110,6 @@ export default class extends BaseComponent {
                 });
             }
         };
-        console.log('searchBarProps', searchBarProps);
-        console.log('dataTableProps', dataTableProps);
-        console.log('modalFormProps', modalFormProps);
 
         return (
             <Layout className="full-layout crud-page">
