@@ -1,5 +1,4 @@
 import { retrievePasswordEmail, retrievePassword } from '../service';
-import {removeAuth} from "@/utils/authentication"
 
 export default {
     namespace: 'retrievePassword',
