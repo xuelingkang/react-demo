@@ -1,4 +1,5 @@
 import { retrievePasswordEmail, retrievePassword } from '../service';
+import {removeAuth} from "@/utils/authentication"
 
 export default {
     namespace: 'retrievePassword',
@@ -6,6 +7,22 @@ export default {
     state: {
         emailStatus: false,
         modPwdStatus: false
+    },
+
+    subscriptions: {
+        setup({history, dispatch}) {
+            return history.listen(({pathname}) => {
+                if (pathname.indexOf('/sign/retrievePassword') !== -1) {
+                    dispatch({
+                        type: 'initRetrievePassword',
+                        payload: {
+                            emailStatus: false,
+                            modPwdStatus: false
+                        }
+                    });
+                }
+            });
+        }
     },
 
     effects: {
@@ -33,14 +50,14 @@ export default {
                 yield put({
                     type: 'modPwdHandler',
                     payload: {
-                        emailStatus: true
+                        modPwdStatus: true
                     }
                 });
             } else {
                 yield put({
                     type: 'modPwdHandler',
                     payload: {
-                        emailStatus: false
+                        modPwdStatus: false
                     }
                 });
             }
@@ -48,6 +65,12 @@ export default {
     },
 
     reducers: {
+        initRetrievePassword(state, {payload}) {
+            return {
+                ...state,
+                ...payload
+            };
+        },
         emailHandler(state, {payload}) {
             return {
                 ...state,

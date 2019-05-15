@@ -20,7 +20,7 @@ export default class extends Component {
             let leftTime = this.state.leftTime - 1;
             this.setState({leftTime: leftTime});
             if (leftTime===0) {
-                this.props.dispatch(routerRedux.replace('/'));
+                this.props.dispatch(routerRedux.replace('/sign/login'));
             }
         }, 1000);
         this.setState({
@@ -31,7 +31,7 @@ export default class extends Component {
         clearInterval(this.state.timerId);
     }
     handleClick = () => {
-        this.props.dispatch(routerRedux.replace('/'));
+        this.props.dispatch(routerRedux.replace('/sign/login'));
     }
     render() {
         const actions = (
@@ -59,13 +59,13 @@ export default class extends Component {
             <Layout className="full-layout result-page">
                 <Content>
                     <Result
-                        title="注册成功"
+                        title="修改密码成功"
                         type="success"
                         actions={actions}
                         footer={footer}
                         extra={extra}
                     >
-                        恭喜你，注册成功！{leftTime}秒后自动跳转到首页。
+                        恭喜你，修改密码成功！{leftTime}秒后自动跳转到登陆页。
                     </Result>
                 </Content>
             </Layout>

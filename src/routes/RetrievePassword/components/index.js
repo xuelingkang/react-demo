@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Link, routerRedux} from 'dva/router';
-import {Form, Layout, Button, Icon, Input, Checkbox, Spin, Popover, Progress} from 'antd';
-import {getAuth} from '@/utils/authentication';
+import {Form, Layout, Button, Input, Popover, Progress} from 'antd';
+import { normal } from 'components/Notification';
+import Success from './Success';
 import logoImg from 'assets/images/logo1.png';
 import '../../Login/components/index.less';
 
+const notice = normal;
 const {Content} = Layout;
 const FormItem = Form.Item;
 
@@ -26,7 +27,12 @@ const passwordProgressMap = {
 }))
 @Form.create()
 export default class RetrievePassword extends Component {
-    state = {};
+    state = {
+        sendEmailLoading: false,
+        sendEmailTimerId: undefined,
+        sendEmailTimeout: undefined,
+        sendEmailText: '发送邮件验证码'
+    };
 
     getPasswordStatus = () => {
         const { form } = this.props;
@@ -93,6 +99,48 @@ export default class RetrievePassword extends Component {
         ) : null;
     };
 
+    handleSendEmail = () => {
+        const {form, dispatch} = this.props;
+        let username = form.getFieldValue('username');
+        if (username) {
+            username = username.trim();
+        }
+        if (username===null || username===undefined || !/^\w+$/.test(username)) {
+            notice.error('用户名不能为空');
+            return;
+        }
+        dispatch({
+            type: 'retrievePassword/email',
+            payload: {username}
+        });
+        const sendEmailTimerId = setInterval(() => {
+            let sendEmailTimeout = this.state.sendEmailTimeout;
+            sendEmailTimeout--;
+            if (sendEmailTimeout>0) {
+                this.setState({
+                    sendEmailLoading: true,
+                    sendEmailTimeout,
+                    sendEmailText: `${this.state.sendEmailTimeout}秒后可重新发送`
+                });
+            } else {
+                clearInterval(sendEmailTimerId);
+                this.setState({
+                    sendEmailLoading: false,
+                    sendEmailTimeout: 0,
+                    sendEmailText: '重新发送验证码'
+                });
+            }
+        }, 1000);
+        this.setState({
+            sendEmailTimerId,
+            sendEmailTimeout: 60
+        });
+    };
+
+    componentWillUnmount = () => {
+        clearInterval(this.state.sendEmailTimerId);
+    }
+
     handleSubmit = e => {
         e.preventDefault();
         const { form, dispatch } = this.props;
@@ -105,11 +153,15 @@ export default class RetrievePassword extends Component {
             }
         });
     };
+
     render() {
         const {retrievePassword, form} = this.props;
-        const {emailStatus, modPwdStatus} = retrievePassword;
+        const {modPwdStatus} = retrievePassword;
         const {getFieldDecorator} = form;
         const { help, visible } = this.state;
+        if (modPwdStatus) {
+            return <Success />
+        }
         return (
             <Layout className="full-layout login-page">
                 <Content>
@@ -133,9 +185,10 @@ export default class RetrievePassword extends Component {
                             <Button
                                 size="large"
                                 className="login-form-button"
-                                loading={true}
+                                onClick={this.handleSendEmail}
+                                loading={this.state.sendEmailLoading}
                             >
-                                发送验证码
+                                {this.state.sendEmailText}
                             </Button>
                         </FormItem>
                         <FormItem>

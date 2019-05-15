@@ -116,7 +116,7 @@ export default class Register extends Component {
   };
 
   render() {
-    const { register, form, submitting } = this.props;
+    const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
     const { help, visible } = this.state;
 
