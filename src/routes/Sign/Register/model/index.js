@@ -28,7 +28,7 @@ export default modelEnhance({
         *submit({payload}, {call, put}) {
             const {code, data, message} = yield call(register, payload);
             if (code === 200) {
-                cacheAuth(data.token, data.authorities, window.localStorage);
+                cacheAuth(data.token, data.authorities, data.user, true);
                 yield put({
                     type: 'registerSuccess',
                     payload,

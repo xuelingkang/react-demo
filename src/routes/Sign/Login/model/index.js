@@ -26,14 +26,15 @@ export default {
         *login({payload}, {call, put}) {
             const {code, data, message} = yield call(login, payload);
             if (code === 200) {
-                const {token, authorities} = data;
+                const {token, authorities, user} = data;
                 yield put({
                     type: 'loginSuccess',
                     payload: {
                         ...payload,
                         code,
                         token,
-                        authorities
+                        authorities,
+                        user
                     }
                 });
             } else {
@@ -51,8 +52,8 @@ export default {
 
     reducers: {
         loginSuccess(state, {payload}) {
-            const {code, username, password, token, authorities, remember} = payload;
-            cacheAuth(token, authorities, remember);
+            const {code, username, password, token, authorities, user, remember} = payload;
+            cacheAuth(token, authorities, user, remember);
             return {
                 ...state,
                 code,

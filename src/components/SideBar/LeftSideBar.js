@@ -10,6 +10,8 @@ import pathToRegexp from 'path-to-regexp';
 import Icon from '../Icon';
 import logoImg from 'assets/images/logo.png';
 import './style/index.less';
+import { getAuth } from '@/utils/authentication';
+
 const Option = Select.Option;
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -177,9 +179,10 @@ class LeftSideBar extends PureComponent {
       leftCollapsedWidth,
       showHeader,
       menu,
-      user,
       isMobile
     } = this.props;
+
+    const {user} = getAuth();
 
     const classnames = cx('sidebar-left', 'sidebar-default', {
       affix: !!fixed,
@@ -216,9 +219,9 @@ class LeftSideBar extends PureComponent {
         <div className="sidebar-left-content">
           <header className="sidebar-header">
             <div className="userlogged clearfix">
-              <Icon type="woman" />
+              <Icon type="man" />
               <div className="user-details">
-                <span>{user.name}</span>
+                <span>{user.nickname}</span>
                 <div className="dropdown">
                   <Select
                     size="small"

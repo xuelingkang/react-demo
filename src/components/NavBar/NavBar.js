@@ -6,6 +6,7 @@ import cx from 'classnames';
 import './style/index.less';
 import logoImg from 'assets/images/logo.png';
 import SearchBox from './SearchBox';
+import { getAuth } from '@/utils/authentication';
 
 /**
  * 其本本局头部区域
@@ -72,9 +73,10 @@ class NavBar extends PureComponent {
       collapsed,
       onExpandTopBar,
       toggleSidebarHeader,
-      user,
       isMobile
     } = this.props;
+
+    const {user} = getAuth();
 
     const classnames = cx('navbar', {
       'navbar-fixed-top': !!fixed,
@@ -155,7 +157,7 @@ class NavBar extends PureComponent {
           <li className="dropdown">
             <Popover
               placement="bottomRight"
-              title={`WELCOME ${user.userName}`}
+              title={`WELCOME ${user.nickname}`}
               overlayClassName={cx('navbar-popup', { [theme]: !!theme })}
               content={<UserDropDown />}
               trigger="click"
@@ -163,7 +165,7 @@ class NavBar extends PureComponent {
               <a className="dropdown-toggle">
                 <Badge dot>
                   <Avatar src={require('assets/images/avatar.png')}>
-                    {user.userName}
+                    {user.nickname}
                   </Avatar>
                 </Badge>
               </a>

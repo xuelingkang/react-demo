@@ -9,9 +9,17 @@ import Coming from './Widgets/Coming';
 import Gallery from './Widgets/Gallery';
 import Result from './Widgets/Result';
 import LevelRoute from './Widgets/LevelRoute';
+
+// 登录
 import Login from './Sign/Login';
+// 注册
 import Register from './Sign/Register';
+// 找回密码
 import RetrievePassword from './Sign/RetrievePassword';
+
+// 部门列表
+import DeptList from './System/Dept/List';
+
 import Dashboard from './Dashboard';
 import Blank from './Blank';
 import Toolbar from './Widgets/Toolbar';
@@ -62,6 +70,9 @@ const routesConfig = app => [
         indexRoute: '/dashboard',
         childRoutes: [
             Dashboard(app),
+
+            DeptList(app),
+
             Blank(app),
             Toolbar(app),
             Column(),

@@ -1,7 +1,7 @@
 import cache from "@/utils/cache"
-import {TOKEN, AUTHORITIES} from "@/utils/cache-keys"
+import {TOKEN, AUTHORITIES, USER} from "@/utils/cache-keys"
 
-export function cacheAuth(token, authorities, remember) {
+export function cacheAuth(token, authorities, user, remember) {
     const expires = 7 * 24 * 60 * 60;
     let strage;
     if (remember) {
@@ -11,13 +11,16 @@ export function cacheAuth(token, authorities, remember) {
     }
     cache.set(TOKEN, token, expires, strage);
     cache.set(AUTHORITIES, authorities, expires, strage);
+    cache.set(USER, user, expires, strage);
 }
 export function getAuth() {
     const token = cache.get(TOKEN);
     const authorities = cache.get(AUTHORITIES);
-    return {token, authorities};
+    const user = cache.get(USER);
+    return {token, authorities, user};
 }
 export function removeAuth() {
     cache.remove(TOKEN);
     cache.remove(AUTHORITIES);
+    cache.remove(USER);
 }
