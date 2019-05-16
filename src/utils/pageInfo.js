@@ -28,7 +28,7 @@ export default class {
     // 查询条件
     params = {};
 
-    jumpPage(current=1, size=10) {
+    jumpPage(current, size) {
         this.current = current;
         this.size = size;
         return this;
@@ -40,8 +40,11 @@ export default class {
     }
 
     async search() {
-        if (this.current<1) {
+        if (!this.current || this.current<1) {
             this.current = 1;
+        }
+        if (!this.size || this.size<1) {
+            this.size = 10;
         }
         const { code, data } = await axiosGet(this.url, {
             ...this.params,

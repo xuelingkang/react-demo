@@ -4,7 +4,8 @@ import {Modal} from 'antd';
 import $$ from 'cmn-utils';
 import config from '@/config';
 
-class BaseComponent extends React.Component {
+export default class extends React.Component {
+
     /**
      * 在没有dispatch函数时，如果想要在组件内进行跳转可以用router进行跳转
      */
@@ -13,13 +14,6 @@ class BaseComponent extends React.Component {
     };
 
     notice = config.notice; // 消息通知
-
-    /**
-     * history api 路由跳转
-     */
-    get history() {
-        return this.context.router.history;
-    }
 
     /**
      * 打开模态框
@@ -40,7 +34,7 @@ class BaseComponent extends React.Component {
      * 删除
      * @param {object | array} record 表单记录, 批量删除时为数组
      */
-    onDelete = record => {
+    delete = record => {
         if (!record) return;
         if ($$.isArray(record) && !record.length) return;
 
@@ -52,16 +46,15 @@ class BaseComponent extends React.Component {
             title: '注意',
             content,
             onOk: () => {
-                this.handleDelete($$.isArray(record) ? record : [record]);
+                this.onDelete($$.isArray(record) ? record : [record]);
             },
             onCancel() {
             }
         });
     };
 
-    handleDelete(records) {
+    onDelete(records) {
         /* 子类重写 */
     }
-}
 
-export default BaseComponent;
+}

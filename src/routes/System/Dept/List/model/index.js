@@ -41,6 +41,11 @@ export default modelEnhance({
             const {success} = payload;
             success();
         },
+        *update({ payload }, { call, put, select }) {
+            console.log(payload)
+            const {success} = payload;
+            success();
+        },
         // 获取所有部门列表
         *findall({ payload }, { call, put }) {
             const { code, data } = yield call(getAllDept);

@@ -52,10 +52,11 @@ export default (self, allDepts) => [
             width: 180,
             render: (text, record) => (
                 <DataTable.Oper>
-                    <Button tooltip="修改" onClick={e => self.onUpdate(record)}>
+                    <Button tooltip="修改"
+                            onClick={e => self.openModal('update', '更新部门', record)}>
                         <Icon type="edit" />
                     </Button>
-                    <Button tooltip="删除" onClick={e => self.onDelete(record)}>
+                    <Button tooltip="删除" onClick={e => self.delete(record)}>
                         <Icon type="trash" />
                     </Button>
                 </DataTable.Oper>

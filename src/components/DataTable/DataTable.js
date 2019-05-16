@@ -132,7 +132,7 @@ class DataTable extends Component {
     });
   };
 
-  handleTableChange = (pagination, filters, sorter) => {
+  handleTableChange = (pagination, params, sorter) => {
     let current = pagination.current || pagination;
 
     let sortMap = sorter.field
@@ -141,7 +141,7 @@ class DataTable extends Component {
         }
       : sorter;
     this.props.onChange &&
-      this.props.onChange({ current, filters, sorter: sortMap });
+      this.props.onChange({ current, params, sorter: sortMap });
   };
 
   onShowSizeChange = (current, size) => {

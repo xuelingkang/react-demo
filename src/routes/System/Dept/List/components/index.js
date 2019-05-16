@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Layout, Button } from 'antd';
-import BaseComponent from 'components/BaseComponent';
+import BaseCrudComponent from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
 import DataTable from 'components/DataTable';
@@ -15,18 +15,63 @@ const Pagination = DataTable.Pagination;
     deptlist,
     loading: loading.models.deptlist
 }))
-export default class extends BaseComponent {
+export default class extends BaseCrudComponent {
     state = {
+        modalType: '',
+        modalTitle: '',
         record: null,
         visible: false,
         rows: []
     };
 
-    handleDelete = records => {
+    // TODO 这一部分提取到父类
+    modalHandlers = {
+        prevHandleRecord: {
+            update: record => {
+                console.log(record);
+                return record;
+            }
+        },
+        onSubmit: {
+            save: (values, record) => {
+                this.props.dispatch({
+                    type: 'deptlist/save',
+                    payload: {
+                        values,
+                        record,
+                        success: this.modalHandlers.onCancel.default
+                    }
+                });
+            },
+            update: (values, record) => {
+                this.props.dispatch({
+                    type: 'deptlist/update',
+                    payload: {
+                        values,
+                        record,
+                        success: this.modalHandlers.onCancel.default
+                    }
+                });
+            }
+        },
+        onCancel: {
+            save: false,
+            default: () => {
+                this.setState({
+                    modalType: '',
+                    modalTitle: '',
+                    record: null,
+                    visible: false
+                });
+            }
+        }
+    };
+
+    onDelete = records => {
         const { rows } = this.state;
 
         this.props.dispatch({
-            type: 'deptlist/remove',
+            type: 'deptlist/delete',
             payload: {
                 records,
                 success: () => {
@@ -39,13 +84,13 @@ export default class extends BaseComponent {
                 }
             }
         });
-    };
+    }
 
     render() {
         const { deptlist, loading, dispatch } = this.props;
         const { pageInfo, allDepts } = deptlist;
         const columns = createColumns(this, allDepts);
-        const { rows, record, visible } = this.state;
+        const { modalType, modalTitle, rows, record, visible } = this.state;
 
         const searchBarProps = {
             columns,
@@ -79,6 +124,8 @@ export default class extends BaseComponent {
         };
 
         const modalFormProps = {
+            title: `${modalTitle}`,
+            modalType,
             loading,
             record,
             visible,
@@ -86,28 +133,7 @@ export default class extends BaseComponent {
             modalOpts: {
                 width: 700
             },
-            onCancel: () => {
-                this.setState({
-                    record: null,
-                    visible: false
-                });
-            },
-            // 新增、修改都会进到这个方法中，
-            // 可以使用主键或是否有record来区分状态
-            onSubmit: values => {
-                dispatch({
-                    type: 'deptlist/save',
-                    payload: {
-                        values,
-                        success: () => {
-                            this.setState({
-                                record: null,
-                                visible: false
-                            });
-                        }
-                    }
-                });
-            }
+            handlers: this.modalHandlers
         };
 
         return (
@@ -116,12 +142,13 @@ export default class extends BaseComponent {
                     <Toolbar
                         appendLeft={
                             <Button.Group>
-                                <Button type="primary" icon="plus" onClick={this.onAdd}>
+                                <Button type="primary" icon="plus"
+                                        onClick={() => this.openModal('save', '保存部门')}>
                                     新增
                                 </Button>
                                 <Button
                                     disabled={!rows.length}
-                                    onClick={e => this.onDelete(rows)}
+                                    onClick={e => this.delete(rows)}
                                     icon="delete"
                                 >
                                     删除
