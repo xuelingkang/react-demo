@@ -23,7 +23,7 @@ class DataTable extends Component {
     /**
      * 数据对像list为必需,如需表格自带分页需要在此提供分页信息 {pageNum:1, list:[], filters:{}, pageSize:10, total:12}
      */
-    dataItems: PropTypes.object.isRequired,
+    pageInfo: PropTypes.object.isRequired,
     /**
      * 是否显示行序号
      */
@@ -133,7 +133,7 @@ class DataTable extends Component {
   };
 
   handleTableChange = (pagination, filters, sorter) => {
-    let pageNum = pagination.current || pagination;
+    let current = pagination.current || pagination;
 
     let sortMap = sorter.field
       ? {
@@ -141,11 +141,11 @@ class DataTable extends Component {
         }
       : sorter;
     this.props.onChange &&
-      this.props.onChange({ pageNum, filters, sorter: sortMap });
+      this.props.onChange({ current, filters, sorter: sortMap });
   };
 
-  onShowSizeChange = (pageNum, pageSize) => {
-    this.props.onChange && this.props.onChange({ pageNum, pageSize });
+  onShowSizeChange = (current, size) => {
+    this.props.onChange && this.props.onChange({ current, size });
   };
 
   render() {
@@ -153,7 +153,7 @@ class DataTable extends Component {
       prefixCls,
       className,
       columns,
-      dataItems,
+      pageInfo,
       showNum,
       alternateColor,
       onChange,
@@ -174,11 +174,7 @@ class DataTable extends Component {
     let cols = columns
       .filter(col => {
         if (col.primary) colRowKey = col.name;
-        if (col.tableItem) {
-          return true;
-        } else {
-          return false;
-        }
+        return !!col.tableItem;
       })
       .map(col => {
         let item = col.tableItem;
@@ -236,9 +232,9 @@ class DataTable extends Component {
         width: 50,
         dataIndex: '_num',
         render(text, record, index) {
-          const { pageNum, pageSize } = dataItems;
-          if (pageNum && pageSize) {
-            return (pageNum - 1) * pageSize + index + 1;
+          const { current, size } = pageInfo;
+          if (current && size) {
+            return (current - 1) * size + index + 1;
           } else {
             // 没有分页
             return index + 1;
@@ -255,9 +251,9 @@ class DataTable extends Component {
         showTotal: total => `共 ${total} 条`,
         onShowSizeChange: this.onShowSizeChange
       },
-      dataItems.pageSize && { pageSize: dataItems.pageSize },
-      dataItems.pageNum && { current: dataItems.pageNum },
-      dataItems.total && { total: dataItems.total },
+      pageInfo.size && { size: pageInfo.size },
+      pageInfo.current && { current: pageInfo.current },
+      pageInfo.total && { total: pageInfo.total },
       pagination
     );
 
@@ -286,7 +282,7 @@ class DataTable extends Component {
           bodyStyle={{ overflowX: 'auto' }}
           columns={cols}
           pagination={pagination ? paging : false}
-          dataSource={dataItems.list}
+          dataSource={pageInfo.records}
           onChange={this.handleTableChange}
           rowKey={this._rowKey}
           {...otherProps}
@@ -313,17 +309,17 @@ export const Tip = prop => (
   </Tooltip>
 );
 
-export const Paging = ({ dataItems, onChange, ...otherProps }) => {
-  const { total, pageSize, pageNum } = dataItems;
+export const Paging = ({ pageInfo, onChange, ...otherProps }) => {
+  const { total, size, current } = pageInfo;
   const paging = {
     total: total,
-    pageSize: pageSize,
-    current: pageNum,
+    pageSize: size,
+    current: current,
     showSizeChanger: true,
     showQuickJumper: true,
     showTotal: total => `共 ${total} 条`,
-    onShowSizeChange: (pageNum, pageSize) => onChange({ pageNum, pageSize }),
-    onChange: pageNum => onChange({ pageNum }),
+    onShowSizeChange: (current, size) => onChange({ current, size }),
+    onChange: current => onChange({ current }),
     ...otherProps
   };
   return <Pagination {...paging} />;

@@ -3,83 +3,48 @@ import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 
-export default (self, employees) => [
+export default (self, allDepts) => [
     {
-        title: '单位名称',
+        title: '上级部门',
+        name: 'pid',
+        dict: allDepts.map(dept => {
+            return {
+                code: dept.id,
+                codeName: dept.fullName
+            }
+        }),
+        searchItem: {
+            type: 'select'
+        },
+        formItem: {
+            type: 'select'
+        }
+    },
+    {
+        title: '名称',
         name: 'deptName',
         tableItem: {},
-        searchItem: {
-            group: 'abc'
-        },
         formItem: {}
     },
     {
-        title: '配电网络',
-        name: 'distributionNetwork',
-        dict: [{ code: '0', codeName: '城市' }, { code: '1', codeName: '乡村' }],
+        title: '全名',
+        name: 'fullName',
         tableItem: {},
-        formItem: {
-            type: 'select'
-        },
         searchItem: {
-            type: 'select'
+            group: 'abc'
         }
     },
     {
-        title: '作业地点',
-        name: 'address',
+        title: '级别',
+        name: 'level',
         tableItem: {},
-        formItem: {},
         searchItem: {}
     },
     {
-        title: '作业类型',
-        name: 'type',
+        title: '顺序',
+        name: 'seq',
         tableItem: {},
-        formItem: {},
-        searchItem: {}
-    },
-    {
-        title: '开工时间',
-        name: 'planBeginTime',
-        tableItem: {},
-        formItem: {
-            type: 'datetime'
-        },
-        searchItem: {
-            type: 'datetime'
-        }
-    },
-    {
-        title: '竣工时间',
-        name: 'planEndTime',
-        tableItem: {},
-        formItem: {
-            type: 'datetime'
-        },
-        searchItem: {
-            type: 'datetime'
-        }
-    },
-    {
-        title: '到岗人员',
-        name: 'workEmployee',
-        tableItem: {
-            render: text => text.map(item => item.title).join(',')
-        },
-        formItem: {
-            type: 'transfer',
-            modal: true,
-            dataSource: employees,
-            normalize: value => value.map(item => item.key)
-        }
-    },
-    {
-        title: '作业内容',
-        name: 'content',
-        formItem: {
-            type: 'editor'
-        }
+        formItem: {}
     },
     {
         title: '操作',

@@ -43,8 +43,8 @@ export default class extends BaseComponent {
 
     render() {
         const { deptlist, loading, dispatch } = this.props;
-        const { pageData, employees } = deptlist;
-        const columns = createColumns(this, employees);
+        const { pageInfo, allDepts } = deptlist;
+        const columns = createColumns(this, allDepts);
         const { rows, record, visible } = this.state;
 
         const searchBarProps = {
@@ -53,7 +53,7 @@ export default class extends BaseComponent {
                 dispatch({
                     type: 'deptlist/getPageInfo',
                     payload: {
-                        pageData: pageData.filter(values).jumpPage(1, 10)
+                        pageInfo: pageInfo.setParams(values)
                     }
                 });
             }
@@ -62,17 +62,16 @@ export default class extends BaseComponent {
         const dataTableProps = {
             loading,
             columns,
+            pageInfo,
             rowKey: 'id',
-            dataItems: pageData,
             selectType: 'checkbox',
-            showNum: true,
             isScroll: true,
             selectedRowKeys: rows.map(item => item.rowKey),
-            onChange: ({ pageNum, pageSize }) => {
+            onChange: ({ current, size }) => {
                 dispatch({
                     type: 'deptlist/getPageInfo',
                     payload: {
-                        pageData: pageData.jumpPage(pageNum, pageSize)
+                        pageInfo: pageInfo.jumpPage(current, size)
                     }
                 });
             },

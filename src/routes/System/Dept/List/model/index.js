@@ -1,24 +1,19 @@
 import modelEnhance from '@/utils/modelEnhance';
-import PageHelper from '@/utils/pageHelper';
-/**
- * 当第一次加载完页面时为true
- * 可以用这个值阻止切换页面时
- * 多次初始化数据
- */
-let LOADED = false;
+import PageInfo from '@/utils/pageInfo';
+import { getAllDept } from '../service';
+
 export default modelEnhance({
     namespace: 'deptlist',
 
     state: {
-        pageData: PageHelper.create(),
-        employees: []
+        pageInfo: new PageInfo('/dept/{current}/{size}'),
+        allDepts: []
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
             history.listen(({ pathname }) => {
-                if (pathname === '/dept/list' && !LOADED) {
-                    LOADED = true;
+                if (pathname === '/dept/list') {
                     dispatch({
                         type: 'init'
                     });
@@ -30,80 +25,33 @@ export default modelEnhance({
     effects: {
         // 进入页面加载
         *init({ payload }, { call, put, select }) {
-            const { pageData } = yield select(state => state.deptlist);
             yield put({
-                type: 'getPageInfo',
-                payload: {
-                    pageData: pageData.startPage(1, 10)
-                }
+                type: 'findall'
             });
-            yield put({
-                type: 'getEmployees'
-            });
+            const { pageInfo } = yield select(state => state.deptlist);
+            yield pageInfo.search();
         },
         // 获取分页数据
-        *getPageInfo({ payload }, { call, put }) {
-            const { pageData } = payload;
-            console.log(pageData);
-            yield put({
-                type: '@request',
-                payload: {
-                    valueField: 'pageData',
-                    url: '/crud/getList',
-                    pageInfo: pageData
-                }
-            });
+        *getPageInfo({ payload }, { call, put, select }) {
+            const { pageInfo } = yield select(state => state.deptlist);
+            yield pageInfo.search();
         },
-        // 保存 之后查询分页
-        *save({ payload }, { call, put, select, take }) {
-            const { values, success } = payload;
-            const { pageData } = yield select(state => state.crud);
-            yield put({
-                type: '@request',
-                payload: {
-                    notice: true,
-                    url: '/crud/save',
-                    data: values
-                }
-            });
-            // 等待@request结束
-            yield take('@request/@@end');
-            yield put({
-                type: 'getPageInfo',
-                payload: { pageData }
-            });
+        *save({ payload }, { call, put, select }) {
+            console.log(payload)
+            const {success} = payload;
             success();
         },
-        // 修改
-        *update({ payload }, { call, put }) {},
-        // 删除 之后查询分页
-        *remove({ payload }, { call, put, select }) {
-            const { records, success } = payload;
-            const { pageData } = yield select(state => state.crud);
-            yield put({
-                type: '@request',
-                payload: {
-                    notice: true,
-                    url: '/crud/bathDelete',
-                    data: records.map(item => item.rowKey)
-                }
-            });
-            yield put({
-                type: 'getPageInfo',
-                payload: { pageData }
-            });
-            success();
-        },
-        // 获取员工列表
-        *getEmployees({ payload }, { call, put }) {
-            yield put({
-                type: '@request',
-                afterResponse: resp => resp.data,
-                payload: {
-                    valueField: 'employees',
-                    url: '/crud/getWorkEmployee'
-                }
-            });
+        // 获取所有部门列表
+        *findall({ payload }, { call, put }) {
+            const { code, data } = yield call(getAllDept);
+            if (code===200) {
+                yield put({
+                    type: '@change',
+                    payload: {
+                        allDepts: data
+                    }
+                });
+            }
         }
     },
 
