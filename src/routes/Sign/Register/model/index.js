@@ -30,13 +30,13 @@ export default modelEnhance({
             if (code === 200) {
                 cacheAuth(data.token, data.authorities, data.user, true);
                 yield put({
-                    type: 'registerSuccess',
+                    type: '@change',
                     payload,
                     code
                 });
             } else {
                 yield put({
-                    type: 'registerFailure',
+                    type: '@change',
                     payload,
                     code,
                     message
@@ -45,18 +45,5 @@ export default modelEnhance({
         },
     },
 
-    reducers: {
-        registerSuccess(state, {payload}) {
-            return {
-                ...state,
-                ...payload
-            };
-        },
-        registerFailure(state, {payload}) {
-            return {
-                ...state,
-                ...payload
-            };
-        }
-    },
+    reducers: {},
 });

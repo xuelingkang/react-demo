@@ -6,6 +6,16 @@ import config from '@/config';
 
 export default class extends React.Component {
 
+    modelNamespace = undefined; // 分发前缀，子类重写，需要与model的namespace一致
+
+    state = {
+        modalType: '',
+        modalTitle: '',
+        record: null,
+        visible: false,
+        rows: []
+    };
+
     /**
      * 在没有dispatch函数时，如果想要在组件内进行跳转可以用router进行跳转
      */
@@ -27,6 +37,18 @@ export default class extends React.Component {
             modalTitle,
             record,
             visible: true
+        });
+    }
+
+    /**
+     * 关闭模态框
+     */
+    closeModel = () => {
+        this.setState({
+            modalType: '',
+            modalTitle: '',
+            record: null,
+            visible: false
         });
     }
 
@@ -53,8 +75,47 @@ export default class extends React.Component {
         });
     };
 
+    /**
+     * 确认删除
+     */
     onDelete(records) {
         /* 子类重写 */
+    }
+
+    /**
+     * 选中行
+     */
+    selectRow = (keys, rows) => this.setState({ rows })
+
+    /**
+     * 点击查询时触发
+     * @param values 查询参数
+     */
+    search = async values => {
+        const { dispatch } = this.props;
+        const pageInfo = this.props[this.modelNamespace]['pageInfo'];
+        await pageInfo.setParams(values);
+        dispatch({
+            type: `${this.modelNamespace}/@change`,
+            payload: {
+                pageInfo
+            }
+        });
+    }
+
+    /**
+     * 翻页或切换页面大小时触发
+     */
+    jumpPage = async ({current, size}) => {
+        const { dispatch } = this.props;
+        const pageInfo = this.props[this.modelNamespace]['pageInfo'];
+        await pageInfo.jumpPage(current, size);
+        dispatch({
+            type: `${this.modelNamespace}/@change`,
+            payload: {
+                pageInfo
+            }
+        });
     }
 
 }

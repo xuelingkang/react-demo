@@ -3,7 +3,7 @@ import PageInfo from '@/utils/pageInfo';
 import { getAllDept } from '../service';
 
 export default modelEnhance({
-    namespace: 'deptlist',
+    namespace: 'dept',
 
     state: {
         pageInfo: new PageInfo('/dept/{current}/{size}'),
@@ -28,12 +28,7 @@ export default modelEnhance({
             yield put({
                 type: 'findall'
             });
-            const { pageInfo } = yield select(state => state.deptlist);
-            yield pageInfo.search();
-        },
-        // 获取分页数据
-        *getPageInfo({ payload }, { call, put, select }) {
-            const { pageInfo } = yield select(state => state.deptlist);
+            const { pageInfo } = yield select(state => state.dept);
             yield pageInfo.search();
         },
         *save({ payload }, { call, put, select }) {

@@ -1,6 +1,7 @@
 import { retrievePasswordEmail, retrievePassword } from '../service';
+import modelEnhance from "@/utils/modelEnhance"
 
-export default {
+export default modelEnhance({
     namespace: 'retrievePassword',
 
     state: {
@@ -13,7 +14,7 @@ export default {
             return history.listen(({pathname}) => {
                 if (pathname.indexOf('/sign/retrievePassword') !== -1) {
                     dispatch({
-                        type: 'initRetrievePassword',
+                        type: '@change',
                         payload: {
                             emailStatus: false,
                             modPwdStatus: false
@@ -29,14 +30,14 @@ export default {
             const {code} = yield call(retrievePasswordEmail, payload);
             if (code===200) {
                 yield put({
-                    type: 'emailHandler',
+                    type: '@change',
                     payload: {
                         emailStatus: true
                     }
                 });
             } else {
                 yield put({
-                    type: 'emailHandler',
+                    type: '@change',
                     payload: {
                         emailStatus: false
                     }
@@ -47,14 +48,14 @@ export default {
             const {code} = yield call(retrievePassword, payload);
             if (code===200) {
                 yield put({
-                    type: 'modPwdHandler',
+                    type: '@change',
                     payload: {
                         modPwdStatus: true
                     }
                 });
             } else {
                 yield put({
-                    type: 'modPwdHandler',
+                    type: '@change',
                     payload: {
                         modPwdStatus: false
                     }
@@ -63,25 +64,6 @@ export default {
         }
     },
 
-    reducers: {
-        initRetrievePassword(state, {payload}) {
-            return {
-                ...state,
-                ...payload
-            };
-        },
-        emailHandler(state, {payload}) {
-            return {
-                ...state,
-                ...payload
-            };
-        },
-        modPwdHandler(state, {payload}) {
-            return {
-                ...state,
-                ...payload
-            };
-        }
-    }
+    reducers: {}
 
-};
+});

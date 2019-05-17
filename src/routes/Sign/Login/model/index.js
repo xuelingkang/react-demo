@@ -1,7 +1,8 @@
 import {login} from '../service';
 import {cacheAuth, removeAuth} from '@/utils/authentication';
+import modelEnhance from "@/utils/modelEnhance"
 
-export default {
+export default modelEnhance({
     namespace: 'login',
 
     state: {
@@ -23,12 +24,14 @@ export default {
     },
 
     effects: {
-        *login({payload}, {call, put}) {
+        *login({payload}, {call, put, select}) {
             const {code, data, message} = yield call(login, payload);
+            const { remember } = yield select(state => state.login);
             if (code === 200) {
                 const {token, authorities, user} = data;
+                cacheAuth(token, authorities, user, remember);
                 yield put({
-                    type: 'loginSuccess',
+                    type: '@change',
                     payload: {
                         ...payload,
                         code,
@@ -39,7 +42,7 @@ export default {
                 });
             } else {
                 yield put({
-                    type: 'loginFailure',
+                    type: '@change',
                     payload: {
                         ...payload,
                         code,
@@ -50,23 +53,5 @@ export default {
         }
     },
 
-    reducers: {
-        loginSuccess(state, {payload}) {
-            const {code, username, password, token, authorities, user, remember} = payload;
-            cacheAuth(token, authorities, user, remember);
-            return {
-                ...state,
-                code,
-                username,
-                password,
-                remember
-            };
-        },
-        loginFailure(state, {payload}) {
-            return {
-                ...state,
-                ...payload
-            }
-        }
-    }
-};
+    reducers: {}
+});

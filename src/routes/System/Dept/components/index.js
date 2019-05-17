@@ -11,20 +11,14 @@ import './index.less';
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
 
-@connect(({ deptlist, loading }) => ({
-    deptlist,
-    loading: loading.models.deptlist
+@connect(({ dept, loading }) => ({
+    dept,
+    loading: loading.models.dept
 }))
 export default class extends BaseCrudComponent {
-    state = {
-        modalType: '',
-        modalTitle: '',
-        record: null,
-        visible: false,
-        rows: []
-    };
 
-    // TODO 这一部分提取到父类
+    modelNamespace = 'dept';
+
     modalHandlers = {
         prevHandleRecord: {
             update: record => {
@@ -33,37 +27,28 @@ export default class extends BaseCrudComponent {
             }
         },
         onSubmit: {
-            save: (values, record) => {
+            save: (values) => {
                 this.props.dispatch({
-                    type: 'deptlist/save',
+                    type: `${this.modelNamespace}/save`,
                     payload: {
                         values,
-                        record,
-                        success: this.modalHandlers.onCancel.default
+                        success: this.closeModel
                     }
                 });
             },
             update: (values, record) => {
                 this.props.dispatch({
-                    type: 'deptlist/update',
+                    type: `${this.modelNamespace}/update`,
                     payload: {
                         values,
                         record,
-                        success: this.modalHandlers.onCancel.default
+                        success: this.closeModel
                     }
                 });
             }
         },
         onCancel: {
-            save: false,
-            default: () => {
-                this.setState({
-                    modalType: '',
-                    modalTitle: '',
-                    record: null,
-                    visible: false
-                });
-            }
+            default: this.closeModel
         }
     };
 
@@ -71,7 +56,7 @@ export default class extends BaseCrudComponent {
         const { rows } = this.state;
 
         this.props.dispatch({
-            type: 'deptlist/delete',
+            type: `${this.modelNamespace}/delete`,
             payload: {
                 records,
                 success: () => {
@@ -87,21 +72,14 @@ export default class extends BaseCrudComponent {
     }
 
     render() {
-        const { deptlist, loading, dispatch } = this.props;
-        const { pageInfo, allDepts } = deptlist;
+        const { dept, loading, dispatch } = this.props;
+        const { pageInfo, allDepts } = dept;
         const columns = createColumns(this, allDepts);
         const { modalType, modalTitle, rows, record, visible } = this.state;
 
         const searchBarProps = {
             columns,
-            onSearch: values => {
-                dispatch({
-                    type: 'deptlist/getPageInfo',
-                    payload: {
-                        pageInfo: pageInfo.setParams(values)
-                    }
-                });
-            }
+            onSearch: this.search
         };
 
         const dataTableProps = {
@@ -112,19 +90,12 @@ export default class extends BaseCrudComponent {
             selectType: 'checkbox',
             isScroll: true,
             selectedRowKeys: rows.map(item => item.rowKey),
-            onChange: ({ current, size }) => {
-                dispatch({
-                    type: 'deptlist/getPageInfo',
-                    payload: {
-                        pageInfo: pageInfo.jumpPage(current, size)
-                    }
-                });
-            },
-            onSelect: (keys, rows) => this.setState({ rows })
+            onChange: this.jumpPage,
+            onSelect: this.selectRow
         };
 
         const modalFormProps = {
-            title: `${modalTitle}`,
+            title: modalTitle,
             modalType,
             loading,
             record,
@@ -170,4 +141,5 @@ export default class extends BaseCrudComponent {
             </Layout>
         );
     }
+
 }

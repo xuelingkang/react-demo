@@ -17,8 +17,8 @@ import Register from './Sign/Register';
 // 找回密码
 import RetrievePassword from './Sign/RetrievePassword';
 
-// 部门列表
-import DeptList from './System/Dept/List';
+// 部门管理
+import Dept from './System/Dept';
 
 import Dashboard from './Dashboard';
 import Blank from './Blank';
@@ -71,7 +71,7 @@ const routesConfig = app => [
         childRoutes: [
             Dashboard(app),
 
-            DeptList(app),
+            Dept(app),
 
             Blank(app),
             Toolbar(app),
