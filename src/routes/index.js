@@ -18,7 +18,7 @@ import Register from './Sign/Register';
 import RetrievePassword from './Sign/RetrievePassword';
 
 // 部门管理
-import Dept from './System/Dept';
+import Dept from './Crud/Dept';
 
 import Dashboard from './Dashboard';
 import Blank from './Blank';
