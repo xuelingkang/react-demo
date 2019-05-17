@@ -160,16 +160,5 @@ export default [
                 path: '/level-route/:sub?',
             },
         ],
-    },
-    {
-        name: '通用场景',
-        icon: 'bulb',
-        path: '/business',
-        children: [
-            {
-                name: 'CRUD',
-                path: '/crud',
-            }
-        ],
-    },
+    }
 ];
