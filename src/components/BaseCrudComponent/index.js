@@ -120,6 +120,12 @@ export default class extends React.Component {
 
 }
 
+/**
+ * 判断当前namespace是否正在加载
+ * @param {object} loading redux中的loading
+ * @param {string} namespace 当前namespace
+ * @returns {boolean} true-当前正在加载 false-当前没有在加载
+ */
 export const isLoading = (loading, namespace) => {
     const { models, effects } = loading;
     if (models[namespace]) {
