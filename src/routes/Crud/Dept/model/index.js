@@ -1,11 +1,11 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
 import { getAllDept } from '../service';
-import { NAMESPACE } from '../constant';
+import { modelNamespace } from '../constant';
 
 export default modelEnhance({
 
-    namespace: NAMESPACE,
+    namespace: modelNamespace,
 
     state: {
         pageInfo: new PageInfo('/dept/{current}/{size}'),
@@ -30,7 +30,7 @@ export default modelEnhance({
             yield put({
                 type: 'findall'
             });
-            const { pageInfo } = yield select(state => state[NAMESPACE]);
+            const { pageInfo } = yield select(state => state[modelNamespace]);
             yield pageInfo.search();
         },
         *save({ payload }, { call, put, select }) {
@@ -39,6 +39,11 @@ export default modelEnhance({
             success();
         },
         *update({ payload }, { call, put, select }) {
+            console.log(payload)
+            const {success} = payload;
+            success();
+        },
+        *delete({ payload }, { call, put, select }) {
             console.log(payload)
             const {success} = payload;
             success();

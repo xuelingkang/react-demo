@@ -6,7 +6,19 @@ import config from '@/config';
 
 export default class extends React.Component {
 
-    modelNamespace = undefined; // 分发前缀，子类重写，需要与model的namespace一致
+    static propTypes = {
+        // 分发前缀，子类重写，需要与model的namespace一致
+        modelNamespace: PropTypes.string.isRequired,
+        // 确认删除方法
+        onDelete: PropTypes.func
+    }
+
+    /**
+     * 在没有dispatch函数时，如果想要在组件内进行跳转可以用router进行跳转
+     */
+    static contextTypes = {
+        router: PropTypes.object
+    };
 
     state = {
         modalType: '',
@@ -14,13 +26,6 @@ export default class extends React.Component {
         record: null,
         visible: false,
         rows: []
-    };
-
-    /**
-     * 在没有dispatch函数时，如果想要在组件内进行跳转可以用router进行跳转
-     */
-    static contextTypes = {
-        router: PropTypes.object
     };
 
     notice = config.notice; // 消息通知
@@ -68,19 +73,12 @@ export default class extends React.Component {
             title: '注意',
             content,
             onOk: () => {
-                this.onDelete($$.isArray(record) ? record : [record]);
+                this.props.onDelete({self: this, records: $$.isArray(record) ? record : [record]});
             },
             onCancel() {
             }
         });
     };
-
-    /**
-     * 确认删除
-     */
-    onDelete(records) {
-        /* 子类重写 */
-    }
 
     /**
      * 选中行
@@ -92,11 +90,11 @@ export default class extends React.Component {
      * @param values 查询参数
      */
     search = async values => {
-        const { dispatch } = this.props;
-        const pageInfo = this.props.modelState.pageInfo;
+        const { dispatch, modelNamespace, modelState } = this.props;
+        const { pageInfo } = modelState;
         await pageInfo.setParams(values);
         dispatch({
-            type: `${this.modelNamespace}/@change`,
+            type: `${modelNamespace}/@change`,
             payload: {
                 pageInfo
             }
@@ -107,11 +105,11 @@ export default class extends React.Component {
      * 翻页或切换页面大小时触发
      */
     jumpPage = async ({current, size}) => {
-        const { dispatch } = this.props;
-        const pageInfo = this.props.modelState.pageInfo;
+        const { dispatch, modelNamespace, modelState } = this.props;
+        const { pageInfo } = modelState;
         await pageInfo.jumpPage(current, size);
         dispatch({
-            type: `${this.modelNamespace}/@change`,
+            type: `${modelNamespace}/@change`,
             payload: {
                 pageInfo
             }
@@ -139,4 +137,30 @@ export const isLoading = (loading, namespace) => {
         }
     }
     return false;
+}
+
+/**
+ * 确认删除时触发
+ * @param {object} self
+ * @param {array} records
+ */
+export const onDelete = ({self, records}) => {
+    const { rows } = self.state;
+    const { modelNamespace, dispatch } = self.props;
+    const rowKeys = rows.map(row => row.rowKey).join();
+    dispatch({
+        type: `${modelNamespace}/delete`,
+        payload: {
+            rowKeys,
+            records,
+            success: () => {
+                // 如果操作成功，在已选择的行中，排除删除的行
+                self.setState({
+                    rows: rows.filter(
+                        item => !records.some(jtem => jtem.rowKey === item.rowKey)
+                    )
+                });
+            }
+        }
+    });
 }

@@ -1,1 +1,1 @@
-export const NAMESPACE = 'dept';
+export const modelNamespace = 'dept';

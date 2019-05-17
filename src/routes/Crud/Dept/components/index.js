@@ -1,36 +1,39 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Layout, Button } from 'antd';
-import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
+import BaseCrudComponent, { onDelete, isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
 import DataTable from 'components/DataTable';
 import { ModalForm } from 'components/Modal';
 import createColumns from './columns';
-import { NAMESPACE } from '../constant';
+import { modelNamespace } from '../constant';
 import './index.less';
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
 
-@connect(({ [NAMESPACE]: modelState, loading }) => ({
+@connect(({ [modelNamespace]: modelState, loading }) => ({
+    modelNamespace,
     modelState,
-    loading: isLoading(loading, NAMESPACE)
+    onDelete,
+    loading: isLoading(loading, modelNamespace)
 }))
 export default class extends BaseCrudComponent {
 
-    modelNamespace = NAMESPACE;
-
     modalHandlers = {
         prevHandleRecord: {
+            // ...super.modalHandlers.prevHandleRecord, TODO 这一部分提取到父类
             update: record => {
                 console.log(record);
                 return {...record, zidingyi: 'a'};
             }
         },
         onSubmit: {
+            // ...super.modalHandlers.onSubmit, TODO 这一部分提取到父类
             save: (values) => {
-                this.props.dispatch({
-                    type: `${this.modelNamespace}/save`,
+                const { modelNamespace, dispatch } = this.props;
+                dispatch({
+                    type: `${modelNamespace}/save`,
                     payload: {
                         values,
                         success: this.closeModel
@@ -38,8 +41,9 @@ export default class extends BaseCrudComponent {
                 });
             },
             update: (values, record) => {
-                this.props.dispatch({
-                    type: `${this.modelNamespace}/update`,
+                const { modelNamespace, dispatch } = this.props;
+                dispatch({
+                    type: `${modelNamespace}/update`,
                     payload: {
                         values,
                         record,
@@ -49,28 +53,10 @@ export default class extends BaseCrudComponent {
             }
         },
         onCancel: {
+            // ...super.modalHandlers.onCancel, TODO 这一部分提取到父类
             default: this.closeModel
         }
     };
-
-    onDelete = records => {
-        const { rows } = this.state;
-
-        this.props.dispatch({
-            type: `${this.modelNamespace}/delete`,
-            payload: {
-                records,
-                success: () => {
-                    // 如果操作成功，在已选择的行中，排除删除的行
-                    this.setState({
-                        rows: rows.filter(
-                            item => !records.some(jtem => jtem.rowKey === item.rowKey)
-                        )
-                    });
-                }
-            }
-        });
-    }
 
     render() {
         const { modelState, loading } = this.props;
