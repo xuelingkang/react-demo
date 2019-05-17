@@ -1,29 +1,30 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Layout, Button } from 'antd';
-import BaseCrudComponent from 'components/BaseCrudComponent';
+import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
 import DataTable from 'components/DataTable';
 import { ModalForm } from 'components/Modal';
 import createColumns from './columns';
+import { NAMESPACE } from '../constant';
 import './index.less';
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
 
-@connect(({ dept, loading }) => ({
-    dept,
-    loading: loading.models.dept
+@connect(({ [NAMESPACE]: modelState, loading }) => ({
+    modelState,
+    loading: isLoading(loading, NAMESPACE)
 }))
 export default class extends BaseCrudComponent {
 
-    modelNamespace = 'dept';
+    modelNamespace = NAMESPACE;
 
     modalHandlers = {
         prevHandleRecord: {
             update: record => {
                 console.log(record);
-                return record;
+                return {...record, zidingyi: 'a'};
             }
         },
         onSubmit: {
@@ -72,8 +73,8 @@ export default class extends BaseCrudComponent {
     }
 
     render() {
-        const { dept, loading, dispatch } = this.props;
-        const { pageInfo, allDepts } = dept;
+        const { modelState, loading } = this.props;
+        const { pageInfo, allDepts } = modelState;
         const columns = createColumns(this, allDepts);
         const { modalType, modalTitle, rows, record, visible } = this.state;
 

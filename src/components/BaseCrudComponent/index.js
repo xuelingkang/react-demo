@@ -93,7 +93,7 @@ export default class extends React.Component {
      */
     search = async values => {
         const { dispatch } = this.props;
-        const pageInfo = this.props[this.modelNamespace]['pageInfo'];
+        const pageInfo = this.props.modelState.pageInfo;
         await pageInfo.setParams(values);
         dispatch({
             type: `${this.modelNamespace}/@change`,
@@ -108,7 +108,7 @@ export default class extends React.Component {
      */
     jumpPage = async ({current, size}) => {
         const { dispatch } = this.props;
-        const pageInfo = this.props[this.modelNamespace]['pageInfo'];
+        const pageInfo = this.props.modelState.pageInfo;
         await pageInfo.jumpPage(current, size);
         dispatch({
             type: `${this.modelNamespace}/@change`,
@@ -118,4 +118,19 @@ export default class extends React.Component {
         });
     }
 
+}
+
+export const isLoading = (loading, namespace) => {
+    const { models, effects } = loading;
+    if (models[namespace]) {
+        return true;
+    }
+    for (let key in effects) {
+        if (effects.hasOwnProperty(key) && key.indexOf(namespace)!==-1) {
+            if (effects[key]) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

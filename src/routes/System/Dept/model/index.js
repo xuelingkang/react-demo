@@ -1,9 +1,11 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
 import { getAllDept } from '../service';
+import { NAMESPACE } from '../constant';
 
 export default modelEnhance({
-    namespace: 'dept',
+
+    namespace: NAMESPACE,
 
     state: {
         pageInfo: new PageInfo('/dept/{current}/{size}'),
@@ -28,7 +30,7 @@ export default modelEnhance({
             yield put({
                 type: 'findall'
             });
-            const { pageInfo } = yield select(state => state.dept);
+            const { pageInfo } = yield select(state => state[NAMESPACE]);
             yield pageInfo.search();
         },
         *save({ payload }, { call, put, select }) {
