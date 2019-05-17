@@ -25,25 +25,38 @@ class ModalForm extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if ('visible' in nextProps) {
+    componentDidMount() {
+        const {record, handlers, modalType} = this.props;
+        const {prevHandleRecord, onSubmit, onCancel} = handlers;
+        if (prevHandleRecord && prevHandleRecord[modalType]) {
+            prevHandleRecord[modalType](record).then(result => {
+                this.setState({
+                    record: result
+                });
+            })
+        }
+
+        if (onSubmit && onSubmit[modalType]) {
             this.setState({
-                visible: nextProps.visible
+                onSubmit: onSubmit[modalType]
+            });
+        }
+
+        if (onCancel && onCancel[modalType]) {
+            this.setState({
+                onCancel: onCancel[modalType]
+            });
+        } else if (onCancel && onCancel[modalType] !== false && onCancel['default']) {
+            this.setState({
+                onCancel: onCancel['default']
             });
         }
     }
 
     closeModal = () => {
-        const { modalType, handlers } = this.props;
-        const { onCancel } = handlers;
-        let onCancelFunc = undefined;
-        if (onCancel && onCancel[modalType]) {
-            onCancelFunc = onCancel[modalType];
-        } else if (onCancel && onCancel[modalType]!==false && onCancel['default']) {
-            onCancelFunc = onCancel['default'];
-        }
-        if (onCancelFunc) {
-            onCancelFunc();
+        const { onCancel } = this.state;
+        if (onCancel) {
+            onCancel();
             return;
         }
         this.setState({
@@ -52,26 +65,20 @@ class ModalForm extends Component {
     };
 
     onSubmit = () => {
-        const { modalType, record, handlers } = this.props;
-        const { onSubmit } = handlers;
-        let onSubmitFunc = undefined;
-        if (onSubmit && onSubmit[modalType]) {
-            onSubmitFunc = onSubmit[modalType];
-        }
+        const { record } = this.state;
         this.refs.form.validateFields((error, value) => {
             if (error) {
                 console.log(error);
                 return;
             }
-            onSubmitFunc && onSubmitFunc(value, record);
+            const { onSubmit } = this.refs.form.props;
+            onSubmit && onSubmit(value, record);
         });
     };
 
     render() {
         const {
             title,
-            modalType,
-            handlers,
             className,
             columns,
             modalOpts,
@@ -81,25 +88,7 @@ class ModalForm extends Component {
             preview
         } = this.props;
 
-        let {record} = this.props;
-        const { prevHandleRecord } = handlers;
-        if (prevHandleRecord && prevHandleRecord[modalType]) {
-            record = prevHandleRecord[modalType](record);
-        }
-
-        let onCancelFunc = undefined;
-        const { onCancel } = handlers;
-        if (onCancel && onCancel[modalType]) {
-            onCancelFunc = onCancel[modalType];
-        } else if (onCancel && onCancel[modalType]!==false && onCancel['default']) {
-            onCancelFunc = onCancel['default'];
-        }
-
-        let onSubmitFunc = undefined;
-        const { onSubmit } = handlers;
-        if (onSubmit && onSubmit[modalType]) {
-            onSubmitFunc = onSubmit[modalType];
-        }
+        const {record, onSubmit, onCancel} = this.state;
 
         const classname = cx(className, 'antui-modalform', {'full-modal': full});
         const modalProps = {
@@ -112,12 +101,12 @@ class ModalForm extends Component {
             destroyOnClose: true,
             onCancel: this.closeModal,
             footer: [
-                onCancelFunc && (
+                onCancel && (
                     <Button key="back" onClick={this.closeModal}>
                         取消
                     </Button>
                 ),
-                onSubmitFunc && (
+                onSubmit && (
                     <Button key="submit" type="primary" onClick={this.onSubmit} loading={loading}>
                         确定
                     </Button>
@@ -129,7 +118,7 @@ class ModalForm extends Component {
         const formProps = {
             ref: 'form',
             columns,
-            onSubmit: onSubmitFunc,
+            onSubmit,
             record,
             preview,
             footer: false,

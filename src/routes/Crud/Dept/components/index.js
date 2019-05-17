@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Layout, Button } from 'antd';
-import BaseCrudComponent, { onDelete, isLoading } from 'components/BaseCrudComponent';
+import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
 import DataTable from 'components/DataTable';
@@ -15,45 +15,20 @@ const Pagination = DataTable.Pagination;
 @connect(({ [modelNamespace]: modelState, loading }) => ({
     modelNamespace,
     modelState,
-    onDelete,
     loading: isLoading(loading, modelNamespace)
 }))
 export default class extends BaseCrudComponent {
 
     modalHandlers = {
         prevHandleRecord: {
-            // ...super.modalHandlers.prevHandleRecord, TODO 这一部分提取到父类
-            update: record => {
-                console.log(record);
-                return {...record, zidingyi: 'a'};
-            }
+            update: this.requestRecord,
+            detail: this.requestRecord
         },
         onSubmit: {
-            // ...super.modalHandlers.onSubmit, TODO 这一部分提取到父类
-            save: (values) => {
-                const { modelNamespace, dispatch } = this.props;
-                dispatch({
-                    type: `${modelNamespace}/save`,
-                    payload: {
-                        values,
-                        success: this.closeModel
-                    }
-                });
-            },
-            update: (values, record) => {
-                const { modelNamespace, dispatch } = this.props;
-                dispatch({
-                    type: `${modelNamespace}/update`,
-                    payload: {
-                        values,
-                        record,
-                        success: this.closeModel
-                    }
-                });
-            }
+            save: this.submitSave,
+            update: this.submitUpdate
         },
         onCancel: {
-            // ...super.modalHandlers.onCancel, TODO 这一部分提取到父类
             default: this.closeModel
         }
     };
@@ -66,7 +41,7 @@ export default class extends BaseCrudComponent {
 
         const searchBarProps = {
             columns,
-            onSearch: this.search
+            onSearch: this.onSearch
         };
 
         const dataTableProps = {
@@ -100,22 +75,21 @@ export default class extends BaseCrudComponent {
                     <Toolbar
                         appendLeft={
                             <Button.Group>
-                                <Button type="primary" icon="plus"
+                                <Button type="primary"
+                                        icon="plus"
                                         onClick={() => this.openModal('save', '保存部门')}>
                                     新增
                                 </Button>
-                                <Button
-                                    disabled={!rows.length}
-                                    onClick={e => this.delete(rows)}
-                                    icon="delete"
-                                >
+                                <Button disabled={!rows.length}
+                                        icon="delete"
+                                        onClick={() => this.delete(rows)}>
                                     删除
                                 </Button>
                             </Button.Group>
                         }
                         pullDown={<SearchBar type="grid" {...searchBarProps} />}
                     >
-                        <SearchBar group="abc" {...searchBarProps} />
+                        <SearchBar group="close" {...searchBarProps} />
                     </Toolbar>
                 </Header>
                 <Content>
@@ -124,7 +98,7 @@ export default class extends BaseCrudComponent {
                 <Footer>
                     <Pagination {...dataTableProps} />
                 </Footer>
-                <ModalForm {...modalFormProps} />
+                {visible? <ModalForm {...modalFormProps} />: null}
             </Layout>
         );
     }

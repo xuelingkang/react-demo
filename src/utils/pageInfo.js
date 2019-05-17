@@ -28,15 +28,15 @@ export default class {
     // 查询条件
     params = {};
 
-    jumpPage = async (current, size) => {
+    jumpPage = (current, size) => {
         this.current = current;
         this.size = size;
-        return await this.search();
+        return this;
     }
 
-    setParams = async params => {
+    setParams = params => {
         this.params = params;
-        return await this.search();
+        return this;
     }
 
     search = async () => {

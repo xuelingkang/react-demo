@@ -31,7 +31,7 @@ export default (self, allDepts) => [
         name: 'fullName',
         tableItem: {},
         searchItem: {
-            group: 'abc'
+            group: 'close'
         }
     },
     {

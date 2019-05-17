@@ -1,6 +1,6 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
-import { getAllDept } from '../service';
+import { getAllDept, save, update, del, detail } from '../service';
 import { modelNamespace } from '../constant';
 
 export default modelEnhance({
@@ -14,7 +14,7 @@ export default modelEnhance({
 
     subscriptions: {
         setup({ dispatch, history }) {
-            history.listen(({ pathname }) => {
+            history.listen(({pathname}) => {
                 if (pathname === '/dept/list') {
                     dispatch({
                         type: 'init'
@@ -26,30 +26,61 @@ export default modelEnhance({
 
     effects: {
         // 进入页面加载
-        *init({ payload }, { call, put, select }) {
+        *init({ payload }, { put }) {
             yield put({
-                type: 'findall'
+                type: 'refreshPageInfoAndAllDepts'
             });
+        },
+        *save({ payload }, { call, put }) {
+            const { values, success } = payload;
+            const { code } = yield call(save, values);
+            if (code===200) {
+                success && success();
+                yield put({
+                    type: 'refreshPageInfoAndAllDepts'
+                });
+            }
+        },
+        *update({ payload }, { call, put }) {
+            const { values, record, success } = payload;
+            const { id } = record;
+            const { code } = yield call(update, {...values, id});
+            if (code===200) {
+                success && success();
+                yield put({
+                    type: 'refreshPageInfoAndAllDepts'
+                });
+            }
+        },
+        *delete({ payload }, { call, put }) {
+            const { recordKeys, records, success } = payload;
+            const { code } = yield call(del, {ids: recordKeys});
+            if (code===200) {
+                success && success();
+                yield put({
+                    type: 'refreshPageInfoAndAllDepts'
+                });
+            }
+        },
+        *detail({ payload }, { call }) {
+            const { rowKey: id } = payload;
+            const {code, data} = yield call(detail, {id});
+            if (code===200) {
+                return data;
+            }
+        },
+        *search({ payload }, { select, put }) {
             const { pageInfo } = yield select(state => state[modelNamespace]);
             yield pageInfo.search();
-        },
-        *save({ payload }, { call, put, select }) {
-            console.log(payload)
-            const {success} = payload;
-            success();
-        },
-        *update({ payload }, { call, put, select }) {
-            console.log(payload)
-            const {success} = payload;
-            success();
-        },
-        *delete({ payload }, { call, put, select }) {
-            console.log(payload)
-            const {success} = payload;
-            success();
+            yield put({
+                type: '@change',
+                payload: {
+                    pageInfo,
+                }
+            });
         },
         // 获取所有部门列表
-        *findall({ payload }, { call, put }) {
+        *findAllDepts({ payload }, { call, put }) {
             const { code, data } = yield call(getAllDept);
             if (code===200) {
                 yield put({
@@ -59,6 +90,14 @@ export default modelEnhance({
                     }
                 });
             }
+        },
+        *refreshPageInfoAndAllDepts({ payload }, { put }) {
+            yield put({
+                type: 'findAllDepts'
+            });
+            yield put({
+                type: 'search'
+            });
         }
     },
 

@@ -43,7 +43,7 @@ export default class extends React.Component {
             record,
             visible: true
         });
-    }
+    };
 
     /**
      * 关闭模态框
@@ -55,25 +55,80 @@ export default class extends React.Component {
             record: null,
             visible: false
         });
-    }
+    };
+
+    /**
+     * 请求详细信息
+     * @param record 当前记录
+     * @returns {Promise<void>}
+     */
+    requestRecord = record => {
+        const { modelNamespace, dispatch } = this.props;
+        const {rowKey} = record;
+        return dispatch({
+            type: `${modelNamespace}/detail`,
+            payload: {
+                rowKey
+            }
+        });
+    };
+
+    /**
+     * 保存
+     * @param values 表单数据
+     */
+    submitSave = async values => {
+        const { modelNamespace, dispatch } = this.props;
+        await dispatch({
+            type: `${modelNamespace}/save`,
+            payload: {
+                values,
+                success: this.saveSuccess
+            }
+        });
+    };
+
+    saveSuccess = this.closeModel;
+
+    /**
+     * 更新
+     * @param values 表单数据
+     * @param record 原数据
+     */
+    submitUpdate = async (values, record) => {
+        const { modelNamespace, dispatch } = this.props;
+        await dispatch({
+            type: `${modelNamespace}/update`,
+            payload: {
+                values,
+                record,
+                success: this.updateSuccess
+            }
+        });
+    };
+
+    updateSuccess = this.closeModel;
 
     /**
      * 删除
      * @param {object | array} record 表单记录, 批量删除时为数组
+     * @param {function} [onDelete] 确认删除回调
      */
-    delete = record => {
+    delete = (record, onDelete) => {
         if (!record) return;
         if ($$.isArray(record) && !record.length) return;
 
         const content = `您是否要删除这${
             $$.isArray(record) ? record.length : ''
             }项？`;
-
+        if (!onDelete) {
+            onDelete = this.onDelete;
+        }
         Modal.confirm({
             title: '注意',
             content,
             onOk: () => {
-                this.props.onDelete({self: this, records: $$.isArray(record) ? record : [record]});
+                onDelete($$.isArray(record) ? record : [record]);
             },
             onCancel() {
             }
@@ -81,40 +136,65 @@ export default class extends React.Component {
     };
 
     /**
-     * 选中行
+     * 确认删除时触发
+     * @param {array} records 要删除的记录
      */
-    selectRow = (keys, rows) => this.setState({ rows })
-
-    /**
-     * 点击查询时触发
-     * @param values 查询参数
-     */
-    search = async values => {
-        const { dispatch, modelNamespace, modelState } = this.props;
-        const { pageInfo } = modelState;
-        await pageInfo.setParams(values);
+    onDelete = records => {
+        const { modelNamespace, dispatch } = this.props;
+        const recordKeys = records.map(record => record.rowKey).join();
         dispatch({
-            type: `${modelNamespace}/@change`,
+            type: `${modelNamespace}/delete`,
             payload: {
-                pageInfo
+                recordKeys,
+                records,
+                success: () => {
+                    const { rows } = this.state;
+                    // 如果操作成功，在已选择的行中，排除删除的行
+                    this.setState({
+                        rows: rows.filter(
+                            item => !records.some(jtem => jtem.rowKey === item.rowKey)
+                        )
+                    });
+                }
             }
         });
-    }
+    };
+
+    /**
+     * 选中行
+     */
+    selectRow = (keys, rows) => this.setState({ rows });
+
+    /**
+     * 修改查询参数
+     * @param values 查询参数
+     */
+    onSearch = values => {
+        const { modelState } = this.props;
+        const { pageInfo } = modelState;
+        pageInfo.setParams(values);
+        this.search();
+    };
 
     /**
      * 翻页或切换页面大小时触发
      */
-    jumpPage = async ({current, size}) => {
-        const { dispatch, modelNamespace, modelState } = this.props;
+    jumpPage = ({current, size}) => {
+        const { modelState } = this.props;
         const { pageInfo } = modelState;
-        await pageInfo.jumpPage(current, size);
+        pageInfo.jumpPage(current, size);
+        this.search();
+    };
+
+    /**
+     * 查询列表数据
+     */
+    search = () => {
+        const { dispatch, modelNamespace } = this.props;
         dispatch({
-            type: `${modelNamespace}/@change`,
-            payload: {
-                pageInfo
-            }
+            type: `${modelNamespace}/search`
         });
-    }
+    };
 
 }
 
@@ -137,30 +217,4 @@ export const isLoading = (loading, namespace) => {
         }
     }
     return false;
-}
-
-/**
- * 确认删除时触发
- * @param {object} self
- * @param {array} records
- */
-export const onDelete = ({self, records}) => {
-    const { rows } = self.state;
-    const { modelNamespace, dispatch } = self.props;
-    const rowKeys = rows.map(row => row.rowKey).join();
-    dispatch({
-        type: `${modelNamespace}/delete`,
-        payload: {
-            rowKeys,
-            records,
-            success: () => {
-                // 如果操作成功，在已选择的行中，排除删除的行
-                self.setState({
-                    rows: rows.filter(
-                        item => !records.some(jtem => jtem.rowKey === item.rowKey)
-                    )
-                });
-            }
-        }
-    });
-}
+};
