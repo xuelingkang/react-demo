@@ -1,9 +1,7 @@
 import React from 'react';
-import { InputNumber } from "antd"
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import createInputNumber from 'components/Form/model/number';
 
 export default (self, allDepts) => [
     {
