@@ -2,7 +2,7 @@ import React from 'react';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { has } from "@/utils/authority";
+import CheckResource from '@/utils/checkResource';
 
 export default (self, allDepts) => [
     {
@@ -86,19 +86,23 @@ export default (self, allDepts) => [
             width: 180,
             render: (text, record) => (
                 <DataTable.Oper>
-                    {has(
-                        'http./dept.PUT',
-                        <Button tooltip='修改'
-                                onClick={e => self.openModal('update', '更新部门', record)}>
-                            <Icon type="edit" />
-                        </Button>
-                    )}
-                    {has(
-                        'http./dept/*.DELETE',
-                        <Button tooltip='删除' onClick={e => self.delete(record)}>
-                            <Icon type="trash" />
-                        </Button>
-                    )}
+                    <CheckResource
+                        resource='http./dept.PUT'
+                        component={
+                            <Button tooltip='修改'
+                                    onClick={e => self.openModal('update', '更新部门', record)}>
+                                <Icon type="edit" />
+                            </Button>
+                        }
+                    />
+                    <CheckResource
+                        resource='http./dept/*.DELETE'
+                        component={
+                            <Button tooltip='删除' onClick={e => self.delete(record)}>
+                                <Icon type="trash" />
+                            </Button>
+                        }
+                    />
                 </DataTable.Oper>
             )
         }

@@ -8,7 +8,7 @@ import DataTable from 'components/DataTable';
 import { ModalForm } from 'components/Modal';
 import createColumns from './columns';
 import { modelNamespace } from '../constant';
-import { has } from "@/utils/authority";
+import CheckResource from '@/utils/checkResource';
 import './index.less';
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
@@ -76,22 +76,26 @@ export default class extends BaseCrudComponent {
                     <Toolbar
                         appendLeft={
                             <Button.Group>
-                                {has(
-                                    'http./dept.POST',
-                                    <Button type="primary"
-                                            icon="plus"
-                                            onClick={() => this.openModal('save', '保存部门')}>
-                                        新增
-                                    </Button>
-                                )}
-                                {has(
-                                    'http./dept/*.DELETE',
-                                    <Button disabled={!rows.length}
-                                            icon="delete"
-                                            onClick={() => this.delete(rows)}>
-                                        删除
-                                    </Button>
-                                )}
+                                <CheckResource
+                                    resource='http./dept.POST'
+                                    component={
+                                        <Button type="primary"
+                                                icon="plus"
+                                                onClick={() => this.openModal('save', '保存部门')}>
+                                            新增
+                                        </Button>
+                                    }
+                                />
+                                <CheckResource
+                                    resource='http./dept/*.DELETE'
+                                    component={
+                                        <Button disabled={!rows.length}
+                                                icon="delete"
+                                                onClick={() => this.delete(rows)}>
+                                            删除
+                                        </Button>
+                                    }
+                                />
                             </Button.Group>
                         }
                         pullDown={<SearchBar type="grid" {...searchBarProps} />}
