@@ -20,7 +20,7 @@ const Pagination = DataTable.Pagination;
 export default class extends BaseCrudComponent {
 
     modalHandlers = {
-        prevHandleRecord: {
+        prepareRecord: {
             update: this.requestRecord,
             detail: this.requestRecord
         },

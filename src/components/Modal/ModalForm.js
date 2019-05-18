@@ -11,7 +11,6 @@ class ModalForm extends Component {
         modalType: PropTypes.string,
         handlers: PropTypes.object,
         record: PropTypes.object,
-        visible: PropTypes.bool,
         columns: PropTypes.array,
         modalOpts: PropTypes.object,
         formOpts: PropTypes.object,
@@ -27,9 +26,9 @@ class ModalForm extends Component {
 
     componentDidMount() {
         const {record, handlers, modalType} = this.props;
-        const {prevHandleRecord, onSubmit, onCancel} = handlers;
-        if (prevHandleRecord && prevHandleRecord[modalType]) {
-            prevHandleRecord[modalType](record).then(result => {
+        const {prepareRecord, onSubmit, onCancel} = handlers;
+        if (prepareRecord && prepareRecord[modalType]) {
+            prepareRecord[modalType](record).then(result => {
                 this.setState({
                     record: result
                 });
@@ -77,10 +76,12 @@ class ModalForm extends Component {
     };
 
     render() {
+        console.log('render')
         const {
             title,
             className,
             columns,
+            modalType,
             modalOpts,
             formOpts,
             loading,
@@ -118,6 +119,7 @@ class ModalForm extends Component {
         const formProps = {
             ref: 'form',
             columns,
+            modalType,
             onSubmit,
             record,
             preview,

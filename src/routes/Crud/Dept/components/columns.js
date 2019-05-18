@@ -1,9 +1,28 @@
 import React from 'react';
+import { InputNumber } from "antd"
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
+import createInputNumber from 'components/Form/model/number';
 
 export default (self, allDepts) => [
+    {
+        title: '名称',
+        name: 'deptName',
+        tableItem: {},
+        formItem: {
+            default: {
+                rules: [
+                    {
+                        required: true,
+                        message: '请输入部门名称'
+                    }
+                ]
+            },
+            save: {},
+            update: {},
+        }
+    },
     {
         title: '上级部门',
         name: 'pid',
@@ -13,18 +32,17 @@ export default (self, allDepts) => [
                 codeName: dept.fullName
             }
         }),
+        tableItem: {},
         searchItem: {
             type: 'select'
         },
         formItem: {
-            type: 'select'
+            default: {
+                type: 'select'
+            },
+            save: {},
+            update: {},
         }
-    },
-    {
-        title: '名称',
-        name: 'deptName',
-        tableItem: {},
-        formItem: {}
     },
     {
         title: '全名',
@@ -44,7 +62,24 @@ export default (self, allDepts) => [
         title: '顺序',
         name: 'seq',
         tableItem: {},
-        formItem: {}
+        formItem: {
+            default: {
+                type: 'number',
+                rules: [
+                    {
+                        required: true,
+                        message: '请输入部门顺序'
+                    },
+                    {
+                        pattern: /^[1-9]\d{0,4}$/g,
+                        message: '部门顺序最小为1最大为99999'
+                    }
+                ],
+                step: 100
+            },
+            save: {},
+            update: {},
+        }
     },
     {
         title: '操作',
