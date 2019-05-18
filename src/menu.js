@@ -14,7 +14,7 @@ export default [
             {
                 name: '部门管理',
                 path: '/dept/list',
-                oneof: ['http./dept/*/*.GET']
+                resource: 'http./dept/*/*.GET'
             },
         ],
     },

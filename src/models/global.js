@@ -1,6 +1,6 @@
 import modelEnhance from '@/utils/modelEnhance';
 import menu from '../menu';
-import { hasOne, hasAll } from '@/utils/authority';
+import { has, hasOne, hasAll } from '@/utils/authority';
 
 export default modelEnhance({
     namespace: 'global',
@@ -15,7 +15,12 @@ export default modelEnhance({
             const loopMenu = (items, pitem = {}) => {
                 let result = [];
                 items.forEach(item => {
-                    const {oneof, allof} = item;
+                    const {oneof, allof, resource} = item;
+                    if (resource) {
+                        if (!has(resource)) {
+                            return;
+                        }
+                    }
                     if (oneof && oneof.length>0) {
                         if (!hasOne(oneof)) {
                             return;

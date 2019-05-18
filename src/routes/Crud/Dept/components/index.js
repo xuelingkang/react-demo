@@ -8,6 +8,7 @@ import DataTable from 'components/DataTable';
 import { ModalForm } from 'components/Modal';
 import createColumns from './columns';
 import { modelNamespace } from '../constant';
+import { has } from "@/utils/authority";
 import './index.less';
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
@@ -75,16 +76,22 @@ export default class extends BaseCrudComponent {
                     <Toolbar
                         appendLeft={
                             <Button.Group>
-                                <Button type="primary"
-                                        icon="plus"
-                                        onClick={() => this.openModal('save', '保存部门')}>
-                                    新增
-                                </Button>
-                                <Button disabled={!rows.length}
-                                        icon="delete"
-                                        onClick={() => this.delete(rows)}>
-                                    删除
-                                </Button>
+                                {has(
+                                    'http./dept.POST',
+                                    <Button type="primary"
+                                            icon="plus"
+                                            onClick={() => this.openModal('save', '保存部门')}>
+                                        新增
+                                    </Button>
+                                )}
+                                {has(
+                                    'http./dept/*.DELETE',
+                                    <Button disabled={!rows.length}
+                                            icon="delete"
+                                            onClick={() => this.delete(rows)}>
+                                        删除
+                                    </Button>
+                                )}
                             </Button.Group>
                         }
                         pullDown={<SearchBar type="grid" {...searchBarProps} />}
