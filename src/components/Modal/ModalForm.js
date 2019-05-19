@@ -25,7 +25,7 @@ class ModalForm extends Component {
     }
 
     componentDidMount() {
-        const {record, handlers, modalType} = this.props;
+        const {record, handlers, modalType, columns} = this.props;
         const {prepareRecord, onSubmit, onCancel} = handlers;
         if (prepareRecord && prepareRecord[modalType]) {
             prepareRecord[modalType](record).then(result => {
@@ -50,6 +50,17 @@ class ModalForm extends Component {
                 onCancel: onCancel['default']
             });
         }
+
+        const formColumns = columns.filter(col => col.formItem && col.formItem[modalType]).map(col => {
+            return {
+                ...col,
+                formItem: {
+                    ...col.formItem['default'],
+                    ...col.formItem[modalType]
+                }
+            }
+        });
+        this.setState({formColumns});
     }
 
     closeModal = () => {
@@ -76,7 +87,6 @@ class ModalForm extends Component {
     };
 
     render() {
-        console.log('render')
         const {
             title,
             className,
@@ -89,7 +99,7 @@ class ModalForm extends Component {
             preview
         } = this.props;
 
-        const {record, onSubmit, onCancel} = this.state;
+        const {record, onSubmit, onCancel, formColumns} = this.state;
 
         const classname = cx(className, 'antui-modalform', {'full-modal': full});
         const modalProps = {
@@ -118,8 +128,7 @@ class ModalForm extends Component {
 
         const formProps = {
             ref: 'form',
-            columns,
-            modalType,
+            columns: formColumns,
             onSubmit,
             record,
             preview,

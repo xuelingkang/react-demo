@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Form, Row, Col, Button, Divider} from 'antd';
+import { Form, Row, Col, Button, Divider } from 'antd';
 import cx from 'classnames';
 import objectAssign from 'object-assign';
 import $$ from 'cmn-utils';
 import omit from 'object.omit';
 import Password from './model/password';
-import createInputNumber from 'components/Form/model/number';
 import './style/index.less';
 
 const createForm = Form.create;
 
-const PlainComp = ({className, children}) => (
+const PlainComp = ({ className, children }) => (
     <div className={className}>{children}</div>
 );
 PlainComp.propTypes = {
@@ -30,10 +29,6 @@ class FormComp extends React.Component {
          * 详见帮助文档 column.js 用法
          */
         columns: PropTypes.array.isRequired,
-        /**
-         * 模态框类型
-         */
-        modalType: PropTypes.string.isRequired,
         /**
          * 使用record的数据对表单进行赋值 {key:value, key1: value1}, 时间类型初始值需转成moment类型
          */
@@ -99,8 +94,8 @@ class FormComp extends React.Component {
         type: 'grid',
         loading: false,
         formItemLayout: {
-            labelCol: {span: 6},
-            wrapperCol: {span: 17}
+            labelCol: { span: 6 },
+            wrapperCol: { span: 17 }
         }
     };
 
@@ -135,7 +130,7 @@ class FormComp extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {form, record, onSubmit} = this.props;
+        const { form, record, onSubmit } = this.props;
         form.validateFields((err, values) => {
             if (!err) {
                 onSubmit && onSubmit(values, record);
@@ -154,7 +149,6 @@ class FormComp extends React.Component {
             layout,
             appendTo,
             columns,
-            modalType,
             record,
             group,
             children,
@@ -180,15 +174,7 @@ class FormComp extends React.Component {
         let ComponentCol = type === 'inline' ? PlainComp : Col;
         let ComponentItem = Form.Item;
 
-        let formFields = columns.filter(col => col.formItem && col.formItem[modalType]).map(col => {
-            return {
-                ...col,
-                formItem: {
-                    ...col.formItem['default'],
-                    ...col.formItem[modalType]
-                }
-            }
-        });
+        let formFields = columns.filter(col => col.formItem);
         formFields = group
             ? formFields.filter(col => col.formItem && col.formItem.group === group)
             : formFields;
@@ -205,19 +191,19 @@ class FormComp extends React.Component {
             <Form
                 className={classname}
                 onSubmit={this.onSubmit}
-                {...objectAssign(otherProps, type === 'inline' && {layout: 'inline'})}
+                {...objectAssign(otherProps, type === 'inline' && { layout: 'inline' })}
             >
                 <ComponentRow className="row-item" {...rowopts}>
                     {formFields.map((field, i) => {
                         // 传入个性化的列大小，改变这个值可以改变每行元素的个数
-                        let col = {...colopts};
+                        let col = { ...colopts };
                         if (type === 'grid' && field.formItem.col) {
                             col = field.formItem.col;
                         } else if (type !== 'grid') {
                             col = {};
                         }
 
-                        let formItemLayout = {..._formItemLayout, ...layout};
+                        let formItemLayout = { ..._formItemLayout, ...layout };
                         if (
                             type === 'grid' &&
                             (field.formItem.formItemLayout || field.formItem.layout)
@@ -275,8 +261,8 @@ class FormComp extends React.Component {
                             case 'hidden': // 隐藏域
                                 return (
                                     <span key={`col-${i}`}>
-                                        {require(`./model/input`).default(formProps)}
-                                    </span>
+                    {require(`./model/input`).default(formProps)}
+                  </span>
                                 );
                             case 'line': // 分隔线
                                 const lineProps = omit(formProps, 'type');
