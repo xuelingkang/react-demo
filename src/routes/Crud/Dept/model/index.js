@@ -15,7 +15,7 @@ export default modelEnhance({
     subscriptions: {
         setup({ dispatch, history }) {
             history.listen(({pathname}) => {
-                if (pathname === '/dept/list') {
+                if (pathname === '/dept') {
                     dispatch({
                         type: 'init'
                     });

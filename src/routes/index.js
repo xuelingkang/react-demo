@@ -19,6 +19,12 @@ import RetrievePassword from './Sign/RetrievePassword';
 
 // 部门管理
 import Dept from './Crud/Dept';
+// 用户管理
+import User from './Crud/User';
+// 角色管理
+import Role from './Crud/Role';
+// 权限（资源）管理
+import Resource from './Crud/Resource';
 
 import Dashboard from './Dashboard';
 import Blank from './Blank';

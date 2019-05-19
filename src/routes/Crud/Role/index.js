@@ -1,8 +1,8 @@
 import {dynamicWrapper, createRoute} from '@/utils/core';
 
 const routesConfig = (app) => ({
-    path: '/dept',
-    title: '部门管理',
+    path: '/role',
+    title: '角色管理',
     component: dynamicWrapper(app, [import('./model')], () => import('./components'))
 });
 

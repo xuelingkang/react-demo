@@ -13,8 +13,23 @@ export default [
         children: [
             {
                 name: '部门管理',
-                path: '/dept/list',
+                path: '/dept',
                 resource: 'http./dept/*/*.GET'
+            },
+            {
+                name: '用户管理',
+                path: '/user',
+                resource: 'http./user/*/*.GET'
+            },
+            {
+                name: '角色管理',
+                path: '/role',
+                resource: 'http./role/*/*.GET'
+            },
+            {
+                name: '权限管理',
+                path: '/resource',
+                resource: 'http./resource/*/*.GET'
             },
         ],
     },
