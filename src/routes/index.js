@@ -77,6 +77,9 @@ const routesConfig = app => [
             Dashboard(app),
 
             Dept(app),
+            User(app),
+            Role(app),
+            Resource(app),
 
             Blank(app),
             Toolbar(app),
