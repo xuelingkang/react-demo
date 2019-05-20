@@ -5,6 +5,7 @@ import { getAuth } from '@/utils/authentication';
 import config from '@/config';
 
 const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
+export const JSON_CONTENT_TYPE = 'application/json; charset=utf-8';
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
 const notice = config.notice;
 

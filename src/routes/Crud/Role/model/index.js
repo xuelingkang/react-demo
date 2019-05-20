@@ -30,9 +30,13 @@ export default modelEnhance({
             yield put({
                 type: 'refresh'
             });
+            yield put({
+                type: 'getAllResources'
+            });
         },
         * save({payload}, {call, put}) {
             const {values, success} = payload;
+            values.resources = values.resources.map(id => ({id}));
             const {code} = yield call(save, values);
             if (code === 200) {
                 success && success();
@@ -43,6 +47,7 @@ export default modelEnhance({
         },
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
+            values.resources = values.resources.map(id => ({id}));
             const {id} = record;
             const {code} = yield call(update, {...values, id});
             if (code === 200) {
@@ -105,7 +110,7 @@ export default modelEnhance({
                 type: 'search'
             });
         },
-        * getAllResources({ payload }, { put }) {
+        * getAllResources({ payload }, { call, put }) {
             const {code, data} = yield call(findAllResources);
             if (code===200) {
                 yield put({

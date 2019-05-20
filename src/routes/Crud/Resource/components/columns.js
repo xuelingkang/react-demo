@@ -31,7 +31,7 @@ export default (self, allCategorys) => [
         },
     },
     {
-        title: '资源类别',
+        title: '权限类别',
         name: 'resourceCategory',
         dict: allCategorys.map(category => ({code: category, codeName: category})),
         tableItem: {},
@@ -40,7 +40,7 @@ export default (self, allCategorys) => [
                 rules: [
                     {
                         required: true,
-                        message: '请输入资源类别'
+                        message: '请输入权限类别'
                     }
                 ]
             },
@@ -52,7 +52,7 @@ export default (self, allCategorys) => [
         }
     },
     {
-        title: '资源pattern',
+        title: '权限pattern',
         name: 'resourcePattern',
         tableItem: {},
         formItem: {
@@ -60,7 +60,7 @@ export default (self, allCategorys) => [
                 rules: [
                     {
                         required: true,
-                        message: '请输入资源pattern'
+                        message: '请输入权限pattern'
                     }
                 ]
             },
@@ -96,7 +96,7 @@ export default (self, allCategorys) => [
         }
     },
     {
-        title: '资源顺序',
+        title: '权限顺序',
         name: 'resourceSeq',
         tableItem: {},
         formItem: {
@@ -105,11 +105,11 @@ export default (self, allCategorys) => [
                 rules: [
                     {
                         required: true,
-                        message: '请输入资源顺序'
+                        message: '请输入权限顺序'
                     },
                     {
                         pattern: /^[1-9]\d{0,4}$/g,
-                        message: '资源顺序最小为1最大为99999'
+                        message: '权限顺序最小为1最大为99999'
                     }
                 ],
                 step: 100
@@ -119,7 +119,7 @@ export default (self, allCategorys) => [
         }
     },
     {
-        title: '资源描述',
+        title: '权限描述',
         name: 'resourceDesc',
         tableItem: {},
         formItem: {
@@ -127,7 +127,7 @@ export default (self, allCategorys) => [
                 rules: [
                     {
                         required: true,
-                        message: '请输入资源描述'
+                        message: '请输入权限描述'
                     }
                 ]
             },

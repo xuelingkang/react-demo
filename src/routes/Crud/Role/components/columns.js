@@ -67,16 +67,17 @@ export default (self, allResources) => [
         }
     },
     {
-        title: '资源pattern',
+        title: '权限pattern',
         name: 'resourcesInfo',
         searchItem: {}
     },
     {
-        title: '资源',
+        title: '权限',
         name: 'resources',
         formItem: {
             default: {
-                type: 'transfertree',
+                type: 'transfer',
+                showSearch: true,
                 dataSource: allResources.map(resource => {
                     const {id, resourceDesc, resourceType, resourcePattern, resourceMethod} = resource;
                     return {
@@ -84,15 +85,16 @@ export default (self, allResources) => [
                         title: `${resourceDesc}: ${resourceType}.${resourcePattern}.${resourceMethod}`
                     }
                 }),
-                showSearch: true,
-                modal: true,
-                normalize: (value) => value.map(item => item.key)
+                rules: [
+                    {
+                        required: true,
+                        message: '请选择权限'
+                    }
+                ],
             },
-            save: {
-                targetNodes: []
-            },
+            save: {},
             update: {
-                targetNodes: []
+                normalize: (value) => value.map(item => item.id)
             }
         }
     },

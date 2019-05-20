@@ -37,11 +37,11 @@ export default class extends BaseCrudComponent {
     expandedRowRender = (record) => {
         const columns = [
             {title: '协议类型', dataIndex: 'resourceType', key: 'resourceType'},
-            {title: '资源类别', dataIndex: 'resourceCategory', key: 'resourceCategory'},
-            {title: '资源pattern', dataIndex: 'resourcePattern', key: 'resourcePattern'},
+            {title: '权限类别', dataIndex: 'resourceCategory', key: 'resourceCategory'},
+            {title: '权限pattern', dataIndex: 'resourcePattern', key: 'resourcePattern'},
             {title: '请求方法', dataIndex: 'resourceMethod', key: 'resourceMethod'},
-            {title: '资源顺序', dataIndex: 'resourceSeq', key: 'resourceSeq'},
-            {title: '资源描述', dataIndex: 'resourceDesc', key: 'resourceDesc'},
+            {title: '权限顺序', dataIndex: 'resourceSeq', key: 'resourceSeq'},
+            {title: '权限描述', dataIndex: 'resourceDesc', key: 'resourceDesc'},
         ];
         const {resources} = record;
         return <Table rowKey='id' columns={columns} dataSource={resources} pagination={false} />;
