@@ -106,7 +106,7 @@ class ModalForm extends Component {
             wrapClassName: "vertical-center-modal",
             className: classname,
             visible: this.state.visible,
-            style: {top: 20},
+            // style: {top: 20},
             title: title || (record ? '编辑' : '新增'),
             // maskClosable: true,
             destroyOnClose: true,
