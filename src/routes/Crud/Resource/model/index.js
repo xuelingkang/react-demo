@@ -28,7 +28,7 @@ export default modelEnhance({
         // 进入页面加载
         * init({payload}, {put}) {
             yield put({
-                type: 'refreshPageInfoAndAllCategorys'
+                type: 'refresh'
             });
         },
         * save({payload}, {call, put}) {
@@ -37,7 +37,7 @@ export default modelEnhance({
             if (code === 200) {
                 success && success();
                 yield put({
-                    type: 'refreshPageInfoAndAllCategorys'
+                    type: 'refresh'
                 });
             }
         },
@@ -48,7 +48,7 @@ export default modelEnhance({
             if (code === 200) {
                 success && success();
                 yield put({
-                    type: 'refreshPageInfoAndAllCategorys'
+                    type: 'refresh'
                 });
             }
         },
@@ -58,7 +58,7 @@ export default modelEnhance({
             if (code === 200) {
                 success && success();
                 yield put({
-                    type: 'refreshPageInfoAndAllCategorys'
+                    type: 'refresh'
                 });
             }
         },
@@ -71,11 +71,11 @@ export default modelEnhance({
         },
         * search({payload}, {select, put}) {
             const {pageInfo} = yield select(state => state[modelNamespace]);
-            yield pageInfo.search();
+            const pageInfo_ = yield pageInfo.search();
             yield put({
                 type: '@change',
                 payload: {
-                    pageInfo,
+                    pageInfo: pageInfo_,
                 }
             });
         },
@@ -90,7 +90,7 @@ export default modelEnhance({
                 });
             }
         },
-        * refreshPageInfoAndAllCategorys({ payload }, { put }) {
+        * refresh({ payload }, { put }) {
             yield put({
                 type: 'getAllCategorys'
             });
