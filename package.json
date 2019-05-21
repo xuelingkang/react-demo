@@ -60,5 +60,5 @@
     "last 2 versions",
     "not ie <= 10"
   ],
-  "proxy": "http://server01/"
+  "proxy": "http://localhost:8080/"
 }

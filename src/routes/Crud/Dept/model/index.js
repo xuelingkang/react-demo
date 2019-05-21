@@ -1,6 +1,6 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
-import { getAllDept, save, update, del, detail } from '../service';
+import { findAllDept, save, update, del, detail } from '../service';
 import { modelNamespace } from '../constant';
 
 export default modelEnhance({
@@ -81,7 +81,7 @@ export default modelEnhance({
         },
         // 获取所有部门列表
         *findAllDepts({ payload }, { call, put }) {
-            const { code, data } = yield call(getAllDept);
+            const { code, data } = yield call(findAllDept);
             if (code===200) {
                 yield put({
                     type: '@change',

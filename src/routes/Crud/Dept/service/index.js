@@ -1,6 +1,6 @@
 import { axiosGet, axiosPost, axiosDelete, axiosPut } from '@/utils/axios';
 
-export const getAllDept = () => axiosGet('/dept/all');
+export const findAllDept = () => axiosGet('/dept/all');
 
 export const save = payload => axiosPost('/dept', payload);
 

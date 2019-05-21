@@ -1,6 +1,7 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
-import {save, update, del, detail, findAllResources} from '../service';
+import {save, update, del, detail} from '../service';
+import {findAllResources} from "../../Resource/service";
 import {modelNamespace} from '../constant';
 
 export default modelEnhance({
