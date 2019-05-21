@@ -1,4 +1,3 @@
-import omit from 'object.omit';
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
 import {save, update, del, detail} from '../service';
@@ -43,7 +42,6 @@ export default modelEnhance({
         },
         * save({payload}, {call, put}) {
             const {values, success} = payload;
-            console.log(values);
             values.roles = values.roles.map(id => ({id}));
             const {code} = yield call(save, values);
             if (code === 200) {

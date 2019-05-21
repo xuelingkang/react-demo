@@ -58,14 +58,15 @@ export default (self, allDepts, allRoles) => [
         name: 'password',
         formItem: {
             save: {
+                type: 'password',
+                repeat: true,
                 rules: [
                     {
                         required: true,
                         message: '请输入密码'
                     }
                 ]
-            },
-            update: {}
+            }
         }
     },
     {
@@ -132,7 +133,9 @@ export default (self, allDepts, allRoles) => [
     {
         title: '生日',
         name: 'birth',
-        tableItem: {},
+        tableItem: {
+            render: text => new Date(text).format('yyyy-MM-dd')
+        },
         formItem: {
             default: {
                 type: 'date',
@@ -150,7 +153,9 @@ export default (self, allDepts, allRoles) => [
     {
         title: '登录时间',
         name: 'logintime',
-        tableItem: {}
+        tableItem: {
+            render: text => new Date(text).format('yyyy-MM-dd hh:mm')
+        }
     },
     {
         title: '角色',
