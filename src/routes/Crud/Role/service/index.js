@@ -1,10 +1,8 @@
-import { axiosGet, axiosDelete, axiosPost, axiosPut, JSON_CONTENT_TYPE } from '@/utils/axios';
+import { axiosGet, axiosDelete, axiosPost, axiosPut, JSON_HEADER } from '@/utils/axios';
 
-export const save = payload => axiosPost('/role', payload,
-    {headers: {'Content-Type': JSON_CONTENT_TYPE}});
+export const save = payload => axiosPost('/role', payload, JSON_HEADER);
 
-export const update = payload => axiosPut('/role', payload,
-    {headers: {'Content-Type': JSON_CONTENT_TYPE}});
+export const update = payload => axiosPut('/role', payload, JSON_HEADER);
 
 export const del = payload => axiosDelete('/role/{ids}', payload);
 

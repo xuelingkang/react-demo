@@ -29,8 +29,8 @@ export default class {
     params = {};
 
     jumpPage = (current, size) => {
-        this.current = current;
-        this.size = size;
+        current && (this.current = current);
+        size && (this.size = size);
         return this;
     }
 
