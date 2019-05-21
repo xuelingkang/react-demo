@@ -58,7 +58,7 @@ export default modelEnhance({
             }
         },
         * delete({payload}, {call, put}) {
-            const {recordKeys, records, success} = payload;
+            const {recordKeys, success} = payload;
             const {code} = yield call(del, {ids: recordKeys});
             if (code === 200) {
                 success && success();
