@@ -38,7 +38,7 @@ export default class extends React.Component {
      * @param {function} [prepareRecord] 预处理record的方法
      */
     openModal = async (modalType, modalTitle, record, prepareRecord) => {
-        await this.setState({
+        this.setState({
             modalType,
             modalTitle,
             record,

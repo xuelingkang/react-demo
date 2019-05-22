@@ -69,6 +69,11 @@ export default (self, allDepts, allRoles) => [
         tableItem: {},
         formItem: {
             default: {
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 8 },
+                    wrapperCol: { span: 13 }
+                },
                 rules: [
                     {
                         required: true,
@@ -87,6 +92,11 @@ export default (self, allDepts, allRoles) => [
         tableItem: {},
         formItem: {
             default: {
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 4 },
+                    wrapperCol: { span: 14 }
+                },
                 rules: [
                     {
                         required: true,
@@ -110,6 +120,11 @@ export default (self, allDepts, allRoles) => [
         formItem: {
             default: {
                 type: 'radio',
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 8 },
+                    wrapperCol: { span: 13 }
+                },
                 rules: [
                     {
                         required: true,
@@ -133,6 +148,11 @@ export default (self, allDepts, allRoles) => [
         formItem: {
             default: {
                 type: 'date',
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 4 },
+                    wrapperCol: { span: 14 }
+                },
                 rules: [
                     {
                         required: true,
