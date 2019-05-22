@@ -23,10 +23,6 @@ const Pagination = DataTable.Pagination;
 export default class extends BaseCrudComponent {
 
     modalHandlers = {
-        prepareRecord: {
-            update: this.requestRecord,
-            detail: this.requestRecord
-        },
         onSubmit: {
             save: this.submitSave,
             update: this.submitUpdate
@@ -111,7 +107,7 @@ export default class extends BaseCrudComponent {
                 <Footer>
                     <Pagination {...dataTableProps} />
                 </Footer>
-                {visible? <ModalForm {...modalFormProps} />: null}
+                <ModalForm {...modalFormProps} />
             </Layout>
         );
     }

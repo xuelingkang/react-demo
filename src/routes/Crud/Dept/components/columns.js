@@ -90,7 +90,7 @@ export default (self, allDepts) => [
                         resource='http./dept.PUT'
                         component={
                             <Button tooltip='修改'
-                                    onClick={e => self.openModal('update', '更新部门', record)}>
+                                    onClick={e => self.openModal('update', '更新部门', record, self.requestRecord)}>
                                 <Icon type="edit" />
                             </Button>
                         }

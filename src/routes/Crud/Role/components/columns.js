@@ -133,7 +133,7 @@ export default (self, allResources) => [
                         resource='http./resource.PUT'
                         component={
                             <Button tooltip='修改'
-                                    onClick={e => self.openModal('update', '更新角色', record)}>
+                                    onClick={e => self.openModal('update', '更新角色', record, self.requestRecord)}>
                                 <Icon type="edit" />
                             </Button>
                         }

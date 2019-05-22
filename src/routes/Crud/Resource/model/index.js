@@ -62,10 +62,24 @@ export default modelEnhance({
                 });
             }
         },
-        * detail({payload}, {call}) {
-            const {rowKey: id} = payload;
+        * detail({ payload }, { call, put, select }) {
+            const { pageInfo } = yield select(state => state[modelNamespace]);
+            const { rowKey: id } = payload;
             const {code, data} = yield call(detail, {id});
-            if (code === 200) {
+            if (code===200) {
+                const records = pageInfo.records.map(item => item.id===id? {
+                    ...item,
+                    ...data
+                }: item);
+                yield put({
+                    type: '@change',
+                    payload: {
+                        pageInfo: {
+                            ...pageInfo,
+                            records
+                        }
+                    }
+                });
                 return data;
             }
         },

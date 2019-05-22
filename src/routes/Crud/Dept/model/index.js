@@ -1,7 +1,7 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
-import { findAllDept, save, update, del, detail } from '../service';
-import { modelNamespace } from '../constant';
+import {findAllDept, save, update, del, detail} from '../service';
+import {modelNamespace} from '../constant';
 
 export default modelEnhance({
 
@@ -13,7 +13,7 @@ export default modelEnhance({
     },
 
     subscriptions: {
-        setup({ dispatch, history }) {
+        setup({dispatch, history}) {
             history.listen(({pathname}) => {
                 if (pathname === '/dept') {
                     dispatch({
@@ -26,51 +26,65 @@ export default modelEnhance({
 
     effects: {
         // 进入页面加载
-        *init({ payload }, { put }) {
+        * init({payload}, {put}) {
             yield put({
                 type: 'refresh'
             });
         },
-        *save({ payload }, { call, put }) {
-            const { values, success } = payload;
-            const { code } = yield call(save, values);
-            if (code===200) {
+        * save({payload}, {call, put}) {
+            const {values, success} = payload;
+            const {code} = yield call(save, values);
+            if (code === 200) {
                 success && success();
                 yield put({
                     type: 'refresh'
                 });
             }
         },
-        *update({ payload }, { call, put }) {
-            const { values, record, success } = payload;
-            const { id } = record;
-            const { code } = yield call(update, {...values, id});
-            if (code===200) {
+        * update({payload}, {call, put}) {
+            const {values, record, success} = payload;
+            const {id} = record;
+            const {code} = yield call(update, {...values, id});
+            if (code === 200) {
                 success && success();
                 yield put({
                     type: 'refresh'
                 });
             }
         },
-        *delete({ payload }, { call, put }) {
-            const { recordKeys, success } = payload;
-            const { code } = yield call(del, {ids: recordKeys});
-            if (code===200) {
+        * delete({payload}, {call, put}) {
+            const {recordKeys, success} = payload;
+            const {code} = yield call(del, {ids: recordKeys});
+            if (code === 200) {
                 success && success();
                 yield put({
                     type: 'refresh'
                 });
             }
         },
-        *detail({ payload }, { call }) {
-            const { rowKey: id } = payload;
+        * detail({payload}, {call, put, select}) {
+            const {pageInfo} = yield select(state => state[modelNamespace]);
+            const {rowKey: id} = payload;
             const {code, data} = yield call(detail, {id});
-            if (code===200) {
+            if (code === 200) {
+                const records = pageInfo.records.map(item => item.id === id ? {
+                    ...item,
+                    ...data
+                } : item);
+                yield put({
+                    type: '@change',
+                    payload: {
+                        pageInfo: {
+                            ...pageInfo,
+                            records
+                        }
+                    }
+                });
                 return data;
             }
         },
-        *search({ payload }, { select, put }) {
-            const { pageInfo } = yield select(state => state[modelNamespace]);
+        * search({payload}, {select, put}) {
+            const {pageInfo} = yield select(state => state[modelNamespace]);
             const pageInfo_ = yield pageInfo.search();
             yield put({
                 type: '@change',
@@ -80,9 +94,9 @@ export default modelEnhance({
             });
         },
         // 获取所有部门列表
-        *findAllDepts({ payload }, { call, put }) {
-            const { code, data } = yield call(findAllDept);
-            if (code===200) {
+        * findAllDepts({payload}, {call, put}) {
+            const {code, data} = yield call(findAllDept);
+            if (code === 200) {
                 yield put({
                     type: '@change',
                     payload: {
@@ -91,7 +105,7 @@ export default modelEnhance({
                 });
             }
         },
-        *refresh({ payload }, { put }) {
+        * refresh({payload}, {put}) {
             yield put({
                 type: 'findAllDepts'
             });

@@ -24,34 +24,27 @@ class ModalForm extends Component {
         };
     }
 
-    componentDidMount() {
-        const {record, handlers, modalType, columns} = this.props;
-        const {prepareRecord, onSubmit, onCancel} = handlers;
-        if (prepareRecord && prepareRecord[modalType]) {
-            prepareRecord[modalType](record).then(result => {
-                this.setState({
-                    record: result
-                });
-            })
-        }
-
+    getOnSubmitFunc = () => {
+        const {handlers, modalType} = this.props;
+        const {onSubmit} = handlers;
         if (onSubmit && onSubmit[modalType]) {
-            this.setState({
-                onSubmit: onSubmit[modalType]
-            });
+            return onSubmit[modalType];
         }
+    };
 
+    getOnCancelFunc = () => {
+        const {handlers, modalType} = this.props;
+        const {onCancel} = handlers;
         if (onCancel && onCancel[modalType]) {
-            this.setState({
-                onCancel: onCancel[modalType]
-            });
+            return onCancel[modalType];
         } else if (onCancel && onCancel[modalType] !== false && onCancel['default']) {
-            this.setState({
-                onCancel: onCancel['default']
-            });
+            return onCancel['default'];
         }
+    }
 
-        const formColumns = columns.filter(col => col.formItem && col.formItem[modalType]).map(col => {
+    getFormColumns = () => {
+        const {modalType, columns} = this.props;
+        return columns.filter(col => col.formItem && col.formItem[modalType]).map(col => {
             return {
                 ...col,
                 formItem: {
@@ -60,11 +53,10 @@ class ModalForm extends Component {
                 }
             }
         });
-        this.setState({formColumns});
     }
 
     closeModal = () => {
-        const { onCancel } = this.state;
+        const onCancel = this.getOnCancelFunc();
         if (onCancel) {
             onCancel();
             return;
@@ -75,7 +67,7 @@ class ModalForm extends Component {
     };
 
     onSubmit = () => {
-        const { record } = this.state;
+        const { record } = this.props;
         this.refs.form.validateFields((error, value) => {
             if (error) {
                 console.log(error);
@@ -89,10 +81,9 @@ class ModalForm extends Component {
     render() {
         const {
             title,
+            record,
             className,
             visible,
-            columns,
-            modalType,
             modalOpts,
             formOpts,
             loading,
@@ -100,7 +91,9 @@ class ModalForm extends Component {
             preview
         } = this.props;
 
-        const {record, onSubmit, onCancel, formColumns} = this.state;
+        const onSubmit = this.getOnSubmitFunc();
+        const onCancel = this.getOnCancelFunc();
+        const formColumns = this.getFormColumns();
 
         const classname = cx(className, 'antui-modalform', {'full-modal': full});
         const modalProps = {

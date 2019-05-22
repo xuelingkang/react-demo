@@ -35,14 +35,21 @@ export default class extends React.Component {
      * @param {string} modalType 模态框类型
      * @param {string} modalTitle 模态框标题
      * @param {object} [record] 要操作的记录
+     * @param {function} [prepareRecord] 预处理record的方法
      */
-    openModal = (modalType, modalTitle, record) => {
-        this.setState({
+    openModal = async (modalType, modalTitle, record, prepareRecord) => {
+        await this.setState({
             modalType,
             modalTitle,
             record,
             visible: true
         });
+        if (record && prepareRecord) {
+            record = await prepareRecord(record);
+            this.setState({
+                record
+            });
+        }
     };
 
     /**

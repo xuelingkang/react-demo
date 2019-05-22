@@ -73,10 +73,24 @@ export default modelEnhance({
                 });
             }
         },
-        * detail({payload}, {call}) {
-            const {rowKey: id} = payload;
+        * detail({ payload }, { call, put, select }) {
+            const { pageInfo } = yield select(state => state[modelNamespace]);
+            const { rowKey: id } = payload;
             const {code, data} = yield call(detail, {id});
-            if (code === 200) {
+            if (code===200) {
+                const records = pageInfo.records.map(item => item.id===id? {
+                    ...item,
+                    ...data
+                }: item);
+                yield put({
+                    type: '@change',
+                    payload: {
+                        pageInfo: {
+                            ...pageInfo,
+                            records
+                        }
+                    }
+                });
                 return data;
             }
         },
@@ -89,27 +103,6 @@ export default modelEnhance({
                     pageInfo: pageInfo_
                 }
             });
-        },
-        * expand({payload}, {call, select, put}) {
-            const {pageInfo} = yield select(state => state[modelNamespace]);
-            const {id} = payload;
-            const {code, data} = yield call(detail, {id});
-            if (code===200) {
-                const {roles} = data;
-                const records = pageInfo.records.map(record => record.id===id? {
-                    ...record,
-                    roles
-                }: record);
-                yield put({
-                    type: '@change',
-                    payload: {
-                        pageInfo: {
-                            ...pageInfo,
-                            records
-                        }
-                    }
-                });
-            }
         },
         * refresh({ payload }, { put }) {
             yield put({

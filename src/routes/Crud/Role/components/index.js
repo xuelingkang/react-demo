@@ -22,18 +22,6 @@ const Pagination = DataTable.Pagination;
 @Form.create()
 export default class extends BaseCrudComponent {
 
-    onExpand = (expanded, record) => {
-        if (expanded) {
-            const {dispatch} = this.props;
-            dispatch({
-                type: `${modelNamespace}/expand`,
-                payload: {
-                    id: record.id
-                }
-            });
-        }
-    };
-
     expandedRowRender = (record) => {
         const columns = [
             {title: '协议类型', dataIndex: 'resourceType', key: 'resourceType'},
@@ -48,10 +36,6 @@ export default class extends BaseCrudComponent {
     }
 
     modalHandlers = {
-        prepareRecord: {
-            update: this.requestRecord,
-            detail: this.requestRecord
-        },
         onSubmit: {
             save: this.submitSave,
             update: this.submitUpdate
@@ -74,7 +58,7 @@ export default class extends BaseCrudComponent {
 
         const dataTableProps = {
             className: "components-table-demo-nested",
-            onExpand: this.onExpand,
+            onExpand: (expanded, record) => expanded && this.requestRecord(record),
             expandedRowRender: this.expandedRowRender,
             loading,
             columns,
@@ -139,7 +123,7 @@ export default class extends BaseCrudComponent {
                 <Footer>
                     <Pagination {...dataTableProps} />
                 </Footer>
-                {visible? <ModalForm {...modalFormProps} />: null}
+                <ModalForm {...modalFormProps} />
             </Layout>
         );
     }
