@@ -134,7 +134,7 @@ export default (self, allDepts, allRoles) => [
         title: '生日',
         name: 'birth',
         tableItem: {
-            render: text => new Date(text).format('yyyy-MM-dd')
+            render: text => text? new Date(text).format('yyyy-MM-dd'): null
         },
         formItem: {
             default: {
@@ -154,7 +154,7 @@ export default (self, allDepts, allRoles) => [
         title: '登录时间',
         name: 'logintime',
         tableItem: {
-            render: text => new Date(text).format('yyyy-MM-dd hh:mm')
+            render: text => text? new Date(text).format('yyyy-MM-dd hh:mm'): null
         }
     },
     {

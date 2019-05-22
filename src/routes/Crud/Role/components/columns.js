@@ -67,6 +67,31 @@ export default (self, allResources) => [
         }
     },
     {
+        title: '新用户角色',
+        name: 'isDefault',
+        dict: [
+            {code: 1, codeName: '是'},
+            {code: 0, codeName: '否'}
+        ],
+        tableItem: {},
+        formItem: {
+            default: {
+                type: 'radio',
+                rules: [
+                    {
+                        required: true,
+                        message: '请选择是否新用户默认角色'
+                    },
+                ]
+            },
+            save: {},
+            update: {}
+        },
+        searchItem: {
+            type: 'select'
+        }
+    },
+    {
         title: '权限pattern',
         name: 'resourcesInfo',
         searchItem: {}
