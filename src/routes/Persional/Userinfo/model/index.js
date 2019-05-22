@@ -1,40 +1,47 @@
-import {modpwd} from '../service';
-import {cacheAuth, removeAuth} from '@/utils/authentication';
+import {detail, update} from '../service';
 import modelEnhance from "@/utils/modelEnhance"
 
 export default modelEnhance({
+
     namespace: 'userinfo',
 
-    effects: {
-        * modPwd({payload}, {call, put}) {
-            const {code} = yield call(modpwd, payload);
-            if (code===200) {
+    state: {
+        userinfo: {}
+    },
 
+    subscriptions: {
+        setup({dispatch, history}) {
+            history.listen(({pathname}) => {
+                if (pathname === '/userinfo') {
+                    dispatch({
+                        type: 'init'
+                    });
+                }
+            });
+        }
+    },
+
+    effects: {
+        * init({payload}, {put}) {
+            yield put({
+                type: 'detail'
+            });
+        },
+        * update({payload}, {call, put}) {
+            const {code} = yield call(update, payload);
+            if (code===200) {
+                yield put({
+                    type: 'detail'
+                });
             }
         },
-        *login({payload}, {call, put, select}) {
-            const {code, data, message} = yield call(login, payload);
-            const { remember } = yield select(state => state.login);
-            if (code === 200) {
-                const {token, authorities, user} = data;
-                cacheAuth(token, authorities, user, remember);
+        * detail({payload}, {call, put}) {
+            const {code, data} = yield call(detail);
+            if (code===200) {
                 yield put({
                     type: '@change',
                     payload: {
-                        ...payload,
-                        code,
-                        token,
-                        authorities,
-                        user
-                    }
-                });
-            } else {
-                yield put({
-                    type: '@change',
-                    payload: {
-                        ...payload,
-                        code,
-                        message
+                        userinfo: data
                     }
                 });
             }

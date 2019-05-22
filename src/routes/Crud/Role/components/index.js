@@ -58,7 +58,7 @@ export default class extends BaseCrudComponent {
 
         const dataTableProps = {
             className: "components-table-demo-nested",
-            onExpand: (expanded, record) => expanded && this.requestRecord(record),
+            onExpand: (expanded, record) => expanded && this.requestDetail(record),
             expandedRowRender: this.expandedRowRender,
             loading,
             columns,

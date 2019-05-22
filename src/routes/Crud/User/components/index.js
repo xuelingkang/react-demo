@@ -55,7 +55,7 @@ export default class extends BaseCrudComponent {
 
         const dataTableProps = {
             className: "components-table-demo-nested",
-            onExpand: (expanded, record) => expanded && this.requestRecord(record),
+            onExpand: (expanded, record) => expanded && this.requestDetail(record),
             expandedRowRender: this.expandedRowRender,
             loading,
             columns,
@@ -92,7 +92,7 @@ export default class extends BaseCrudComponent {
                                     component={
                                         <Button type="primary"
                                                 icon="plus"
-                                                onClick={() => this.openModal('save', '保存角色')}>
+                                                onClick={() => this.openModal('save', '保存用户')}>
                                             新增
                                         </Button>
                                     }

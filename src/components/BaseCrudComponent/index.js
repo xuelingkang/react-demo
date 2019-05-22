@@ -69,7 +69,7 @@ export default class extends React.Component {
      * @param record 当前记录
      * @returns {Promise<void>}
      */
-    requestRecord = record => {
+    requestDetail = record => {
         const { modelNamespace, dispatch } = this.props;
         const {rowKey} = record;
         return dispatch({
