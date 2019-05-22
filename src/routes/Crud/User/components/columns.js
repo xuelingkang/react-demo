@@ -60,12 +60,6 @@ export default (self, allDepts, allRoles) => [
             save: {
                 type: 'password',
                 repeat: true,
-                rules: [
-                    {
-                        required: true,
-                        message: '请输入密码'
-                    }
-                ]
             }
         }
     },

@@ -7,13 +7,16 @@ import './style/index.less';
 import logoImg from 'assets/images/logo.png';
 import SearchBox from './SearchBox';
 import { getAuth } from '@/utils/authentication';
+import ModPwd from './ModPwd';
 
 /**
  * 其本本局头部区域
  */
 class NavBar extends PureComponent {
   state = {
-    openSearchBox: false
+    openSearchBox: false,
+    userDropDownVisible: false,
+    modpwdVisible: false
   };
 
   static defaultProps = {
@@ -63,6 +66,30 @@ class NavBar extends PureComponent {
       openSearchBox: true
     });
   };
+
+  hideUserDropDown = () => {
+    this.setState({
+      userDropDownVisible: false
+    });
+  }
+
+  handleuserDropDownVisibleChange = visible => {
+    this.setState({
+      userDropDownVisible: visible
+    });
+  }
+
+  showModpwd = () => {
+    this.setState({
+      modpwdVisible: true
+    });
+  }
+
+  hideModpwd = () => {
+    this.setState({
+      modpwdVisible: false
+    });
+  }
 
   render() {
     const { openSearchBox } = this.state;
@@ -158,7 +185,9 @@ class NavBar extends PureComponent {
               placement="bottomRight"
               title={`WELCOME ${nickname}`}
               overlayClassName={cx('navbar-popup', { [theme]: !!theme })}
-              content={<UserDropDown />}
+              visible={this.state.userDropDownVisible}
+              onVisibleChange={this.handleuserDropDownVisibleChange}
+              content={<UserDropDown onClick={this.hideUserDropDown} showModpwd={this.showModpwd} />}
               trigger="click"
             >
               <a className="dropdown-toggle">
@@ -172,13 +201,14 @@ class NavBar extends PureComponent {
           </li>
         </ul>
         <SearchBox visible={openSearchBox} onClose={this.onCloseSearchBox} />
+        <ModPwd visible={this.state.modpwdVisible} hideModpwd={this.hideModpwd} />
       </header>
     );
   }
 }
 
 const UserDropDown = props => (
-  <ul className="dropdown-menu list-group dropdown-persist">
+  <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
     <li className="list-group-item">
       <a className="animated animated-short fadeInUp">
         <Icon type="mail" /> 信息
@@ -192,8 +222,13 @@ const UserDropDown = props => (
       </a>
     </li>
     <li className="list-group-item">
-      <a className="animated animated-short fadeInUp">
+      <Link className="animated animated-short fadeInUp" to="/userinfo">
         <Icon type="gear" /> 帐户设置
+      </Link>
+    </li>
+    <li className="list-group-item" onClick={props.showModpwd} >
+      <a className="animated animated-short fadeInUp">
+        <Icon type="password" font="iconfont" /> 修改密码
       </a>
     </li>
     <li className="list-group-item">

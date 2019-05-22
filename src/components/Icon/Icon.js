@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import AntdIcon from 'antd/lib/icon';
+import './style/index.less';
 
 /**
  * 字体图标，兼容antd的图标
