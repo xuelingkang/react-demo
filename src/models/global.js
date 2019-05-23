@@ -1,6 +1,8 @@
 import modelEnhance from '@/utils/modelEnhance';
 import menu from '../menu';
-import { has, hasOne, hasAll } from '@/utils/authority';
+import omit from 'object.omit';
+import {has, hasOne, hasAll} from '@/utils/authority';
+import {axiosGet, axiosPut, axiosPatch} from '@/utils/axios';
 
 export default modelEnhance({
     namespace: 'global',
@@ -8,10 +10,12 @@ export default modelEnhance({
     state: {
         menu: [],
         flatMenu: [],
+        userinfo: undefined,
+        message: ''
     },
 
     effects: {
-        *getMenu({payload}, {call, put}) {
+        * getMenu({payload}, {put}) {
             const loopMenu = (items, pitem = {}) => {
                 let result = [];
                 items.forEach(item => {
@@ -21,12 +25,12 @@ export default modelEnhance({
                             return;
                         }
                     }
-                    if (oneof && oneof.length>0) {
+                    if (oneof && oneof.length > 0) {
                         if (!hasOne(oneof)) {
                             return;
                         }
                     }
-                    if (allof && allof.length>0) {
+                    if (allof && allof.length > 0) {
                         if (!hasAll(allof)) {
                             return;
                         }
@@ -47,6 +51,42 @@ export default modelEnhance({
                 payload: loopMenu(menu),
             });
         },
+        * getUserinfo({payload}, {put}) {
+            const {code, data} = yield axiosGet('/userinfo');
+            if (code === 200) {
+                yield put({
+                    type: '@change',
+                    payload: {
+                        userinfo: data,
+                        message: '修改个人信息成功'
+                    }
+                });
+            }
+        },
+        * updateUserinfo({payload}, {put}) {
+            const {values, success} = payload;
+            console.log(values);
+            const {birth, headImg} = values;
+            const params = omit({
+                ...values,
+                birth: birth.valueOf(),
+                headImgId: headImg[0].id
+            }, ['headImg']);
+            const {code} = yield axiosPut('/userinfo', params);
+            if (code === 200) {
+                yield put({
+                    type: 'getUserinfo'
+                });
+                success && success();
+            }
+        },
+        * modpwd({payload}) {
+            const {values, success} = payload;
+            const {code} = yield axiosPatch('/userinfo', values);
+            if (code === 200) {
+                success && success();
+            }
+        }
     },
 
     reducers: {

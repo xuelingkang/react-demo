@@ -10,7 +10,6 @@ import pathToRegexp from 'path-to-regexp';
 import Icon from '../Icon';
 import logoImg from 'assets/images/logo.png';
 import './style/index.less';
-import { getAuth } from '@/utils/authentication';
 
 const Option = Select.Option;
 const { Sider } = Layout;
@@ -179,10 +178,10 @@ class LeftSideBar extends PureComponent {
       leftCollapsedWidth,
       showHeader,
       menu,
+      user,
       isMobile
     } = this.props;
 
-    const {user} = getAuth();
     let nickname;
     if (user) {
       nickname = user.nickname;

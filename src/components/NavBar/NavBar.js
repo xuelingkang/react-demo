@@ -1,247 +1,228 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import Icon from '../Icon';
-import { Popover, Badge, Avatar } from 'antd';
-import { Link } from 'dva/router';
+import {Popover, Badge, Avatar} from 'antd';
+import {Link} from 'dva/router';
 import cx from 'classnames';
 import './style/index.less';
 import logoImg from 'assets/images/logo.png';
 import SearchBox from './SearchBox';
-import { getAuth } from '@/utils/authentication';
-import ModPwd from './ModPwd';
 
 /**
  * 其本本局头部区域
  */
 class NavBar extends PureComponent {
-  state = {
-    openSearchBox: false,
-    userDropDownVisible: false,
-    modpwdVisible: false
-  };
+    state = {
+        openSearchBox: false,
+        userDropDownVisible: false,
+    };
 
-  static defaultProps = {
-    fixed: true,
-    theme: '' //'bg-dark',
-  };
+    static defaultProps = {
+        fixed: true,
+        theme: '' //'bg-dark',
+    };
 
-  toggleFullScreen() {
-    if (
-      !document.fullscreenElement &&
-      !document.mozFullScreenElement &&
-      !document.webkitFullscreenElement &&
-      !document.msFullscreenElement
-    ) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen(
-          Element.ALLOW_KEYBOARD_INPUT
-        );
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    }
-  }
-
-  onCloseSearchBox = () => {
-    this.setState({
-      openSearchBox: false
-    });
-  };
-
-  onOpenSearchBox = () => {
-    this.setState({
-      openSearchBox: true
-    });
-  };
-
-  hideUserDropDown = () => {
-    this.setState({
-      userDropDownVisible: false
-    });
-  }
-
-  handleuserDropDownVisibleChange = visible => {
-    this.setState({
-      userDropDownVisible: visible
-    });
-  }
-
-  showModpwd = () => {
-    this.setState({
-      modpwdVisible: true
-    });
-  }
-
-  hideModpwd = () => {
-    this.setState({
-      modpwdVisible: false
-    });
-  }
-
-  render() {
-    const { openSearchBox } = this.state;
-    const {
-      fixed,
-      theme,
-      onCollapseLeftSide,
-      collapsed,
-      onExpandTopBar,
-      toggleSidebarHeader,
-      isMobile
-    } = this.props;
-
-    const {user} = getAuth();
-    let nickname;
-    if (user) {
-      nickname = user.nickname;
+    toggleFullScreen() {
+        if (
+            !document.fullscreenElement &&
+            !document.mozFullScreenElement &&
+            !document.webkitFullscreenElement &&
+            !document.msFullscreenElement
+        ) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen(
+                    Element.ALLOW_KEYBOARD_INPUT
+                );
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
     }
 
-    const classnames = cx('navbar', {
-      'navbar-fixed-top': !!fixed,
-      'navbar-sm': isMobile ? true : collapsed,
-      ['bg-' + theme]: !!theme
-    });
+    onCloseSearchBox = () => {
+        this.setState({
+            openSearchBox: false
+        });
+    };
 
-    return (
-      <header className={classnames}>
-        <div className="navbar-branding">
-          <Link className="navbar-brand" to="/">
-            <img src={logoImg} alt="logo" />
-            <b>REACT</b>
-            中后台
-          </Link>
-          <span className="toggle_sidemenu_l" onClick={onCollapseLeftSide}>
-            <Icon type="lines" />
+    onOpenSearchBox = () => {
+        this.setState({
+            openSearchBox: true
+        });
+    };
+
+    hideUserDropDown = () => {
+        this.setState({
+            userDropDownVisible: false
+        });
+    }
+
+    handleuserDropDownVisibleChange = visible => {
+        this.setState({
+            userDropDownVisible: visible
+        });
+    }
+
+    render() {
+        const {openSearchBox} = this.state;
+        const {
+            fixed,
+            theme,
+            onCollapseLeftSide,
+            collapsed,
+            onExpandTopBar,
+            toggleSidebarHeader,
+            isMobile,
+            user = {}
+        } = this.props;
+
+        const {nickname} = user;
+
+        const classnames = cx('navbar', {
+            'navbar-fixed-top': !!fixed,
+            'navbar-sm': isMobile ? true : collapsed,
+            ['bg-' + theme]: !!theme
+        });
+
+        return (
+            <header className={classnames}>
+                <div className="navbar-branding">
+                    <Link className="navbar-brand" to="/">
+                        <img src={logoImg} alt="logo"/>
+                        <b>REACT</b>
+                        中后台
+                    </Link>
+                    <span className="toggle_sidemenu_l" onClick={onCollapseLeftSide}>
+            <Icon type="lines"/>
           </span>
-        </div>
-        <ul className="nav navbar-nav navbar-left clearfix">
-          {collapsed || isMobile ? null : (
-            <li>
-              <a className="sidebar-menu-toggle" onClick={toggleSidebarHeader}>
-                <Icon type="ruby" />
-              </a>
-            </li>
-          )}
-          <li>
-            <a onClick={onExpandTopBar}>
-              <Icon type="wand" />
-            </a>
-          </li>
-          {isMobile ? (
-            <li className="mini-search" onClick={this.onOpenSearchBox}>
-              <a>
-                <Icon type="search" antd />
-              </a>
-            </li>
-          ) : (
-            <li onClick={this.toggleFullScreen}>
-              <a className="request-fullscreen">
-                <Icon type="screen-full" />
-              </a>
-            </li>
-          )}
-        </ul>
-        {isMobile ? null : (
-          <form className="navbar-form navbar-search clearfix">
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="全文检索"
-                onClick={this.onOpenSearchBox}
-              />
-            </div>
-          </form>
-        )}
-        <ul className="nav navbar-nav navbar-right clearfix">
-          <li className="dropdown">
-            <Popover
-              placement="bottomRight"
-              title={'通知'}
-              overlayClassName={cx('navbar-popup', { [theme]: !!theme })}
-              content={''}
-              trigger="click"
-            >
-              <a className="dropdown-toggle">
-                <Icon type="radio-tower" />
-              </a>
-            </Popover>
-          </li>
-          <li className="dropdown">
-            <Popover
-              placement="bottomRight"
-              title={`WELCOME ${nickname}`}
-              overlayClassName={cx('navbar-popup', { [theme]: !!theme })}
-              visible={this.state.userDropDownVisible}
-              onVisibleChange={this.handleuserDropDownVisibleChange}
-              content={<UserDropDown onClick={this.hideUserDropDown} showModpwd={this.showModpwd} />}
-              trigger="click"
-            >
-              <a className="dropdown-toggle">
-                <Badge dot>
-                  <Avatar src={require('assets/images/avatar.png')}>
-                    {nickname}
-                  </Avatar>
-                </Badge>
-              </a>
-            </Popover>
-          </li>
-        </ul>
-        <SearchBox visible={openSearchBox} onClose={this.onCloseSearchBox} />
-        <ModPwd visible={this.state.modpwdVisible} hideModpwd={this.hideModpwd} />
-      </header>
-    );
-  }
+                </div>
+                <ul className="nav navbar-nav navbar-left clearfix">
+                    {collapsed || isMobile ? null : (
+                        <li>
+                            <a className="sidebar-menu-toggle" onClick={toggleSidebarHeader}>
+                                <Icon type="ruby"/>
+                            </a>
+                        </li>
+                    )}
+                    <li>
+                        <a onClick={onExpandTopBar}>
+                            <Icon type="wand"/>
+                        </a>
+                    </li>
+                    {isMobile ? (
+                        <li className="mini-search" onClick={this.onOpenSearchBox}>
+                            <a>
+                                <Icon type="search" antd/>
+                            </a>
+                        </li>
+                    ) : (
+                        <li onClick={this.toggleFullScreen}>
+                            <a className="request-fullscreen">
+                                <Icon type="screen-full"/>
+                            </a>
+                        </li>
+                    )}
+                </ul>
+                {isMobile ? null : (
+                    <form className="navbar-form navbar-search clearfix">
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="全文检索"
+                                onClick={this.onOpenSearchBox}
+                            />
+                        </div>
+                    </form>
+                )}
+                <ul className="nav navbar-nav navbar-right clearfix">
+                    <li className="dropdown">
+                        <Popover
+                            placement="bottomRight"
+                            title={'通知'}
+                            overlayClassName={cx('navbar-popup', {[theme]: !!theme})}
+                            content={''}
+                            trigger="click"
+                        >
+                            <a className="dropdown-toggle">
+                                <Icon type="radio-tower"/>
+                            </a>
+                        </Popover>
+                    </li>
+                    <li className="dropdown">
+                        <Popover
+                            placement="bottomRight"
+                            title={`WELCOME ${nickname}`}
+                            overlayClassName={cx('navbar-popup', {[theme]: !!theme})}
+                            visible={this.state.userDropDownVisible}
+                            onVisibleChange={this.handleuserDropDownVisibleChange}
+                            content={<UserDropDown onClick={this.hideUserDropDown} showModal={this.props.showModal}/>}
+                            trigger="click"
+                        >
+                            <a className="dropdown-toggle">
+                                <Badge dot>
+                                    <Avatar src={require('assets/images/avatar.png')}>
+                                        {nickname}
+                                    </Avatar>
+                                </Badge>
+                            </a>
+                        </Popover>
+                    </li>
+                </ul>
+                <SearchBox visible={openSearchBox} onClose={this.onCloseSearchBox}/>
+            </header>
+        );
+    }
 }
 
 const UserDropDown = props => (
-  <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
-    <li className="list-group-item">
-      <a className="animated animated-short fadeInUp">
-        <Icon type="mail" /> 信息
-        <Badge count={5} className="label" />
-      </a>
-    </li>
-    <li className="list-group-item">
-      <a className="animated animated-short fadeInUp">
-        <Icon type="users" /> 好友
-        <Badge count={6} className="label" />
-      </a>
-    </li>
-    <li className="list-group-item">
-      <Link className="animated animated-short fadeInUp" to="/userinfo">
-        <Icon type="gear" /> 帐户设置
-      </Link>
-    </li>
-    <li className="list-group-item" onClick={props.showModpwd} >
-      <a className="animated animated-short fadeInUp">
-        <Icon type="password" font="iconfont" /> 修改密码
-      </a>
-    </li>
-    <li className="list-group-item">
-      <a className="animated animated-short fadeInUp">
-        <Icon type="ring" /> 通知
-      </a>
-    </li>
-    <li className="list-group-item dropdown-footer">
-      <Link to="/sign/login">
-        <Icon type="poweroff" /> 退出
-      </Link>
-    </li>
-  </ul>
+    <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
+        <li className="list-group-item">
+            <a className="animated animated-short fadeInUp">
+                <Icon type="mail"/> 信息
+                <Badge count={5} className="label"/>
+            </a>
+        </li>
+        <li className="list-group-item">
+            <a className="animated animated-short fadeInUp">
+                <Icon type="users"/> 好友
+                <Badge count={6} className="label"/>
+            </a>
+        </li>
+        <li className="list-group-item" onClick={() => props.showModal('userinfo', '帐户设置')}>
+            <a className="animated animated-short fadeInUp">
+                <Icon type="gear"/> 帐户设置
+            </a>
+        </li>
+        <li className="list-group-item" onClick={() => props.showModal('modpwd', '修改密码')}>
+            <a className="animated animated-short fadeInUp">
+                <Icon type="password" font="iconfont"/> 修改密码
+            </a>
+        </li>
+        <li className="list-group-item">
+            <a className="animated animated-short fadeInUp">
+                <Icon type="ring"/> 通知
+            </a>
+        </li>
+        <li className="list-group-item dropdown-footer">
+            <Link to="/sign/login">
+                <Icon type="poweroff"/> 退出
+            </Link>
+        </li>
+    </ul>
 );
 
 export default NavBar;

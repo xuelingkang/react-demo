@@ -42,8 +42,9 @@ export default modelEnhance({
         },
         * save({payload}, {call, put}) {
             const {values, success} = payload;
+            const {birth} = values;
             values.roles = values.roles.map(id => ({id}));
-            const {code} = yield call(save, values);
+            const {code} = yield call(save, {...values, birth: birth.valueOf()});
             if (code === 200) {
                 success && success();
                 yield put({
@@ -53,9 +54,10 @@ export default modelEnhance({
         },
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
+            const {birth} = values;
             values.roles = values.roles.map(id => ({id}));
             const {id} = record;
-            const {code} = yield call(update, {...values, id});
+            const {code} = yield call(update, {...values, id, birth: birth.valueOf()});
             if (code === 200) {
                 success && success();
                 yield put({

@@ -18,8 +18,7 @@ export function cacheAuth(token, authorities, user, remember) {
 export function getAuth() {
     const token = cache.get(TOKEN);
     const authorities = cache.get(AUTHORITIES);
-    const user = cache.get(USER);
-    return {token, authorities, user};
+    return {token, authorities};
 }
 export function removeAuth() {
     axiosGet('/logout')

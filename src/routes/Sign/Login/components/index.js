@@ -28,8 +28,8 @@ class Login extends Component {
     };
 
     componentWillReceiveProps() {
-        const {token, authorities, user} = getAuth();
-        if (token && authorities && user) {
+        const {token, authorities} = getAuth();
+        if (token && authorities) {
             this.props.dispatch(routerRedux.replace('/'));
         }
     }

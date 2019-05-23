@@ -120,8 +120,8 @@ export default class Register extends Component {
     const { getFieldDecorator } = form;
     const { help, visible } = this.state;
 
-    const {token, authorities, user} = getAuth();
-    if (token && authorities && user) {
+    const {token, authorities} = getAuth();
+    if (token && authorities) {
       return <Success />;
     }
     return (

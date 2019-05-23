@@ -2,6 +2,7 @@ import React from 'react';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
+import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
 
 export default (self, allDepts, allRoles) => [
@@ -143,7 +144,7 @@ export default (self, allDepts, allRoles) => [
         title: '生日',
         name: 'birth',
         tableItem: {
-            render: text => text? new Date(text).format('yyyy-MM-dd'): null
+            render: text => text? moment(text).format('YYYY-MM-DD'): null
         },
         formItem: {
             default: {
@@ -168,7 +169,7 @@ export default (self, allDepts, allRoles) => [
         title: '登录时间',
         name: 'logintime',
         tableItem: {
-            render: text => text? new Date(text).format('yyyy-MM-dd hh:mm'): null
+            render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
         }
     },
     {

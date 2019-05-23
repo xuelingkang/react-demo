@@ -282,9 +282,15 @@ class FormComp extends React.Component {
                                 );
                             default:
                                 // 通用
-                                FieldComp = require(`./model/${fieldType.toLowerCase()}`).default(
-                                    formProps
-                                );
+                                try {
+                                    FieldComp = require(`./model/${fieldType.toLowerCase()}`).default(
+                                        formProps
+                                    );
+                                } catch (e) {
+                                    FieldComp = require(`./model/${fieldType.toLowerCase()}/index`).default(
+                                        formProps
+                                    );
+                                }
                         }
 
                         return (
