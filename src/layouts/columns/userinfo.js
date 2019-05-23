@@ -1,4 +1,6 @@
-export default [
+import {message} from 'antd';
+
+export default self => [
     {
         title: '原密码',
         name: 'password',
@@ -133,11 +135,26 @@ export default [
                         message: '请上传头像'
                     }
                 ],
-                maxFileSize: 10240, // 最大限制 kb
-                fileTypes: ['.png', '.jpg', '.gif'], // 允许类型
-                max: 1,
                 action: '/file/head/1',
-                fileName: 'file'
+                fileName: 'file',
+                onChange: (form, info) => {
+                    if (info.file.status === 'uploading') {
+                        self.setState({modalLoading: true});
+                    } else if (info.file.status === 'done') {
+                        self.setState({modalLoading: false});
+                    }
+                },
+                beforeUpload: file => {
+                    const isJPG = file.type === 'image/jpeg';
+                    if (!isJPG) {
+                        message.error('只支持JPG图片');
+                    }
+                    const isLt10M = file.size / 1024 / 1024 < 10;
+                    if (!isLt10M) {
+                        message.error('图片必须小于10M');
+                    }
+                    return isJPG && isLt10M;
+                }
             }
         }
     },

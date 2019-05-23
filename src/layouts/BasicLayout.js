@@ -55,7 +55,8 @@ export default class BasicLayout extends React.PureComponent {
             isMobile: false,
             modalVisible: false,
             modalType: '',
-            modalTitle: ''
+            modalTitle: '',
+            modalLoading: false
         };
 
         props.dispatch({
@@ -251,7 +252,8 @@ export default class BasicLayout extends React.PureComponent {
             isMobile,
             modalVisible,
             modalTitle,
-            modalType
+            modalType,
+            modalLoading
         } = this.state;
         const {routerData, location, global} = this.props;
         const {userinfo={}} = global;
@@ -271,8 +273,9 @@ export default class BasicLayout extends React.PureComponent {
             visible: modalVisible,
             title: modalTitle,
             modalType: modalType,
+            loading: modalLoading,
             record: userinfo,
-            columns: userinfoColumns,
+            columns: userinfoColumns(this),
             modalOpts: {
                 width: 700
             },

@@ -70,14 +70,14 @@ export default modelEnhance({
             const params = omit({
                 ...values,
                 birth: birth.valueOf(),
-                headImgId: headImg[0].id
+                headImgId: headImg.id
             }, ['headImg']);
             const {code} = yield axiosPut('/userinfo', params);
             if (code === 200) {
+                success && success();
                 yield put({
                     type: 'getUserinfo'
                 });
-                success && success();
             }
         },
         * modpwd({payload}) {

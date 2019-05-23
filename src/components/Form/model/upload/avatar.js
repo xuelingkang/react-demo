@@ -1,24 +1,26 @@
 import React from 'react';
-import {Icon, message} from 'antd';
-import omit from "object.omit";
+import {Icon} from 'antd';
 import $$ from "cmn-utils/lib";
 import Upload from 'components/Upload';
 import './avatar.less';
 
-export default ({
-                    form,
-                    name,
-                    formFieldOptions = {},
-                    record,
-                    initialValue,
-                    normalize,
-                    rules,
-                    maxFileSize, // 最大文件大小
-                    fileTypes, // 允许文件类型
-                    action,    // 后台地址
-                    fileName,  // 后台接受文件的参数名
-                    ...otherProps
-                }) => {
+export default
+({
+    form,
+    name,
+    formFieldOptions = {},
+    record,
+    initialValue,
+    normalize,
+    rules,
+    maxFileSize, // 最大文件大小
+    fileTypes, // 允许文件类型
+    action,    // 后台地址
+    fileName,  // 后台接受文件的参数名
+    onChange,
+    loading,
+    ...otherProps
+}) => {
     const {getFieldDecorator} = form;
 
     let initval = initialValue;
@@ -51,36 +53,13 @@ export default ({
         formFieldOptions.rules = rules;
     }
 
-    if (maxFileSize || fileTypes) {
-        formFieldOptions.rules = [
-            {
-                validator: (rule, value, callback) => {
-                    if (value) {
-                        const sizeMsg = validatorFileSize(maxFileSize, value);
-                        if (sizeMsg) {
-                            callback(sizeMsg);
-                            return false;
-                        }
-                        const typeMsg = validatorFileTypes(fileTypes, value);
-                        if (typeMsg) {
-                            callback(typeMsg);
-                            return false;
-                        }
-                    }
-                    callback();
-                }
-            },
-            ...(formFieldOptions.rules || [])
-        ];
-    }
-
     let uploadProps = {}
 
-    // 直接上传到后台
     if (action) {
-        uploadProps = omit(otherProps, ['beforeUpload']);
+        uploadProps = otherProps;
         uploadProps.action = action;
         uploadProps.name = fileName || 'file';
+        uploadProps.onChange = onChange && (info => onChange(form, info)) || (info => info)
     }
 
     return getFieldDecorator(name, {
@@ -92,62 +71,39 @@ export default ({
     );
 }
 
-const validatorFileSize = (maxFileSize, value) => {
-    if (value.some(item => item.size > maxFileSize * 1024)) {
-        return `请上传文件大小在${maxFileSize}K以内的图片`;
-    }
-};
-
-const validatorFileTypes = (fileTypes, value) => {
-    if ($$.isArray(fileTypes) && fileTypes.length > 0) {
-        if (
-            value.some(
-                item =>
-                    item.name &&
-                    !fileTypes.some(
-                        type => item.name.toLowerCase().indexOf(type.toLowerCase()) !== -1
-                    )
-            )
-        ) {
-            return `请上传${fileTypes.join('、')}，类型文件`;
+const normFile = info => {
+    if (info.file.status === 'done') {
+        const {code, data} = info.file.response;
+        if (code===200) {
+            return data;
         }
     }
-};
-
-const normFile = e => {
-    console.log(e);
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e && e.fileList;
 };
 
 class Avatar extends React.Component {
+
     state = {
-        loading: false,
-    };
+        imageUrl: ''
+    }
 
     handleChange = info => {
-        if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
-        } else if (info.file.status === 'done') {
-            const { code, data } = info.file.response;
-            const { attachmentAddress: imageUrl } = data;
-            if (code===200) {
-                this.setState({
-                    imageUrl,
-                    loading: false
-                });
+        if (info.file.status === 'done') {
+            const {code, data} = info.file.response;
+            const {attachmentAddress: imageUrl} = data;
+            if (code === 200) {
+                this.setState({imageUrl});
             }
         }
+        const {onChange} = this.props;
+        onChange && onChange(info);
     };
 
     render() {
-        const {action, name, fileList, title, onChange} = this.props;
-        let {loading, imageUrl} = this.state;
+        const {action, name, fileList, title, loading, beforeUpload} = this.props;
+        let {imageUrl} = this.state;
         const uploadButton = (
             <div>
-                <Icon type={loading ? 'loading' : 'plus'} />
+                <Icon type={loading ? 'loading' : 'plus'}/>
                 <div className="ant-upload-text">{title}</div>
             </div>
         );
@@ -162,8 +118,9 @@ class Avatar extends React.Component {
                 name={name}
                 action={action}
                 onChange={this.handleChange}
+                beforeUpload={beforeUpload}
             >
-                {imageUrl ? <img src={imageUrl} alt='avatar' style={{width: '100%'}} /> : uploadButton}
+                {imageUrl ? <img src={imageUrl} alt='avatar' style={{width: '100%'}}/> : uploadButton}
             </Upload>
         );
     }
