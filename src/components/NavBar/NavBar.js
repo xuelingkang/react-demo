@@ -89,7 +89,10 @@ class NavBar extends PureComponent {
         } = this.props;
 
         const {nickname, headImg={}} = user;
-        const {attachmentAddress} = headImg;
+        let attachmentAddress;
+        if (headImg) {
+            attachmentAddress = headImg.attachmentAddress;
+        }
 
         const classnames = cx('navbar', {
             'navbar-fixed-top': !!fixed,
