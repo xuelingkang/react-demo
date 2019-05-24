@@ -16,8 +16,6 @@ import Login from './Sign/Login';
 import Register from './Sign/Register';
 // 找回密码
 import RetrievePassword from './Sign/RetrievePassword';
-// 个人信息
-import Userinfo from './Persional/Userinfo';
 
 // 部门管理
 import Dept from './Crud/Dept';
@@ -77,8 +75,6 @@ const routesConfig = app => [
         indexRoute: '/dashboard',
         childRoutes: [
             Dashboard(app),
-
-            Userinfo(app),
 
             Dept(app),
             User(app),

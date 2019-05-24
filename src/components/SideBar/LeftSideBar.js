@@ -178,14 +178,8 @@ class LeftSideBar extends PureComponent {
       leftCollapsedWidth,
       showHeader,
       menu,
-      user,
       isMobile
     } = this.props;
-
-    let nickname;
-    if (user) {
-      nickname = user.nickname;
-    }
 
     const classnames = cx('sidebar-left', 'sidebar-default', {
       affix: !!fixed,
@@ -220,38 +214,6 @@ class LeftSideBar extends PureComponent {
         trigger={null}
       >
         <div className="sidebar-left-content">
-          <header className="sidebar-header">
-            <div className="userlogged clearfix">
-              <Icon type="man" />
-              <div className="user-details">
-                <span>{nickname}</span>
-                <div className="dropdown">
-                  <Select
-                    size="small"
-                    defaultValue="online"
-                    dropdownClassName="sidebar-header-dropdown"
-                  >
-                    <Option value="online">
-                      <span className="user online" />
-                      在线
-                    </Option>
-                    <Option value="busy">
-                      <span className="user busy" />
-                      忙碌
-                    </Option>
-                    <Option value="invisible">
-                      <span className="user invisible" />
-                      隐身
-                    </Option>
-                    <Option value="offline">
-                      <span className="user offline" />
-                      离线
-                    </Option>
-                  </Select>
-                </div>
-              </div>
-            </div>
-          </header>
           <Menu
             onClick={this.handleClick}
             inlineCollapsed={collapsed}

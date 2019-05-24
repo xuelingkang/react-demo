@@ -1,11 +1,12 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import {Icon} from 'antd';
 import $$ from "cmn-utils/lib";
 import Upload from 'components/Upload';
 import './avatar.less';
 
-export default
-({
+
+export default ({
     form,
     name,
     formFieldOptions = {},
@@ -19,6 +20,7 @@ export default
     action,    // 后台地址
     fileName,  // 后台接受文件的参数名
     onChange,
+    loading,
     ...otherProps
 }) => {
     const {getFieldDecorator} = form;
@@ -66,8 +68,8 @@ class Avatar extends React.Component {
         const {action, name, imageFile={}, title, loading, beforeUpload, onChange} = this.props;
         const uploadButton = (
             <div>
-                <Icon type={loading==='true' ? 'loading' : 'plus'} />
-                <div className="ant-upload-text">{loading==='true' ? '上传中' : title}</div>
+                <Icon type={loading ? 'loading' : 'plus'} />
+                <div className="ant-upload-text">{loading ? '上传中' : title}</div>
             </div>
         );
         const {thumbUrl} = imageFile;
@@ -81,7 +83,7 @@ class Avatar extends React.Component {
                 onChange={onChange}
                 beforeUpload={beforeUpload}
             >
-                {loading==='true'||!thumbUrl ? uploadButton: <img src={thumbUrl} alt='avatar' className='avatar-image' />}
+                {loading||!thumbUrl ? uploadButton: <img src={thumbUrl} alt='avatar' className='avatar-image' />}
             </Upload>
         );
     }

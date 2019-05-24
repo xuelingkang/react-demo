@@ -10,8 +10,8 @@ export default modelEnhance({
     state: {
         menu: [],
         flatMenu: [],
-        userinfo: undefined,
-        message: ''
+        userinfo: {},
+        structure: [],
     },
 
     effects: {
@@ -57,8 +57,18 @@ export default modelEnhance({
                 yield put({
                     type: '@change',
                     payload: {
-                        userinfo: data,
-                        message: '修改个人信息成功'
+                        userinfo: data
+                    }
+                });
+            }
+        },
+        * getStructure({payload}, {put}) {
+            const {code, data} = yield axiosGet('/dept/structure');
+            if (code===200) {
+                yield put({
+                    type: '@change',
+                    payload: {
+                        structure: data
                     }
                 });
             }

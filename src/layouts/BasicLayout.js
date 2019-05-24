@@ -47,7 +47,6 @@ export default class BasicLayout extends React.PureComponent {
         this.state = {
             collapsedLeftSide: false, // 左边栏开关控制
             leftCollapsedWidth: 60, // 左边栏宽度
-            expandTopBar: false, // 头部多功能区开合
             showSidebarHeader: false, // 左边栏头部开关
             collapsedRightSide: true, // 右边栏开关
             theme, // 皮肤设置
@@ -64,6 +63,9 @@ export default class BasicLayout extends React.PureComponent {
         });
         props.dispatch({
             type: 'global/getUserinfo'
+        });
+        props.dispatch({
+            type: 'global/getStructure'
         });
     }
 
@@ -146,24 +148,6 @@ export default class BasicLayout extends React.PureComponent {
     };
 
     /**
-     * 展开面包屑所在条中的多功能区
-     */
-    onExpandTopBar = _ => {
-        this.setState({
-            expandTopBar: true
-        });
-    };
-
-    /**
-     * 与上面相反
-     */
-    onCollapseTopBar = _ => {
-        this.setState({
-            expandTopBar: false
-        });
-    };
-
-    /**
      * 切换左边栏中头部的开合
      */
     toggleSidebarHeader = _ => {
@@ -206,6 +190,10 @@ export default class BasicLayout extends React.PureComponent {
         });
     }
 
+    onSelectTreeNode = () => {
+
+    }
+
     modalHandlers = {
         onSubmit: {
             modpwd: async values => {
@@ -244,7 +232,6 @@ export default class BasicLayout extends React.PureComponent {
         const {
             collapsedLeftSide,
             leftCollapsedWidth,
-            expandTopBar,
             showSidebarHeader,
             collapsedRightSide,
             theme,
@@ -256,7 +243,7 @@ export default class BasicLayout extends React.PureComponent {
             modalLoading
         } = this.state;
         const {routerData, location, global} = this.props;
-        const {userinfo={}} = global;
+        const {userinfo={}, structure=[]} = global;
         const {menu, flatMenu} = global;
         const {childRoutes} = routerData;
         const classnames = cx('basic-layout', 'full-layout', {
@@ -288,12 +275,12 @@ export default class BasicLayout extends React.PureComponent {
                     <NavBar
                         collapsed={collapsedLeftSide}
                         onCollapseLeftSide={this.onCollapseLeftSide}
-                        onExpandTopBar={this.onExpandTopBar}
                         toggleSidebarHeader={this.toggleSidebarHeader}
                         theme={theme.navbar}
                         user={userinfo}
                         isMobile={isMobile}
                         showModal={this.showModal}
+                        onCollapse={this.toggleRightSide}
                     />
                 </Header>
                 <Layout>
@@ -318,10 +305,6 @@ export default class BasicLayout extends React.PureComponent {
                             <Layout className="full-layout">
                                 <Header>
                                     <TopBar
-                                        expand={expandTopBar}
-                                        toggleRightSide={this.toggleRightSide}
-                                        collapsedRightSide={collapsedRightSide}
-                                        onCollapse={this.onCollapseTopBar}
                                         currentMenu={currentMenu}
                                         location={location}
                                         theme={theme}
@@ -336,7 +319,9 @@ export default class BasicLayout extends React.PureComponent {
                     <RightSideBar
                         collapsed={collapsedRightSide}
                         isMobile={isMobile}
+                        theme={theme.leftSide}
                         onCollapse={this.toggleRightSide}
+                        structure={structure}
                     />
                 </Layout>
                 <SkinToolbox onChangeTheme={this.onChangeTheme} theme={theme}/>

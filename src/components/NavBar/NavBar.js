@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import Icon from '../Icon';
-import {Popover, Badge, Avatar} from 'antd';
+import {Popover, Avatar} from 'antd';
 import {Link} from 'dva/router';
 import cx from 'classnames';
 import './style/index.less';
@@ -83,13 +83,13 @@ class NavBar extends PureComponent {
             theme,
             onCollapseLeftSide,
             collapsed,
-            onExpandTopBar,
-            toggleSidebarHeader,
             isMobile,
+            onCollapse,
             user = {}
         } = this.props;
 
-        const {nickname} = user;
+        const {nickname, headImg={}} = user;
+        const {attachmentAddress} = headImg;
 
         const classnames = cx('navbar', {
             'navbar-fixed-top': !!fixed,
@@ -110,18 +110,6 @@ class NavBar extends PureComponent {
           </span>
                 </div>
                 <ul className="nav navbar-nav navbar-left clearfix">
-                    {collapsed || isMobile ? null : (
-                        <li>
-                            <a className="sidebar-menu-toggle" onClick={toggleSidebarHeader}>
-                                <Icon type="ruby"/>
-                            </a>
-                        </li>
-                    )}
-                    <li>
-                        <a onClick={onExpandTopBar}>
-                            <Icon type="wand"/>
-                        </a>
-                    </li>
                     {isMobile ? (
                         <li className="mini-search" onClick={this.onOpenSearchBox}>
                             <a>
@@ -162,6 +150,11 @@ class NavBar extends PureComponent {
                             </a>
                         </Popover>
                     </li>
+                    <li>
+                        <a onClick={onCollapse}>
+                            <Icon type="users" />
+                        </a>
+                    </li>
                     <li className="dropdown">
                         <Popover
                             placement="bottomRight"
@@ -173,11 +166,9 @@ class NavBar extends PureComponent {
                             trigger="click"
                         >
                             <a className="dropdown-toggle">
-                                <Badge dot>
-                                    <Avatar src={require('assets/images/avatar.png')}>
-                                        {nickname}
-                                    </Avatar>
-                                </Badge>
+                                <Avatar src={attachmentAddress} alt='头像'>
+                                    {nickname}
+                                </Avatar>
                             </a>
                         </Popover>
                     </li>
@@ -190,18 +181,6 @@ class NavBar extends PureComponent {
 
 const UserDropDown = props => (
     <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
-        <li className="list-group-item">
-            <a className="animated animated-short fadeInUp">
-                <Icon type="mail"/> 信息
-                <Badge count={5} className="label"/>
-            </a>
-        </li>
-        <li className="list-group-item">
-            <a className="animated animated-short fadeInUp">
-                <Icon type="users"/> 好友
-                <Badge count={6} className="label"/>
-            </a>
-        </li>
         <li className="list-group-item" onClick={() => props.showModal('userinfo', '帐户设置')}>
             <a className="animated animated-short fadeInUp">
                 <Icon type="gear"/> 帐户设置
@@ -210,11 +189,6 @@ const UserDropDown = props => (
         <li className="list-group-item" onClick={() => props.showModal('modpwd', '修改密码')}>
             <a className="animated animated-short fadeInUp">
                 <Icon type="password" font="iconfont"/> 修改密码
-            </a>
-        </li>
-        <li className="list-group-item">
-            <a className="animated animated-short fadeInUp">
-                <Icon type="ring"/> 通知
             </a>
         </li>
         <li className="list-group-item dropdown-footer">

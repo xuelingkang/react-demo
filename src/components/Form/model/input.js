@@ -55,6 +55,7 @@ export default ({
   const Comp = type === 'textarea' ? TextArea : Input;
 
   delete otherProps.render;
+  delete otherProps.loading;
 
   const props = {
     autoComplete: 'off',

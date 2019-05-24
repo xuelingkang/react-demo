@@ -225,7 +225,7 @@ class FormComp extends React.Component {
                             title: field.title,
                             record,
                             preview,
-                            loading: loading? 'true': 'false',
+                            loading,
                             ...field.formItem
                         };
 
