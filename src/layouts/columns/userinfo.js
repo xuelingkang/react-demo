@@ -1,6 +1,6 @@
 import {message} from 'antd';
 
-export default self => [
+export default (self) => [
     {
         title: '原密码',
         name: 'password',
@@ -122,13 +122,11 @@ export default self => [
         formItem: {
             userinfo: {
                 type: 'upload/avatar',
-                normalize: value => [
-                    {
-                        ...value,
-                        uid: `fs_${value.id}`,
-                        thumbUrl: value.attachmentAddress
-                    }
-                ],
+                normalize: value => ({
+                    ...value,
+                    uid: `fs_${value.id}`,
+                    thumbUrl: value.attachmentAddress
+                }),
                 rules: [
                     {
                         required: true,
@@ -144,16 +142,25 @@ export default self => [
                         self.setState({modalLoading: false});
                     }
                 },
+                getValueFromEvent: info => {
+                    if (info.file.status === 'done') {
+                        const {code, data} = info.file.response;
+                        if (code===200) {
+                            return {...data, uid: `fs_${data.id}`, thumbUrl: data.attachmentAddress};
+                        }
+                    }
+                    return {};
+                },
                 beforeUpload: file => {
-                    const isJPG = file.type === 'image/jpeg';
-                    if (!isJPG) {
-                        message.error('只支持JPG图片');
+                    const validType = file.type === 'image/jpeg' || file.type === 'image/png';
+                    if (!validType) {
+                        message.error('请上传JPG、PNG图片');
                     }
                     const isLt10M = file.size / 1024 / 1024 < 10;
                     if (!isLt10M) {
                         message.error('图片必须小于10M');
                     }
-                    return isJPG && isLt10M;
+                    return validType && isLt10M;
                 }
             }
         }

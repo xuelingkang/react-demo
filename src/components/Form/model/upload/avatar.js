@@ -12,13 +12,13 @@ export default
     record,
     initialValue,
     normalize,
+    getValueFromEvent,
     rules,
     maxFileSize, // 最大文件大小
     fileTypes, // 允许文件类型
     action,    // 后台地址
     fileName,  // 后台接受文件的参数名
     onChange,
-    loading,
     ...otherProps
 }) => {
     const {getFieldDecorator} = form;
@@ -34,17 +34,7 @@ export default
         if ($$.isFunction(normalize)) {
             formFieldOptions.initialValue = normalize(initval);
         } else {
-            formFieldOptions.initialValue = $$.isArray(initval)
-                ? initval.map((item, index) => ({
-                    uid: 'fs_' + index,
-                    thumbUrl: item
-                }))
-                : [
-                    {
-                        uid: 'fs_0',
-                        thumbUrl: record[name]
-                    }
-                ];
+            formFieldOptions.initialValue = {uid: 'fs_0', thumbUrl: record[name]}
         }
     }
 
@@ -63,53 +53,24 @@ export default
     }
 
     return getFieldDecorator(name, {
-        valuePropName: 'fileList',
-        getValueFromEvent: normFile,
+        valuePropName: 'imageFile',
+        getValueFromEvent,
         ...formFieldOptions
     })(
         <Avatar {...uploadProps} />
     );
 }
 
-const normFile = info => {
-    if (info.file.status === 'done') {
-        const {code, data} = info.file.response;
-        if (code===200) {
-            return data;
-        }
-    }
-};
-
 class Avatar extends React.Component {
-
-    state = {
-        imageUrl: ''
-    }
-
-    handleChange = info => {
-        if (info.file.status === 'done') {
-            const {code, data} = info.file.response;
-            const {attachmentAddress: imageUrl} = data;
-            if (code === 200) {
-                this.setState({imageUrl});
-            }
-        }
-        const {onChange} = this.props;
-        onChange && onChange(info);
-    };
-
     render() {
-        const {action, name, fileList, title, loading, beforeUpload} = this.props;
-        let {imageUrl} = this.state;
+        const {action, name, imageFile={}, title, loading, beforeUpload, onChange} = this.props;
         const uploadButton = (
             <div>
-                <Icon type={loading ? 'loading' : 'plus'}/>
-                <div className="ant-upload-text">{title}</div>
+                <Icon type={loading==='true' ? 'loading' : 'plus'} />
+                <div className="ant-upload-text">{loading==='true' ? '上传中' : title}</div>
             </div>
         );
-        if (!imageUrl && fileList) {
-            imageUrl = fileList[0].thumbUrl;
-        }
+        const {thumbUrl} = imageFile;
         return (
             <Upload
                 listType='picture-card'
@@ -117,10 +78,10 @@ class Avatar extends React.Component {
                 showUploadList={false}
                 name={name}
                 action={action}
-                onChange={this.handleChange}
+                onChange={onChange}
                 beforeUpload={beforeUpload}
             >
-                {imageUrl ? <img src={imageUrl} alt='avatar' style={{width: '100%'}}/> : uploadButton}
+                {loading==='true'||!thumbUrl ? uploadButton: <img src={thumbUrl} alt='avatar' className='avatar-image' />}
             </Upload>
         );
     }

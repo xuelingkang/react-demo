@@ -125,6 +125,7 @@ class ModalForm extends Component {
             columns: formColumns,
             onSubmit,
             record,
+            loading,
             preview,
             footer: false,
             formItemLayout: {

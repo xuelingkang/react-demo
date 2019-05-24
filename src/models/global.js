@@ -65,7 +65,6 @@ export default modelEnhance({
         },
         * updateUserinfo({payload}, {put}) {
             const {values, success} = payload;
-            console.log(values);
             const {birth, headImg} = values;
             const params = omit({
                 ...values,
