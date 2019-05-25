@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import {Icon} from 'antd';
+import Icon from 'components/Icon';
 import $$ from "cmn-utils/lib";
 import Upload from 'components/Upload';
 import './avatar.less';
@@ -68,7 +68,7 @@ class Avatar extends React.Component {
         const {action, name, imageFile={}, title, loading, beforeUpload, onChange} = this.props;
         const uploadButton = (
             <div>
-                <Icon type={loading ? 'loading' : 'plus'} />
+                {loading? <Icon type='loading' font='iconfont' />: <Icon type='plus' />}
                 <div className="ant-upload-text">{loading ? '上传中' : title}</div>
             </div>
         );

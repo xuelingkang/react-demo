@@ -6,6 +6,12 @@ export default [
         path: '/dashboard',
     },
     {
+        name: '邮件管理',
+        icon: 'mail',
+        path: '/mail',
+        resource: 'http./mail/*/*.GET'
+    },
+    {
         name: '系统管理',
         icon: 'desktop',
         path: '/system',
