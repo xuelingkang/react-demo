@@ -2,11 +2,12 @@ import axios from 'axios';
 import qs from 'qs';
 
 import { getAuth } from '@/utils/authentication';
+import saveBlob from '@/utils/saveBlob';
 import config from '@/config';
 
 const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
 const JSON_CONTENT_TYPE = 'application/json; charset=utf-8';
-export const JSON_HEADER = {headers: {'Content-Type': JSON_CONTENT_TYPE}};
+const JSON_HEADER = {headers: {'Content-Type': JSON_CONTENT_TYPE}};
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
 const notice = config.notice;
 
@@ -59,7 +60,7 @@ const handlePathVariable = ({url, params}) => {
     return url;
 }
 
-async function axiosGet(url, params, config) {
+const axiosGet = async (url, params, config) => {
     url = handlePathVariable({url, params});
     return instance.get(url, {
         params,
@@ -67,7 +68,7 @@ async function axiosGet(url, params, config) {
     });
 }
 
-async function axiosDelete(url, params, config) {
+const axiosDelete = async (url, params, config) => {
     url = handlePathVariable({url, params});
     return instance.delete(url, {
         params,
@@ -75,7 +76,7 @@ async function axiosDelete(url, params, config) {
     });
 }
 
-async function axiosHead(url, params, config) {
+const axiosHead = async (url, params, config) => {
     url = handlePathVariable({url, params});
     return instance.head(url, {
         params,
@@ -83,19 +84,29 @@ async function axiosHead(url, params, config) {
     });
 }
 
-async function axiosPost(url, params, config) {
+const axiosPost = (url, params, config) => {
     url = handlePathVariable({url, params});
     return instance.post(url, params, config);
 }
 
-async function axiosPut(url, params, config) {
+const axiosPut = async (url, params, config) => {
     url = handlePathVariable({url, params});
     return instance.put(url, params, config);
 }
 
-async function axiosPatch(url, params, config) {
+const axiosPatch = async (url, params, config) => {
     url = handlePathVariable({url, params});
     return instance.patch(url, params, config);
 }
 
-export { axiosGet, axiosDelete, axiosHead, axiosPost, axiosPut, axiosPatch };
+const axiosDownload = async url => {
+    const filename = url.split('/').reverse()[0];
+    const {status, data} = await axios.get(url, {responseType: 'blob'});
+    if (status===200) {
+        saveBlob(data, filename);
+    } else {
+        notice.error('下载文件出错');
+    }
+}
+
+export { axiosGet, axiosDelete, axiosHead, axiosPost, axiosPut, axiosPatch, axiosDownload, JSON_HEADER };

@@ -130,7 +130,7 @@ export default (self, allResources) => [
             render: (text, record) => (
                 <DataTable.Oper>
                     <CheckResource
-                        resource='http./resource.PUT'
+                        resource='http./role.PUT'
                         component={
                             <Button tooltip='修改'
                                     onClick={e => self.openModal('update', '更新角色', record, self.requestDetail)}>
@@ -139,7 +139,7 @@ export default (self, allResources) => [
                         }
                     />
                     <CheckResource
-                        resource='http./resource/*.DELETE'
+                        resource='http./role/*.DELETE'
                         component={
                             <Button tooltip='删除' onClick={e => self.delete(record)}>
                                 <Icon type="trash" />

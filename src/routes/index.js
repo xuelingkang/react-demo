@@ -25,6 +25,8 @@ import User from './Crud/User';
 import Role from './Crud/Role';
 // 权限（资源）管理
 import Resource from './Crud/Resource';
+// 附件管理
+import Attachment from './Crud/Attachment';
 
 import Dashboard from './Dashboard';
 import Blank from './Blank';
@@ -80,6 +82,7 @@ const routesConfig = app => [
             User(app),
             Role(app),
             Resource(app),
+            Attachment(app),
 
             Blank(app),
             Toolbar(app),

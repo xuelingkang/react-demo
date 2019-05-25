@@ -88,7 +88,7 @@ export default class extends BaseCrudComponent {
                         appendLeft={
                             <Button.Group>
                                 <CheckResource
-                                    resource='http./resource.POST'
+                                    resource='http./user.POST'
                                     component={
                                         <Button type="primary"
                                                 icon="plus"
@@ -98,7 +98,7 @@ export default class extends BaseCrudComponent {
                                     }
                                 />
                                 <CheckResource
-                                    resource='http./resource/*.DELETE'
+                                    resource='http./user/*.DELETE'
                                     component={
                                         <Button disabled={!rows.length}
                                                 icon="delete"

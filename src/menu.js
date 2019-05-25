@@ -31,6 +31,11 @@ export default [
                 path: '/resource',
                 resource: 'http./resource/*/*.GET'
             },
+            {
+                name: '附件管理',
+                path: '/attachment',
+                resource: 'http./attachment/*/*.GET'
+            },
         ],
     },
     {
