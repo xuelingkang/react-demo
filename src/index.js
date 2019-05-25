@@ -12,7 +12,6 @@ import 'moment/locale/zh-cn';
 
 import * as serviceWorker from './serviceWorker';
 
-import '@/utils/extends';
 import './assets/styles/index.less';
 import config from './config';
 import { homepage } from '../package.json';
