@@ -79,6 +79,10 @@ export default (self, allDepts, allRoles) => [
                     {
                         required: true,
                         message: '请输入邮箱'
+                    },
+                    {
+                        type: 'email',
+                        message: '邮箱地址格式错误'
                     }
                 ]
             },
