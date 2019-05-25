@@ -1,6 +1,7 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
 import {axiosDownload} from '@/utils/axios';
+import saveBlob from '@/utils/saveBlob';
 import {del, detail} from '../service';
 import {modelNamespace} from '../constant';
 
@@ -75,7 +76,10 @@ export default modelEnhance({
         * download({payload}) {
             const {record} = payload;
             const {attachmentAddress} = record;
-            yield axiosDownload(attachmentAddress);
+            const {status, data} = yield axiosDownload(attachmentAddress);
+            if (status===200) {
+                saveBlob(data, attachmentAddress.split('/').reverse()[0]);
+            }
         },
         * refresh({payload}, {put}) {
             yield put({

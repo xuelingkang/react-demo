@@ -2,7 +2,6 @@ import axios from 'axios';
 import qs from 'qs';
 
 import { getAuth } from '@/utils/authentication';
-import saveBlob from '@/utils/saveBlob';
 import config from '@/config';
 
 const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -99,16 +98,11 @@ const axiosPatch = async (url, params, config) => {
     return instance.patch(url, params, config);
 }
 
-const axiosDownload = async (url, filename) => {
-    if (!filename) {
-        filename = url.split('/').reverse()[0];
-    }
-    const {status, data} = await axios.get(url, {responseType: 'blob'});
-    if (status===200) {
-        saveBlob(data, filename);
-    } else {
-        notice.error('下载文件出错');
-    }
+const axiosDownload = async (url) => {
+    // if (!filename) {
+    //     filename = url.split('/').reverse()[0];
+    // }
+    return axios.get(url, {responseType: 'blob'});
 }
 
 export { axiosGet, axiosDelete, axiosHead, axiosPost, axiosPut, axiosPatch, axiosDownload, JSON_HEADER };
