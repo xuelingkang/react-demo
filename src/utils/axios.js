@@ -99,9 +99,6 @@ const axiosPatch = async (url, params, config) => {
 }
 
 const axiosDownload = async (url) => {
-    // if (!filename) {
-    //     filename = url.split('/').reverse()[0];
-    // }
     return axios.get(url, {responseType: 'blob'});
 }
 
