@@ -1,4 +1,4 @@
-import { axiosGet, axiosDelete, axiosDownload } from '@/utils/axios';
+import { axiosGet, axiosDelete } from '@/utils/axios';
 
 export const detail = payload => axiosGet('/attachment/{id}', payload);
 

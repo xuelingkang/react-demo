@@ -32,26 +32,29 @@ export default self => [
         title: '操作',
         tableItem: {
             width: 180,
-            render: (text, {linkInfo, ...otherProps}) => (
-                <DataTable.Oper>
-                    <Button tooltip='下载' onClick={() => self.download({linkInfo, ...otherProps})}>
-                        <Icon type="download" />
-                    </Button>
-                    <Condition
-                        condition={!linkInfo}
-                        component={
-                            <CheckResource
-                                resource='http./attachment/*.DELETE'
-                                component={
-                                    <Button tooltip='删除' onClick={e => self.delete({linkInfo, ...otherProps})}>
-                                        <Icon type="trash" />
-                                    </Button>
-                                }
-                            />
-                        }
-                    />
-                </DataTable.Oper>
-            )
+            render: (text, record) => {
+                const {linkInfo} = record;
+                return (
+                    <DataTable.Oper>
+                        <Button tooltip='下载' onClick={() => self.download(record)}>
+                            <Icon type="download" />
+                        </Button>
+                        <Condition
+                            condition={!linkInfo}
+                            component={
+                                <CheckResource
+                                    resource='http./attachment/*.DELETE'
+                                    component={
+                                        <Button tooltip='删除' onClick={e => self.delete(record)}>
+                                            <Icon type="trash" />
+                                        </Button>
+                                    }
+                                />
+                            }
+                        />
+                    </DataTable.Oper>
+                )
+            }
         }
     }
 ]
