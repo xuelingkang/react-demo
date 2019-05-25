@@ -1,6 +1,7 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
-import {del, detail, download} from '../service';
+import {axiosDownload} from '@/utils/axios';
+import {del, detail} from '../service';
 import {modelNamespace} from '../constant';
 
 export default modelEnhance({
@@ -71,10 +72,10 @@ export default modelEnhance({
                 }
             });
         },
-        * download({payload}, {call}) {
+        * download({payload}) {
             const {record} = payload;
             const {attachmentAddress} = record;
-            yield call(download, attachmentAddress);
+            yield axiosDownload(attachmentAddress);
         },
         * refresh({payload}, {put}) {
             yield put({

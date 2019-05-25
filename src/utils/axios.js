@@ -99,8 +99,10 @@ const axiosPatch = async (url, params, config) => {
     return instance.patch(url, params, config);
 }
 
-const axiosDownload = async url => {
-    const filename = url.split('/').reverse()[0];
+const axiosDownload = async (url, filename) => {
+    if (!filename) {
+        filename = url.split('/').reverse()[0];
+    }
     const {status, data} = await axios.get(url, {responseType: 'blob'});
     if (status===200) {
         saveBlob(data, filename);
