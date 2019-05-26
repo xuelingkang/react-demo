@@ -8,4 +8,4 @@ export const detail = payload => axiosGet('/mail/{id}', payload);
 
 export const del = payload => axiosDelete('/mail/{ids}', payload);
 
-export const send = payload => axiosPatch('', payload);
+export const send = payload => axiosPatch('/mail/{id}', payload);

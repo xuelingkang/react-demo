@@ -1,6 +1,6 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
-import {save, update, del, detail} from '../service';
+import {save, update, del, detail, send} from '../service';
 import { findAllUsers } from '../../User/service';
 import {modelNamespace} from '../constant';
 
@@ -34,7 +34,12 @@ export default modelEnhance({
         },
         * save({payload}, {call, put}) {
             const {values, success} = payload;
-            const {code} = yield call(save, values);
+            let {mailContent, toUsers} = values;
+            mailContent = {
+                content: mailContent
+            }
+            toUsers = toUsers.map(id => ({id}));
+            const {code} = yield call(save, {...values, mailContent, toUsers});
             if (code === 200) {
                 success && success();
                 yield put({
@@ -44,8 +49,14 @@ export default modelEnhance({
         },
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
-            const {id} = record;
-            const {code} = yield call(update, {...values, id});
+            const {id, mailContent: {id: mailContentId}} = record;
+            let {mailContent, toUsers} = values;
+            mailContent = {
+                id: mailContentId,
+                content: mailContent
+            }
+            toUsers = toUsers.map(id => ({id}));
+            const {code} = yield call(update, {...values, mailContent, toUsers, id});
             if (code === 200) {
                 success && success();
                 yield put({
@@ -82,6 +93,16 @@ export default modelEnhance({
                     }
                 });
                 return data;
+            }
+        },
+        * send({payload}, {call, put}) {
+            const {record} = payload;
+            const {id} = record;
+            const {code} = yield call(send, {id});
+            if (code===200) {
+                yield put({
+                    type: 'search'
+                });
             }
         },
         * search({payload}, {select, put}) {

@@ -71,6 +71,53 @@ export default (self, allUsers) => [
         searchItem: {}
     },
     {
+        title: '接收用户',
+        name: 'toUsers',
+        formItem: {
+            default: {
+                type: 'transfer',
+                showSearch: true,
+                dataSource: allUsers.map(user => {
+                    const {id, nickname, username} = user;
+                    return {
+                        key: id,
+                        title: `${nickname}(${username})`
+                    }
+                }),
+                rules: [
+                    {
+                        required: true,
+                        message: '请选择接收用户'
+                    }
+                ],
+                modal: true
+            },
+            save: {},
+            update: {
+                normalize: (value) => value.map(item => item.id)
+            }
+        }
+    },
+    {
+        title: '正文',
+        name: 'mailContent',
+        formItem: {
+            default: {
+                type: 'editor',
+                rules: [
+                    {
+                        required: true,
+                        message: '请输入正文'
+                    }
+                ]
+            },
+            save: {},
+            update: {
+                normalize: ({content}) => content
+            },
+        }
+    },
+    {
         title: '创建时间',
         name: 'createTime',
         tableItem: {
@@ -97,46 +144,49 @@ export default (self, allUsers) => [
         title: '操作',
         tableItem: {
             width: 180,
-            render: (text, record) => (
-                <DataTable.Oper>
-                    <Condition
-                        condition={record.mailStatus==='draft'}
-                        component={
-                            <CheckResource
-                                resource='http./mail.PATCH'
-                                component={
-                                    <Button tooltip='发送'
-                                            onClick={e => self.openModal('patch', '发送邮件', record, self.requestDetail)}>
-                                        <Icon type="twitter" antd />
-                                    </Button>
-                                }
-                            />
-                        }
-                    />
-                    <Condition
-                        condition={record.mailStatus==='draft'}
-                        component={
-                            <CheckResource
-                                resource='http./mail.PUT'
-                                component={
-                                    <Button tooltip='修改'
-                                            onClick={e => self.openModal('update', '更新邮件', record, self.requestDetail)}>
-                                        <Icon type="edit" />
-                                    </Button>
-                                }
-                            />
-                        }
-                    />
-                    <CheckResource
-                        resource='http./mail/*.DELETE'
-                        component={
-                            <Button tooltip='删除' onClick={e => self.delete(record)}>
-                                <Icon type="trash" />
-                            </Button>
-                        }
-                    />
-                </DataTable.Oper>
-            )
+            render: (text, record) => {
+                const {mailStatus} = record;
+                return (
+                    <DataTable.Oper>
+                        <Condition
+                            condition={mailStatus==='draft'}
+                            component={
+                                <CheckResource
+                                    resource='http./mail/*.PATCH'
+                                    component={
+                                        <Button tooltip='发送'
+                                                onClick={e => self.send(record)}>
+                                            <Icon type="twitter" antd />
+                                        </Button>
+                                    }
+                                />
+                            }
+                        />
+                        <Condition
+                            condition={mailStatus==='draft'}
+                            component={
+                                <CheckResource
+                                    resource='http./mail.PUT'
+                                    component={
+                                        <Button tooltip='修改'
+                                                onClick={e => self.openModal('update', '更新邮件', record, self.requestDetail)}>
+                                            <Icon type="edit" />
+                                        </Button>
+                                    }
+                                />
+                            }
+                        />
+                        <CheckResource
+                            resource='http./mail/*.DELETE'
+                            component={
+                                <Button tooltip='删除' onClick={e => self.delete(record)}>
+                                    <Icon type="trash" />
+                                </Button>
+                            }
+                        />
+                    </DataTable.Oper>
+                )
+            }
         }
     }
 ];

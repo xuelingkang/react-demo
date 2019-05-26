@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Button } from 'antd';
+import {Layout, Button, Modal} from 'antd';
 import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
@@ -19,6 +19,26 @@ const Pagination = DataTable.Pagination;
     loading: isLoading(loading, modelNamespace)
 }))
 export default class extends BaseCrudComponent {
+
+    send = record => {
+        Modal.confirm({
+            title: '注意',
+            content: '是否确定发送这封邮件',
+            onOk: () => this.onSend(record),
+            onCancel() {
+            }
+        });
+    }
+
+    onSend = record => {
+        const {dispatch} = this.props;
+        dispatch({
+            type: `${modelNamespace}/send`,
+            payload: {
+                record
+            }
+        });
+    }
 
     modalHandlers = {
         onSubmit: {
