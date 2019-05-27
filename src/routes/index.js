@@ -3,16 +3,15 @@ import BasicLayout from '@/layouts/BasicLayout';
 import UserLayout from '@/layouts/UserLayout';
 import NotFound from './Pages/404';
 import Dashboard from './Dashboard';
-
-import Login from './Sign/Login'; // 登录
-import Register from './Sign/Register'; // 注册
-import RetrievePassword from './Sign/RetrievePassword'; // 找回密码
-import Dept from './Crud/Dept'; // 部门管理
-import User from './Crud/User'; // 用户管理
-import Role from './Crud/Role'; // 角色管理
-import Resource from './Crud/Resource'; // 权限（资源）管理
-import Attachment from './Crud/Attachment'; // 附件管理
-import Mail from './Crud/Mail'; // 邮件管理
+import Login from './Sign/Login';
+import Register from './Sign/Register';
+import RetrievePassword from './Sign/RetrievePassword';
+import Dept from './Crud/Dept';
+import User from './Crud/User';
+import Role from './Crud/Role';
+import Resource from './Crud/Resource';
+import Attachment from './Crud/Attachment';
+import Mail from './Crud/Mail';
 
 /**
  * 主路由配置
