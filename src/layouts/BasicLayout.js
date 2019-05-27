@@ -10,7 +10,8 @@ import pathToRegexp from 'path-to-regexp';
 import {enquireIsMobile} from '@/utils/enquireScreen';
 import TabsLayout from './TabsLayout';
 import './styles/basic.less';
-import $$ from 'cmn-utils';
+import cache from "@/utils/cache";
+import {THEME} from "@/utils/cache-keys";
 import cx from 'classnames';
 import {getAuth} from '@/utils/authentication';
 import {ModalForm} from "components/Modal";
@@ -31,10 +32,7 @@ const notice = config.notice;
 export default class BasicLayout extends React.PureComponent {
     constructor(props) {
         super(props);
-        const theme = $$.getStore('theme', {
-            leftSide: 'darkgrey', // 左边
-            navbar: 'light' // 顶部
-        });
+        const theme = {leftSide: 'light', navbar: 'light', ...cache.get(THEME)};
         if (!theme.layout) {
             theme.layout = [
                 'fixedHeader',
@@ -61,12 +59,15 @@ export default class BasicLayout extends React.PureComponent {
         props.dispatch({
             type: 'global/getMenu'
         });
-        props.dispatch({
-            type: 'global/getUserinfo'
-        });
-        props.dispatch({
-            type: 'global/getStructure'
-        });
+        const {token, authorities} = getAuth();
+        if (token && authorities) {
+            props.dispatch({
+                type: 'global/getUserinfo'
+            });
+            props.dispatch({
+                type: 'global/getStructure'
+            });
+        }
     }
 
     componentDidMount() {
@@ -168,7 +169,7 @@ export default class BasicLayout extends React.PureComponent {
     };
 
     onChangeTheme = theme => {
-        $$.setStore('theme', theme);
+      cache.set(THEME, theme, -1, window.localStorage);
         this.setState({
             theme
         });

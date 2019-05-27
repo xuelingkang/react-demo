@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import Icon from '../Icon';
 import { Tabs } from 'antd';
-import $$ from 'cmn-utils';
+import cache from "@/utils/cache";
+import {THEME} from "@/utils/cache-keys";
 import SideBarBox from './SideBarBox';
 import NavBarBox from './NavBarBox';
 import LayoutBox from "./LayoutBox";
@@ -39,7 +40,7 @@ class SkinToolbox extends Component {
   }
 
   clearThemeStore = _ => {
-    $$.removeStore('theme');
+    cache.remove(THEME);
   }
 
   /**

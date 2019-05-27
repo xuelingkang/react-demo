@@ -5,7 +5,8 @@ import { Switch, routerRedux, Link } from 'dva/router';
 import pathToRegexp from 'path-to-regexp';
 import ElementQueries from 'css-element-queries/src/ElementQueries';
 import './styles/basic.less';
-import $$ from 'cmn-utils';
+import cache from "@/utils/cache";
+import {THEME} from "@/utils/cache-keys";
 import cx from 'classnames';
 import SkinToolbox from 'components/SkinToolbox';
 import Icon from 'components/Icon';
@@ -22,11 +23,8 @@ const SubMenu = Menu.SubMenu;
 export default class CardLayout extends React.PureComponent {
   constructor(props) {
     super(props);
-    const user = $$.getStore('user', []);
-    const theme = $$.getStore('theme', {
-      leftSide: 'darkgrey', // 左边
-      navbar: 'light' // 顶部
-    });
+    const theme = {leftSide: 'light', navbar: 'light', ...cache.get(THEME)};
+    // {leftSide: 'light', navbar: 'light'}
     if (!theme.layout) {
       theme.layout = [
         'fixedHeader',
@@ -37,7 +35,6 @@ export default class CardLayout extends React.PureComponent {
     }
     this.state = {
       theme, // 皮肤设置
-      user,
       currentMenu: {}
     };
 
@@ -182,9 +179,9 @@ export default class CardLayout extends React.PureComponent {
   };
 
   onChangeTheme = theme => {
-    $$.setStore('theme', theme);
+    cache.set(THEME, theme, -1, window.localStorage);
     this.setState({
-      theme
+        theme
     });
   };
 
