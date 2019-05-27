@@ -88,7 +88,11 @@ class NavBar extends PureComponent {
             user = {}
         } = this.props;
 
-        const {nickname, headImg={}} = user;
+        let nickname, headImg;
+        if (user) {
+            nickname = user.nickname;
+            headImg = user.headImg;
+        }
         let attachmentAddress;
         if (headImg) {
             attachmentAddress = headImg.attachmentAddress;

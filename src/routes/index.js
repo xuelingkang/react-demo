@@ -12,6 +12,8 @@ import Role from './Crud/Role';
 import Resource from './Crud/Resource';
 import Attachment from './Crud/Attachment';
 import Mail from './Crud/Mail';
+import JobTemplate from './Crud/JobTemplate';
+import Job from './Crud/Job';
 
 /**
  * 主路由配置
@@ -49,6 +51,8 @@ const routesConfig = app => [
             Resource(app),
             Attachment(app),
             Mail(app),
+            JobTemplate(app),
+            Job(app),
             NotFound()
         ]
     }

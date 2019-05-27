@@ -6,9 +6,22 @@ export default [
         path: '/dashboard',
     },
     {
-        name: '定时任务',
+        name: '任务管理',
         icon: 'book',
         path: '/job',
+        oneof: ['http./jobTemplate/*/*.GET', 'http./job/*/*.GET'],
+        children: [
+            {
+                name: '任务模板',
+                path: '/jobTemplate',
+                resource: 'http./jobTemplate/*/*.GET'
+            },
+            {
+                name: '定时任务',
+                path: '/job',
+                resource: 'http./job/*/*.GET'
+            },
+        ]
     },
     {
         name: '邮件管理',
@@ -20,7 +33,7 @@ export default [
         name: '系统管理',
         icon: 'desktop',
         path: '/system',
-        oneof: ['http./dept/*/*.GET'],
+        oneof: ['http./dept/*/*.GET', 'http./user/*/*.GET', 'http./role/*/*.GET', 'http./resource/*/*.GET', 'http./attachment/*/*.GET'],
         children: [
             {
                 name: '部门管理',

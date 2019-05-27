@@ -217,7 +217,7 @@ export const isLoading = (loading, namespace) => {
         return true;
     }
     for (let key in effects) {
-        if (effects.hasOwnProperty(key) && key.indexOf(namespace)!==-1) {
+        if (effects.hasOwnProperty(key) && key.indexOf(`${namespace}/`)!==-1) {
             if (effects[key]) {
                 return true;
             }
