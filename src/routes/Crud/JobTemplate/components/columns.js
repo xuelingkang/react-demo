@@ -1,4 +1,5 @@
 import React from 'react';
+import { Input, Select } from 'antd';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -15,6 +16,11 @@ export default (self) => [
         },
         formItem: {
             default: {
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 8 },
+                    wrapperCol: { span: 13 }
+                },
                 rules: [
                     {
                         required: true,
@@ -33,6 +39,11 @@ export default (self) => [
         searchItem: {},
         formItem: {
             default: {
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 4 },
+                    wrapperCol: { span: 14 }
+                },
                 rules: [
                     {
                         required: true,
@@ -60,6 +71,70 @@ export default (self) => [
             },
             save: {},
             update: {},
+        }
+    },
+    {
+        title: '参数列表',
+        name: 'parameters',
+        formItem: {
+            save: {
+                type: 'custom',
+                render: (record, form, otherProps) => {
+                    console.log('record', record);
+                    console.log('form', form);
+                    console.log('otherProps', otherProps);
+                    return (
+                        <div>
+                            <div className='ant-col ant-col-6 col-item'
+                                 style={{paddingLeft: 4, paddingRight: 4}}>
+                                <div className='ant-row ant-form-item col-item-content'>
+                                    <div className='ant-form-item-control'>
+                                        <span className='ant-form-item-children'>
+                                            <Input placeholder='请输入参数名称' />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='ant-col ant-col-6 col-item'
+                                 style={{paddingLeft: 4, paddingRight: 4}}>
+                                <div className='ant-row ant-form-item col-item-content'>
+                                    <div className='ant-form-item-control'>
+                                        <span className='ant-form-item-children'>
+                                            <Select placeholder='请选择参数类型'>
+                                                <Select.Option key='string' value='string' title='string'>
+                                                    string
+                                                </Select.Option>
+                                                <Select.Option key='number' value='number' title='number'>
+                                                    number
+                                                </Select.Option>
+                                            </Select>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='ant-col ant-col-6 col-item'
+                                 style={{paddingLeft: 4, paddingRight: 4}}>
+                                <div className='ant-row ant-form-item col-item-content'>
+                                    <div className='ant-form-item-control'>
+                                        <span className='ant-form-item-children'>
+                                            <Input placeholder='请输入参数描述' />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+            },
+            update: {
+                type: 'custom',
+                render: (record, form, otherProps) => {
+                    console.log('record', record);
+                    console.log('form', form);
+                    console.log('otherProps', otherProps);
+                    return null;
+                }
+            }
         }
     },
     {
