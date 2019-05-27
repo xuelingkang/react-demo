@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'dva';
 import {Layout} from 'antd';
-import {Switch, routerRedux} from 'dva/router';
+import {routerRedux, Switch} from 'dva/router';
 import NavBar from 'components/NavBar';
 import {LeftSideBar, RightSideBar} from 'components/SideBar';
 import TopBar from 'components/TopBar';
@@ -110,8 +110,7 @@ export default class BasicLayout extends React.PureComponent {
             location: {pathname},
             global
         } = props || this.props;
-        const menu = this.getMeunMatchKeys(global.flatMenu, pathname)[0];
-        return menu;
+        return this.getMeunMatchKeys(global.flatMenu, pathname)[0];
     }
 
     getMeunMatchKeys = (flatMenu, path) => {
@@ -189,10 +188,6 @@ export default class BasicLayout extends React.PureComponent {
             modalType: '',
             modalTitle: ''
         });
-    }
-
-    onSelectTreeNode = () => {
-
     }
 
     modalHandlers = {
