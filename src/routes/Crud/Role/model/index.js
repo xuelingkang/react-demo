@@ -86,7 +86,7 @@ export default modelEnhance({
                         }
                     }
                 });
-                return data;
+                return records.find(item => item.id === id);
             }
         },
         * search({payload}, {select, put}) {

@@ -1,5 +1,6 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
+import omit from 'object.omit';
 import {save, update, del, detail, send} from '../service';
 import { findAllUsers } from '../../User/service';
 import {modelNamespace} from '../constant';
@@ -34,12 +35,23 @@ export default modelEnhance({
         },
         * save({payload}, {call, put}) {
             const {values, success} = payload;
-            let {mailContent, toUsers} = values;
+            let {mailContent, toUsers, attachments} = values;
             mailContent = {
                 content: mailContent
             }
             toUsers = toUsers.map(id => ({id}));
-            const {code} = yield call(save, {...values, mailContent, toUsers});
+            attachments = attachments.map(({id, response}) => {
+                if (id) {
+                    return {id};
+                } else if (response) {
+                    const {code, data} = response;
+                    if (code===200) {
+                        const {id} = data;
+                        return {id};
+                    }
+                }
+            });
+            const {code} = yield call(save, {...values, mailContent, toUsers, attachments});
             if (code === 200) {
                 success && success();
                 yield put({
@@ -50,13 +62,24 @@ export default modelEnhance({
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
             const {id, mailContent: {id: mailContentId}} = record;
-            let {mailContent, toUsers} = values;
+            let {mailContent, toUsers, attachments} = values;
             mailContent = {
                 id: mailContentId,
                 content: mailContent
             }
             toUsers = toUsers.map(id => ({id}));
-            const {code} = yield call(update, {...values, mailContent, toUsers, id});
+            attachments = attachments.map(({id, response}) => {
+                if (id) {
+                    return {id};
+                } else if (response) {
+                    const {code, data} = response;
+                    if (code===200) {
+                        const {id} = data;
+                        return {id};
+                    }
+                }
+            });
+            const {code} = yield call(update, {...values, mailContent, toUsers, attachments, id});
             if (code === 200) {
                 success && success();
                 yield put({
@@ -81,7 +104,7 @@ export default modelEnhance({
             if (code === 200) {
                 const records = pageInfo.records.map(item => item.id === id ? {
                     ...item,
-                    ...data
+                    ...omit(data, 'toUsersInfo'),
                 } : item);
                 yield put({
                     type: '@change',
@@ -92,7 +115,7 @@ export default modelEnhance({
                         }
                     }
                 });
-                return data;
+                return records.find(item => item.id === id);
             }
         },
         * send({payload}, {call, put}) {

@@ -79,7 +79,7 @@ export default ({
     return (
       <div
         style={otherProps.style}
-        dangerouslySetInnerHTML={{ __html: initval || '' }}
+        dangerouslySetInnerHTML={{ __html: formFieldOptions.initialValue || '' }}
       />
     );
   }

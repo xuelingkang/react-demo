@@ -1,4 +1,5 @@
 import React from 'react';
+import {message} from "antd";
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -25,6 +26,9 @@ export default (self, allUsers) => [
             },
             save: {},
             update: {},
+            detail: {
+                preview: true
+            }
         }
     },
     {
@@ -49,7 +53,10 @@ export default (self, allUsers) => [
                 ]
             },
             save: {},
-            update: {}
+            update: {},
+            detail: {
+                preview: true
+            }
         }
     },
     {
@@ -57,7 +64,9 @@ export default (self, allUsers) => [
         name: 'mailStatus',
         dict: [
             {code: 'draft', codeName: '草稿'},
+            {code: 'sending', codeName: '发送中'},
             {code: 'sent', codeName: '已发送'},
+            {code: 'fail', codeName: '发送失败'},
         ],
         tableItem: {},
         searchItem: {
@@ -68,7 +77,12 @@ export default (self, allUsers) => [
         title: '接收用户',
         name: 'toUsersInfo',
         tableItem: {},
-        searchItem: {}
+        searchItem: {},
+        formItem: {
+            detail: {
+                preview: true
+            }
+        }
     },
     {
         title: '接收用户',
@@ -95,7 +109,7 @@ export default (self, allUsers) => [
             save: {},
             update: {
                 normalize: (value) => value.map(item => item.id)
-            }
+            },
         }
     },
     {
@@ -115,6 +129,81 @@ export default (self, allUsers) => [
             update: {
                 normalize: ({content}) => content
             },
+            detail: {
+                preview: true,
+                normalize: ({content}) => content
+            }
+        }
+    },
+    {
+        title: '附件',
+        name: 'attachments',
+        formItem: {
+            default: {
+                type: 'upload',
+                action: '/file/mail/1',
+                fileName: 'file',
+                max: 3,
+                onChange: (form, info) => {
+                    if (info.file.status === 'uploading') {
+                        self.setState({modalLoading: true});
+                    } else if (info.file.status === 'done') {
+                        self.setState({modalLoading: false});
+                    }
+                },
+                beforeUpload: file => {
+                    const validSize = file.size / 1024 / 1024 < 20;
+                    if (!validSize) {
+                        message.error('单个附件必须小于20M');
+                    }
+                    return validSize;
+                },
+                getValueFromEvent: info => {
+                    const {fileList} = info;
+                    return fileList.map(file => {
+                        const {response} = file;
+                        if (response) {
+                            const {code, data, message} = response;
+                            if (code) {
+                                if (code===200) {
+                                    const {id, attachmentAddress} = data;
+                                    return {
+                                        ...file,
+                                        id,
+                                        url: `http://server01${attachmentAddress}`
+                                    };
+                                } else {
+                                    return {
+                                        ...file,
+                                        response: message
+                                    };
+                                }
+                            }
+                        }
+                        return file;
+                    });
+                }
+            },
+            save: {},
+            update: {
+                normalize: values => values.map(({id, attachmentName, attachmentAddress}) => ({
+                    id,
+                    uid: `fs_${id}`,
+                    name: attachmentName,
+                    status: 'done',
+                    url: `http://server01${attachmentAddress}`
+                }))
+            },
+            detail: {
+                normalize: values => values.map(({id, attachmentName, attachmentAddress}) => ({
+                    id,
+                    uid: `fs_${id}`,
+                    name: attachmentName,
+                    status: 'done',
+                    url: `http://server01${attachmentAddress}`
+                })),
+                preview: true
+            }
         }
     },
     {
@@ -149,7 +238,7 @@ export default (self, allUsers) => [
                 return (
                     <DataTable.Oper>
                         <Condition
-                            condition={mailStatus==='draft'}
+                            condition={mailStatus==='draft'||mailStatus==='fail'}
                             component={
                                 <CheckResource
                                     resource='http./mail/*.PATCH'
@@ -163,7 +252,7 @@ export default (self, allUsers) => [
                             }
                         />
                         <Condition
-                            condition={mailStatus==='draft'}
+                            condition={mailStatus==='draft'||mailStatus==='fail'}
                             component={
                                 <CheckResource
                                     resource='http./mail.PUT'
@@ -171,6 +260,20 @@ export default (self, allUsers) => [
                                         <Button tooltip='修改'
                                                 onClick={e => self.openModal('update', '更新邮件', record, self.requestDetail)}>
                                             <Icon type="edit" />
+                                        </Button>
+                                    }
+                                />
+                            }
+                        />
+                        <Condition
+                            condition={mailStatus!=='draft'&&mailStatus!=='fail'}
+                            component={
+                                <CheckResource
+                                    resource='http./mail/*.GET'
+                                    component={
+                                        <Button tooltip='查看'
+                                                onClick={e => self.openModal('detail', '查看邮件', record, self.requestDetail)}>
+                                            <Icon type="search" font='iconfont' />
                                         </Button>
                                     }
                                 />

@@ -146,7 +146,8 @@ export default (self) => [
                     if (info.file.status === 'done') {
                         const {code, data} = info.file.response;
                         if (code===200) {
-                            return {...data, uid: `fs_${data.id}`, thumbUrl: data.attachmentAddress};
+                            const {id, attachmentAddress} = data;
+                            return {...data, uid: `fs_${id}`, thumbUrl: attachmentAddress};
                         }
                     }
                     return {};

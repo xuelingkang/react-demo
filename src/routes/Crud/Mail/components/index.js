@@ -54,7 +54,7 @@ export default class extends BaseCrudComponent {
         const { modelState, loading } = this.props;
         const { pageInfo, allUsers } = modelState;
         const columns = createColumns(this, allUsers);
-        const { modalType, modalTitle, rows, record, visible } = this.state;
+        const { modalType, modalTitle, modalLoading, rows, record, visible } = this.state;
 
         const searchBarProps = {
             columns,
@@ -76,7 +76,7 @@ export default class extends BaseCrudComponent {
         const modalFormProps = {
             title: modalTitle,
             modalType,
-            loading,
+            loading: loading || modalLoading,
             record,
             visible,
             columns,

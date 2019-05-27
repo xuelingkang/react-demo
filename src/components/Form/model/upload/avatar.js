@@ -1,10 +1,8 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import Icon from 'components/Icon';
 import $$ from "cmn-utils/lib";
 import Upload from 'components/Upload';
 import './avatar.less';
-
 
 export default ({
     form,
@@ -15,8 +13,6 @@ export default ({
     normalize,
     getValueFromEvent,
     rules,
-    maxFileSize, // 最大文件大小
-    fileTypes, // 允许文件类型
     action,    // 后台地址
     fileName,  // 后台接受文件的参数名
     onChange,
@@ -51,7 +47,7 @@ export default ({
         uploadProps = otherProps;
         uploadProps.action = action;
         uploadProps.name = fileName || 'file';
-        uploadProps.onChange = onChange && (info => onChange(form, info)) || (info => info)
+        uploadProps.onChange = onChange && (info => onChange(form, info)) || (info => info);
     }
 
     return getFieldDecorator(name, {
