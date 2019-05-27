@@ -149,7 +149,7 @@ class NavBar extends PureComponent {
                             trigger="click"
                         >
                             <a className="dropdown-toggle">
-                                <Icon type="radio-tower"/>
+                                <Icon type="ring"/>
                             </a>
                         </Popover>
                     </li>

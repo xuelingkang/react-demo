@@ -6,6 +6,11 @@ export default [
         path: '/dashboard',
     },
     {
+        name: '定时任务',
+        icon: 'book',
+        path: '/job',
+    },
+    {
         name: '邮件管理',
         icon: 'mail',
         path: '/mail',

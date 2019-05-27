@@ -21,7 +21,7 @@ class RightSideBar extends Component {
 
             return (
                 <TreeNode key={`dept_${id}`} title={deptName} dataRef={item} expandable={true}
-                          icon={<Icon type='lines'/>}>
+                          icon={<Icon type='list' font='iconfont' />}>
                     {users ? users.map(user => {
                         const {id, nickname, sex, headImg = {}} = user;
                         let iconComp;
