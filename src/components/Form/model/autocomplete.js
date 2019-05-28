@@ -4,6 +4,7 @@ import { AutoComplete, Input, Icon } from 'antd';
 import $$ from 'cmn-utils';
 import omit from 'object.omit';
 import isEqual from 'react-fast-compare';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 const Option = AutoComplete.Option;
 
 class AutoCompleteControlled extends Component {
@@ -167,7 +168,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

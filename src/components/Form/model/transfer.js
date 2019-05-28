@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Transfer, Modal, Select } from 'antd';
 import $$ from 'cmn-utils';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 
 const Option = Select.Option;
 /**
@@ -156,7 +157,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

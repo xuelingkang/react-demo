@@ -1,6 +1,7 @@
 import React from 'react';
 import { TreeSelect } from 'antd';
 import $$ from 'cmn-utils';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 
 /**
  * 下拉树菜单元件
@@ -25,7 +26,7 @@ export const TreeSelectForm = ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Radio } from 'antd';
 import $$ from 'cmn-utils';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 const RadioGroup = Radio.Group;
 /**
  * 单选框
@@ -25,7 +26,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

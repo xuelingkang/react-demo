@@ -32,24 +32,27 @@ export default modelEnhance({
         },
         * save({payload}, {call, put}) {
             const {values, success} = payload;
-            const {code} = yield call(save, values);
-            if (code === 200) {
-                success && success();
-                yield put({
-                    type: 'refresh'
-                });
-            }
+            console.log('values', values);
+            // const {code} = yield call(save, values);
+            // if (code === 200) {
+            //     success && success();
+            //     yield put({
+            //         type: 'refresh'
+            //     });
+            // }
         },
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
-            const {id} = record;
-            const {code} = yield call(update, {...values, id});
-            if (code === 200) {
-                success && success();
-                yield put({
-                    type: 'refresh'
-                });
-            }
+            console.log('values', values);
+            console.log('record', record);
+            // const {id} = record;
+            // const {code} = yield call(update, {...values, id});
+            // if (code === 200) {
+            //     success && success();
+            //     yield put({
+            //         type: 'refresh'
+            //     });
+            // }
         },
         * delete({payload}, {call, put}) {
             const {recordKeys, success} = payload;

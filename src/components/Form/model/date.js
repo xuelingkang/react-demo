@@ -2,6 +2,7 @@ import React from 'react';
 import { DatePicker, TimePicker } from 'antd';
 import $$ from 'cmn-utils';
 import moment from 'moment';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 const { MonthPicker, RangePicker } = DatePicker;
 /**
  * 日期，时间元件
@@ -26,7 +27,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

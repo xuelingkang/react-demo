@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox } from 'antd';
 import $$ from 'cmn-utils';
 import omit from 'object.omit';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 
 const CheckboxGroup = Checkbox.Group;
 /**
@@ -27,7 +28,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

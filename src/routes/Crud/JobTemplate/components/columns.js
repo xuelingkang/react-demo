@@ -1,5 +1,4 @@
 import React from 'react';
-import { Input, Select } from 'antd';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -77,64 +76,64 @@ export default (self) => [
         title: '参数列表',
         name: 'parameters',
         formItem: {
-            save: {
-                type: 'custom',
-                render: (record, form, otherProps) => {
-                    console.log('record', record);
-                    console.log('form', form);
-                    console.log('otherProps', otherProps);
-                    return (
-                        <div>
-                            <div className='ant-col ant-col-6 col-item'
-                                 style={{paddingLeft: 4, paddingRight: 4}}>
-                                <div className='ant-row ant-form-item col-item-content'>
-                                    <div className='ant-form-item-control'>
-                                        <span className='ant-form-item-children'>
-                                            <Input placeholder='请输入参数名称' />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='ant-col ant-col-6 col-item'
-                                 style={{paddingLeft: 4, paddingRight: 4}}>
-                                <div className='ant-row ant-form-item col-item-content'>
-                                    <div className='ant-form-item-control'>
-                                        <span className='ant-form-item-children'>
-                                            <Select placeholder='请选择参数类型'>
-                                                <Select.Option key='string' value='string' title='string'>
-                                                    string
-                                                </Select.Option>
-                                                <Select.Option key='number' value='number' title='number'>
-                                                    number
-                                                </Select.Option>
-                                            </Select>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='ant-col ant-col-6 col-item'
-                                 style={{paddingLeft: 4, paddingRight: 4}}>
-                                <div className='ant-row ant-form-item col-item-content'>
-                                    <div className='ant-form-item-control'>
-                                        <span className='ant-form-item-children'>
-                                            <Input placeholder='请输入参数描述' />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                }
+            default: {
+                type: 'group',
+                groupType: 'array',
+                groupkey: 'id',
+                items: [
+                    {
+                        title: '名称',
+                        name: 'parameterName',
+                        col: { span: 6 },
+                        formItemLayout: {
+                            wrapperCol: { span: 24 }
+                        },
+                        rules: [
+                            {
+                                required: true,
+                                message: '请输入名称'
+                            }
+                        ]
+                    },
+                    {
+                        title: '类型',
+                        name: 'parameterType',
+                        type: 'select',
+                        dict: [
+                            {code: 'string', codeName: 'string'},
+                            {code: 'number', codeName: 'number'},
+                        ],
+                        col: { span: 6 },
+                        formItemLayout: {
+                            wrapperCol: { span: 24 }
+                        },
+                        rules: [
+                            {
+                                required: true,
+                                message: '请选择类型'
+                            }
+                        ]
+                    },
+                    {
+                        title: '描述',
+                        name: 'parameterDesc',
+                        col: { span: 6 },
+                        formItemLayout: {
+                            wrapperCol: { span: 24 }
+                        },
+                        rules: [
+                            {
+                                required: true,
+                                message: '请输入名描述'
+                            }
+                        ]
+                    },
+                ],
+                plus: true,
+                minus: true,
             },
-            update: {
-                type: 'custom',
-                render: (record, form, otherProps) => {
-                    console.log('record', record);
-                    console.log('form', form);
-                    console.log('otherProps', otherProps);
-                    return null;
-                }
-            }
+            save: {},
+            update: {}
         }
     },
     {

@@ -38,16 +38,20 @@ export default class extends React.Component {
      * @param {function} [prepareRecord] 预处理record的方法
      */
     openModal = async (modalType, modalTitle, record, prepareRecord) => {
-        this.setState({
-            modalType,
-            modalTitle,
-            record,
-            visible: true
-        });
         if (record && prepareRecord) {
             record = await prepareRecord(record);
             this.setState({
-                record
+                modalType,
+                modalTitle,
+                record,
+                visible: true
+            });
+        } else {
+            this.setState({
+                modalType,
+                modalTitle,
+                record,
+                visible: true
             });
         }
     };

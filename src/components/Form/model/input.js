@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input } from 'antd';
 import $$ from 'cmn-utils';
+import getValueFromRecord from '@/utils/getValueFromRecord';
 const { TextArea } = Input;
 /**
  * 文本框元件
@@ -25,7 +26,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值

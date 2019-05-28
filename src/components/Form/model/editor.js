@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Editor from '../../Editor';
 import $$ from 'cmn-utils';
 import omit from 'object.omit';
+import getValueFromRecord from "@/utils/getValueFromRecord";
 
 class EditorControlled extends Component {
   static propTypes = {
@@ -63,7 +64,7 @@ export default ({
   let initval = initialValue;
 
   if (record) {
-    initval = record[name];
+    initval = getValueFromRecord(record, name);
   }
 
   // 如果存在初始值
