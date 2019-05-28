@@ -79,8 +79,13 @@ export default (self) => [
             default: {
                 type: 'group',
                 groupType: 'array',
-                groupkey: 'id',
+                plus: true,
+                minus: true,
                 items: [
+                    {
+                        name: 'id',
+                        type: 'hidden'
+                    },
                     {
                         title: '名称',
                         name: 'parameterName',
@@ -129,8 +134,6 @@ export default (self) => [
                         ]
                     },
                 ],
-                plus: true,
-                minus: true,
             },
             save: {},
             update: {}

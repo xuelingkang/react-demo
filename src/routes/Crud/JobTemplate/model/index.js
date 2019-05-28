@@ -44,6 +44,7 @@ export default modelEnhance({
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
             console.log('values', values);
+            console.log('stringify', JSON.stringify(values));
             console.log('record', record);
             // const {id} = record;
             // const {code} = yield call(update, {...values, id});

@@ -9,6 +9,49 @@ import Password from "components/Form/model/password";
 import Button from 'components/Button';
 import getValueFromRecord from "@/utils/getValueFromRecord";
 
+/*
+{
+    type: 'group',
+    groupType: 'array',
+    plus: true,
+    minus: true,
+    items: [
+        {
+            title: '名称',
+            name: 'parameterName',
+            col: { span: 6 },
+            formItemLayout: {
+                wrapperCol: { span: 24 }
+            },
+            rules: [
+                {
+                    required: true,
+                    message: '请输入名称'
+                }
+            ]
+        },
+        {
+            title: '类型',
+            name: 'parameterType',
+            type: 'select',
+            dict: [
+                {code: 'string', codeName: 'string'},
+                {code: 'number', codeName: 'number'},
+            ],
+            col: { span: 6 },
+            formItemLayout: {
+                wrapperCol: { span: 24 }
+            },
+            rules: [
+                {
+                    required: true,
+                    message: '请选择类型'
+                }
+            ]
+        },
+    ],
+}
+*/
 export default ({
     groupType,
     items,
@@ -32,6 +75,10 @@ export default ({
             initval = normalize(initval);
         }
     }
+    record = {
+        ...record,
+        [name]: initval
+    };
     const groupProps = {
         ...otherProps,
         groupName: name,
@@ -41,7 +88,6 @@ export default ({
         minus,
         form,
         preview,
-        initval,
         record,
     };
     return <Groups {...groupProps} />
@@ -51,59 +97,39 @@ class Groups extends React.Component {
 
     constructor(props) {
         super(props);
-        let {record, initval, groupName, groupType, items} = props;
-        if (groupType==='array') {
-            if (!record || !initval) {
-                record = {
-                    [groupName]: [this.emptyItem()]
-                };
-                initval = [this.emptyItem()];
-            }
-        }
+        const {record, groupName, groupType, items} = props;
         this.state = {
             record,
-            initval,
             groupName,
             groupType,
             items
         }
     }
 
-    emptyItem = () => {
-        const {items} = this.props;
-        let empty = {};
-        items.forEach(({name}) => {
-            empty[name] = '';
-        })
-        return empty;
-    }
-
     plus = () => {
-        const {record, initval, groupName, groupType} = this.state;
+        const {record, groupName, groupType} = this.state;
         if (groupType==='array') {
             const record_ = {
                 ...record,
-                [groupName]: record[groupName].concat(this.emptyItem())
+                [groupName]: record[groupName]? record[groupName].concat({}): [{}]
             };
-            const initval_ = initval.concat(this.emptyItem());
             this.setState({
-                record: record_,
-                initval: initval_
+                record: record_
             });
         }
     }
 
     minus = i => {
-        const {record, initval, groupName, groupType} = this.state;
+        const {record, groupName, groupType} = this.state;
         if (groupType==='array') {
-            const initval_ = initval.filter((item, index) => index!==i);
-            const record_ = {
-                ...record,
-                [groupName]: record[groupName].filter((item, index) => index!==i)
-            }
+            // 这里只能用delete
+            const array = record[groupName].map(a => a);
+            delete array[i];
             this.setState({
-                record: record_,
-                initval: initval_
+                record: {
+                    ...record,
+                    [groupName]: array
+                }
             });
         }
     }
@@ -117,7 +143,7 @@ class Groups extends React.Component {
             preview,
             ...otherProps
         } = this.props;
-        const {record, initval, groupName, groupType} = this.state;
+        const {record, groupName, groupType} = this.state;
         if (groupType === 'array') {
             const plusBtn = <Button shape='circle'
                                     icon='plus'
@@ -128,7 +154,7 @@ class Groups extends React.Component {
                 <div>
                     {plus? plusBtn: null}
                     {
-                        initval.map((val, index) => {
+                        record[groupName]? record[groupName].map((val, index) => {
                             const props = {
                                 ...otherProps,
                                 form,
@@ -142,19 +168,23 @@ class Groups extends React.Component {
                                 minus,
                                 onMinus: this.minus,
                             };
-                            return (
-                                <Group key={index} {...props} />
-                            );
-                        })
+                            return <Group key={index} {...props} />;
+                        }): null
                     }
                 </div>
             );
         } else {
-            return (
-                <Group>
-
-                </Group>
-            );
+            const props = {
+                ...otherProps,
+                form,
+                groupType,
+                groupName,
+                preview,
+                columns: items,
+                record,
+                type: 'grid',
+            };
+            return <Group {...props} />;
         }
     }
 }
