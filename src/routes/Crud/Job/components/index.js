@@ -150,7 +150,7 @@ export default class extends BaseCrudComponent {
                                 <CheckResource
                                     resource='http./job/*.DELETE'
                                     component={
-                                        <Button disabled={!rows.length}
+                                        <Button disabled={!rows.length || rows.some(({triggerState}) => triggerState==='EXECUTING')}
                                                 icon="delete"
                                                 onClick={() => this.delete(rows)}>
                                             删除

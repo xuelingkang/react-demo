@@ -14,6 +14,7 @@ class NavBar extends PureComponent {
     state = {
         openSearchBox: false,
         userDropDownVisible: false,
+        gitDropDownVisible: false,
     };
 
     static defaultProps = {
@@ -73,6 +74,18 @@ class NavBar extends PureComponent {
     handleuserDropDownVisibleChange = visible => {
         this.setState({
             userDropDownVisible: visible
+        });
+    }
+
+    hideGitDropDown = () => {
+        this.setState({
+            gitDropDownVisible: false
+        });
+    }
+
+    handleGitDropDownVisibleChange = visible => {
+        this.setState({
+            gitDropDownVisible: visible
         });
     }
 
@@ -149,7 +162,9 @@ class NavBar extends PureComponent {
                             placement="bottomRight"
                             title={'项目源码'}
                             overlayClassName={cx('navbar-popup', {[theme]: !!theme})}
-                            content={<GitDropDown />}
+                            visible={this.state.gitDropDownVisible}
+                            onVisibleChange={this.handleGitDropDownVisibleChange}
+                            content={<GitDropDown onClick={this.hideGitDropDown} />}
                             trigger="click"
                         >
                             <a className="dropdown-toggle">
@@ -199,8 +214,8 @@ class NavBar extends PureComponent {
     }
 }
 
-const GitDropDown = () => (
-    <ul className="dropdown-menu list-group dropdown-persist">
+const GitDropDown = props => (
+    <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
         <li className="list-group-item">
             <a className="animated animated-short fadeInUp" href='https://gitee.com/xuelingkang/react-demo' target='_blank'>
                 前端项目

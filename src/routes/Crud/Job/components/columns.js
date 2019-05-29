@@ -124,7 +124,9 @@ export default (self, allTemplates) => [
             {code: 'PAUSED_BLOCKED', codeName: '阻塞暂停'},
         ],
         tableItem: {},
-        searchItem: {},
+        searchItem: {
+            type: 'select'
+        },
     },
     {
         title: '上次时间',
