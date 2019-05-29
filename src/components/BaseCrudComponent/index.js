@@ -9,8 +9,6 @@ export default class extends React.Component {
     static propTypes = {
         // 分发前缀，子类重写，需要与model的namespace一致
         modelNamespace: PropTypes.string.isRequired,
-        // 确认删除方法
-        onDelete: PropTypes.func
     }
 
     /**

@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
 
-export default (self, allTemplates) => [
+export default (self, allTemplates, onChangeTemplateType) => [
     {
         title: '任务模板',
         name: 'jobTemplateId',
@@ -23,7 +23,8 @@ export default (self, allTemplates) => [
                         required: true,
                         message: '请选择任务模板'
                     }
-                ]
+                ],
+                onChange: (form, value) => onChangeTemplateType(value)
             },
             save: {},
             update: {},
@@ -56,6 +57,11 @@ export default (self, allTemplates) => [
         formItem: {
             default: {
                 type: 'datetime',
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 8 },
+                    wrapperCol: { span: 15 }
+                },
                 rules: [
                     {
                         required: true,
@@ -76,6 +82,11 @@ export default (self, allTemplates) => [
         formItem: {
             default: {
                 type: 'datetime',
+                col: { span: 12 },
+                formItemLayout: {
+                    labelCol: { span: 5 },
+                    wrapperCol: { span: 15 }
+                },
             },
             save: {},
             update: {}
@@ -108,14 +119,61 @@ export default (self, allTemplates) => [
         title: '上次时间',
         name: 'prevTime',
         tableItem: {
-            render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
+            render: text => (text&&text!==-1)? moment(text).format('YYYY-MM-DD HH:mm'): null
         }
     },
     {
         title: '下次时间',
         name: 'nextTime',
         tableItem: {
-            render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
+            render: text => (text&&text!==-1)? moment(text).format('YYYY-MM-DD HH:mm'): null
+        }
+    },
+    {
+        title: '参数列表',
+        name: 'parameters',
+        formItem: {
+            default: {
+                type: 'group',
+                groupType: 'array',
+                items: [
+                    {
+                        name: 'id',
+                        type: 'hidden'
+                    },
+                    {
+                        title: '名称',
+                        name: 'parameterName',
+                        readOnly: true,
+                        col: { span: 12 },
+                        formItemLayout: {
+                            wrapperCol: { span: 24 }
+                        },
+                        rules: [
+                            {
+                                required: true,
+                                message: '请输入名称'
+                            }
+                        ]
+                    },
+                    {
+                        title: '参数值',
+                        name: 'parameterValue',
+                        col: { span: 12 },
+                        formItemLayout: {
+                            wrapperCol: { span: 24 }
+                        },
+                        rules: [
+                            {
+                                required: true,
+                                message: '请输入参数值'
+                            }
+                        ]
+                    },
+                ],
+            },
+            save: {},
+            update: {}
         }
     },
     {

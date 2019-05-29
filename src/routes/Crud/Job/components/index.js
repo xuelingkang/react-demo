@@ -21,6 +21,25 @@ const Pagination = DataTable.Pagination;
 }))
 export default class extends BaseCrudComponent {
 
+    onChangeTemp = async id => {
+        const {dispatch} = this.props;
+        const temp = await dispatch({
+            type: `${modelNamespace}/tempDetail`,
+            payload: {id}
+        });
+        if (temp) {
+            const {parameters: tempParameters} = temp;
+            const parameters = tempParameters.map(({parameterName}) => ({parameterName, parameterValue: null}));
+            let {record} = this.state;
+            if (record) {
+                record = {...record, parameters}
+            } else {
+                record = {parameters}
+            }
+            this.setState({record});
+        }
+    }
+
     expandedRowRender = (record) => {
         const columns = [
             {title: '参数名称', dataIndex: 'parameterName', key: 'parameterName'},
@@ -43,7 +62,7 @@ export default class extends BaseCrudComponent {
     render() {
         const { modelState, loading } = this.props;
         const { pageInfo, allTemplates } = modelState;
-        const columns = createColumns(this, allTemplates);
+        const columns = createColumns(this, allTemplates, this.onChangeTemp);
         const { modalType, modalTitle, rows, record, visible } = this.state;
 
         const searchBarProps = {

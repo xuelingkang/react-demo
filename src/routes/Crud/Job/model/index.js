@@ -1,7 +1,7 @@
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
 import {save, update, pause, resume, del, detail} from '../service';
-import {findAllJobTemplate} from '../../JobTemplate/service';
+import {detail as tempDetail, findAllJobTemplate} from '../../JobTemplate/service';
 import {modelNamespace} from '../constant';
 
 export default modelEnhance({
@@ -123,6 +123,24 @@ export default modelEnhance({
                         allTemplates: data
                     }
                 });
+            }
+        },
+        * tempDetail({payload}, {call, put, select}) {
+            let {allTemplates} = yield select(state => state[modelNamespace]);
+            const {id} = payload;
+            const {code, data} = yield call(tempDetail, {id});
+            if (code === 200) {
+                allTemplates = allTemplates.map(temp => temp.id===id? {
+                    ...temp,
+                    ...data
+                }: temp);
+                yield put({
+                    type: '@change',
+                    payload: {
+                        allTemplates
+                    }
+                });
+                return allTemplates.find(temp => temp.id===id);
             }
         },
         * refresh({payload}, {put}) {

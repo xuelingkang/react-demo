@@ -1,4 +1,5 @@
 import React from 'react';
+import isEqual from 'react-fast-compare';
 import {Col, Divider, Form, Row} from "antd";
 import objectAssign from 'object-assign';
 import $$ from 'cmn-utils';
@@ -103,6 +104,13 @@ class Groups extends React.Component {
             groupName,
             groupType,
             items
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        const {record} = nextProps;
+        if (!isEqual(this.props.record, record)) {
+            this.setState({record});
         }
     }
 

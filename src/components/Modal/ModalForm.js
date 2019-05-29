@@ -97,7 +97,7 @@ class ModalForm extends Component {
 
         const classname = cx(className, 'antui-modalform', {'full-modal': full});
         const modalProps = {
-            wrapClassName: "vertical-center-modal",
+            centered: true, // 垂直居中
             className: classname,
             visible,
             // style: {top: 20},
