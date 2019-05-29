@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import {Layout, Button, Table} from 'antd';
+import {Layout, Button, Table, Modal} from 'antd';
 import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
@@ -10,6 +10,7 @@ import createColumns from './columns';
 import { modelNamespace } from '../constant';
 import CheckResource from '@/utils/checkResource';
 import './index.less';
+import $$ from "cmn-utils/lib"
 
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
@@ -40,6 +41,38 @@ export default class extends BaseCrudComponent {
         }
     }
 
+    resume = id => {
+        Modal.confirm({
+            title: '注意',
+            content: '是否确定开始此定时任务',
+            onOk: () => {
+                const {dispatch} = this.props;
+                dispatch({
+                    type: `${modelNamespace}/resume`,
+                    payload: {id}
+                });
+            },
+            onCancel() {
+            }
+        });
+    }
+
+    pause = id => {
+        Modal.confirm({
+            title: '注意',
+            content: '是否确定暂停此定时任务',
+            onOk: () => {
+                const {dispatch} = this.props;
+                dispatch({
+                    type: `${modelNamespace}/pause`,
+                    payload: {id}
+                });
+            },
+            onCancel() {
+            }
+        });
+    }
+
     expandedRowRender = (record) => {
         const columns = [
             {title: '参数名称', dataIndex: 'parameterName', key: 'parameterName'},
@@ -62,7 +95,7 @@ export default class extends BaseCrudComponent {
     render() {
         const { modelState, loading } = this.props;
         const { pageInfo, allTemplates } = modelState;
-        const columns = createColumns(this, allTemplates, this.onChangeTemp);
+        const columns = createColumns(this, allTemplates);
         const { modalType, modalTitle, rows, record, visible } = this.state;
 
         const searchBarProps = {

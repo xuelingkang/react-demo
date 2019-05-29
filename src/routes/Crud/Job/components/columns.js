@@ -4,8 +4,9 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
+import Condition from '@/utils/condition';
 
-export default (self, allTemplates, onChangeTemplateType) => [
+export default (self, allTemplates) => [
     {
         title: '任务模板',
         name: 'jobTemplateId',
@@ -24,7 +25,7 @@ export default (self, allTemplates, onChangeTemplateType) => [
                         message: '请选择任务模板'
                     }
                 ],
-                onChange: (form, value) => onChangeTemplateType(value)
+                onChange: (form, value) => self.onChangeTemp(value)
             },
             save: {},
             update: {},
@@ -112,6 +113,16 @@ export default (self, allTemplates, onChangeTemplateType) => [
     {
         title: '状态',
         name: 'triggerState',
+        dict: [
+            {code: 'WAITING', codeName: '等待中'},
+            {code: 'ACQUIRED', codeName: '准备中'},
+            {code: 'EXECUTING', codeName: '正在执行'},
+            {code: 'COMPLETE', codeName: '完成'},
+            {code: 'BLOCKED', codeName: '阻塞'},
+            {code: 'ERROR', codeName: '错误'},
+            {code: 'PAUSED', codeName: '暂停'},
+            {code: 'PAUSED_BLOCKED', codeName: '阻塞暂停'},
+        ],
         tableItem: {},
         searchItem: {},
     },
@@ -182,21 +193,59 @@ export default (self, allTemplates, onChangeTemplateType) => [
             width: 180,
             render: (text, record) => (
                 <DataTable.Oper>
-                    <CheckResource
-                        resource='http./job.PUT'
+                    <Condition
+                        condition={record.triggerState!=='EXECUTING' || record.triggerState!=='COMPLETE'}
                         component={
-                            <Button tooltip='修改'
-                                    onClick={e => self.openModal('update', '更新任务', record, self.requestDetail)}>
-                                <Icon type="edit" />
-                            </Button>
+                            <CheckResource
+                                resource='http./job.PUT'
+                                component={
+                                    <Button tooltip='修改'
+                                            onClick={e => self.openModal('update', '更新任务', record, self.requestDetail)}>
+                                        <Icon type="edit" />
+                                    </Button>
+                                }
+                            />
                         }
                     />
-                    <CheckResource
-                        resource='http./job/*.DELETE'
+                    <Condition
+                        condition={record.triggerState==='PAUSED' || record.triggerState==='PAUSED_BLOCKED'}
                         component={
-                            <Button tooltip='删除' onClick={e => self.delete(record)}>
-                                <Icon type="trash" />
-                            </Button>
+                            <CheckResource
+                                resource='http./job.PUT'
+                                component={
+                                    <Button tooltip='开始'
+                                            onClick={e => self.resume(record.id)}>
+                                        <Icon type="caret-right" font='iconfont' />
+                                    </Button>
+                                }
+                            />
+                        }
+                    />
+                    <Condition
+                        condition={record.triggerState==='WAITING' || record.triggerState==='ACQUIRED'}
+                        component={
+                            <CheckResource
+                                resource='http./job.PUT'
+                                component={
+                                    <Button tooltip='暂停'
+                                            onClick={e => self.pause(record.id)}>
+                                        <Icon type="pause" antd />
+                                    </Button>
+                                }
+                            />
+                        }
+                    />
+                    <Condition
+                        condition={record.triggerState!=='EXECUTING'}
+                        component={
+                            <CheckResource
+                                resource='http./job/*.DELETE'
+                                component={
+                                    <Button tooltip='删除' onClick={e => self.delete(record)}>
+                                        <Icon type="trash" />
+                                    </Button>
+                                }
+                            />
                         }
                     />
                 </DataTable.Oper>
