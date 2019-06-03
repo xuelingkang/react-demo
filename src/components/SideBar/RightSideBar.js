@@ -38,8 +38,8 @@ class RightSideBar extends Component {
                                 key={`user_${id}`}
                                 title={nickname}
                                 dataRef={user}
-                                selectable={true}
                                 icon={iconComp}
+                                clickable={true}
                             />
                         );
                     }) : null}
@@ -49,16 +49,8 @@ class RightSideBar extends Component {
         });
     };
 
-    // 选中时回调，参数selectedKeys, {selected, selectedNodes, node, event}
-    onSelectTreeNode = (selectedKeys, {selected, node}) => {
-        if (selected) {
-            const {dataRef} = node.props;
-            console.log(dataRef);
-        }
-    }
-
     render() {
-        const {fixed, theme, collapsed, isMobile, onCollapse, structure} = this.props;
+        const {fixed, theme, collapsed, isMobile, onCollapse, structure, openChat} = this.props;
 
         const classnames = cx('sidebar-left', {
             affix: !!fixed,
@@ -76,7 +68,7 @@ class RightSideBar extends Component {
                 trigger={null}
             >
                 <div className="sidebar-right-content">
-                    <Tree showIcon={true} onSelect={this.onSelectTreeNode}>
+                    <Tree showIcon={true} onClick={(e, node) => openChat(node)}>
                         {this.renderTreeNodes(structure)}
                     </Tree>
                 </div>

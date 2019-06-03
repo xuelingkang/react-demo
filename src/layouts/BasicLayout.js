@@ -14,7 +14,7 @@ import cache from "@/utils/cache";
 import {THEME} from "@/utils/cache-keys";
 import cx from 'classnames';
 import {getAuth} from '@/utils/authentication';
-import {ModalForm} from "components/Modal";
+import {ModalForm, ModalChat} from "components/Modal";
 import config from '@/config';
 import userinfoColumns from './columns/userinfo';
 
@@ -53,7 +53,9 @@ export default class BasicLayout extends React.PureComponent {
             modalVisible: false,
             modalType: '',
             modalTitle: '',
-            modalLoading: false
+            modalLoading: false,
+            chatVisible: false,
+            chatTarget: null,
         };
 
         props.dispatch({
@@ -190,6 +192,36 @@ export default class BasicLayout extends React.PureComponent {
         });
     }
 
+    openChat = (node) => {
+        const {global} = this.props;
+        const {userinfo} = global;
+        let selfId = null;
+        if (userinfo) {
+            selfId = userinfo.id;
+        }
+        const {clickable, dataRef} = node.props;
+        if (clickable) {
+            const {id: targetId} = dataRef;
+            if (targetId===selfId) {
+                return;
+            }
+            this.setState({
+                chatVisible: true,
+                chatTarget: dataRef,
+            });
+        }
+    }
+
+    sendChat = () => {
+        console.log('发送消息');
+    }
+
+    closeChat = () => {
+        this.setState({
+            chatVisible: false
+        });
+    }
+
     modalHandlers = {
         onSubmit: {
             modpwd: async values => {
@@ -236,7 +268,9 @@ export default class BasicLayout extends React.PureComponent {
             modalVisible,
             modalTitle,
             modalType,
-            modalLoading
+            modalLoading,
+            chatVisible,
+            chatTarget,
         } = this.state;
         const {routerData, location, global} = this.props;
         const {userinfo={}, structure=[]} = global;
@@ -263,6 +297,14 @@ export default class BasicLayout extends React.PureComponent {
                 width: 700
             },
             handlers: this.modalHandlers
+        };
+
+        const modalChatProps = {
+            visible: chatVisible,
+            self: userinfo,
+            target: chatTarget,
+            onSend: this.sendChat,
+            onClose: this.closeChat
         };
 
         return (
@@ -318,10 +360,12 @@ export default class BasicLayout extends React.PureComponent {
                         theme={theme.leftSide}
                         onCollapse={this.toggleRightSide}
                         structure={structure}
+                        openChat={this.openChat}
                     />
                 </Layout>
                 <SkinToolbox onChangeTheme={this.onChangeTheme} theme={theme}/>
                 <ModalForm {...modalFormProps} />
+                <ModalChat {...modalChatProps} />
             </Layout>
         );
     }
