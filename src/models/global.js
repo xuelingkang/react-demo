@@ -1,8 +1,10 @@
 import modelEnhance from '@/utils/modelEnhance';
 import menu from '../menu';
 import omit from 'object.omit';
+import {getAuth} from '@/utils/authentication';
 import {has, hasOne, hasAll} from '@/utils/authority';
 import {axiosGet, axiosPut, axiosPatch} from '@/utils/axios';
+import Socket from '@/utils/socket';
 
 export default modelEnhance({
     namespace: 'global',
@@ -12,6 +14,8 @@ export default modelEnhance({
         flatMenu: [],
         userinfo: {},
         structure: [],
+        broadcasts: [],
+        chats: [],
     },
 
     effects: {
@@ -95,6 +99,12 @@ export default modelEnhance({
             if (code === 200) {
                 success && success();
             }
+        },
+        * findUnreadBroadcasts({payload}, {call, put}) {
+
+        },
+        * findUnreadChats({payload}, {call, put}) {
+
         }
     },
 

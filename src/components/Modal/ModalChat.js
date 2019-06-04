@@ -344,47 +344,13 @@ class ModalChat extends Component {
         onClose: PropTypes.func
     };
 
-    createTitle = () => {
-        const {target} = this.props;
-        if (target) {
-            const {nickname, headImg} = target;
-            let headImgAddr = null;
-            if (headImg) {
-                headImgAddr = headImg.attachmentAddress;
-            }
-            return (
-                <div className='chat-title'>
-                    <Avatar src={headImgAddr} alt='头像'>
-                        {nickname}
-                    </Avatar>
-                    <span className='target-name'>{nickname}</span>
-                </div>
-            );
-        }
-    };
-
-    createFooter = () => {
-        const {onSend, onClose} = this.props;
-        return (
-            <div className='chat-footer'>
-                <div className='editor'>
-                    <Input.TextArea />
-                </div>
-                <div>
-                    <Button onClick={onClose}>关闭</Button>
-                    <Button type='primary' onClick={onSend}>发送</Button>
-                </div>
-            </div>
-        );
-    };
-
     bodyStyle = {
         height: document.body.clientHeight/2-200,
         overflow: 'auto'
     };
 
     render() {
-        const {visible, self} = this.props;
+        const {visible, self, target, onSend, onClose} = this.props;
         const modalProps = {
             visible,
             bodyStyle: this.bodyStyle,
@@ -393,8 +359,8 @@ class ModalChat extends Component {
             closable: false,
             destroyOnClose: true,
             width: 600,
-            title: this.createTitle(),
-            footer: this.createFooter(),
+            title: <Title target={target} />,
+            footer: <Footer onSend={onSend} onClose={onClose} />,
         };
         return (
             <Modal {...modalProps}>
@@ -423,6 +389,34 @@ class ModalChat extends Component {
         );
     }
 
+}
+
+const Title = props => {
+    const {target} = props;
+    if (target) {
+        const {nickname} = target;
+        return (
+            <div className='chat-title'>
+                <HeadImg user={target} />
+                <span className='target-name'>{nickname}</span>
+            </div>
+        );
+    }
+}
+
+const Footer = props => {
+    const {onSend, onClose} = props;
+    return (
+        <div className='chat-footer'>
+            <div className='editor'>
+                <Input.TextArea />
+            </div>
+            <div>
+                <Button onClick={onClose}>关闭</Button>
+                <Button type='primary' onClick={onSend}>发送</Button>
+            </div>
+        </div>
+    );
 }
 
 const Content = props => {

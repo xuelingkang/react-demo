@@ -17,6 +17,7 @@ import {getAuth} from '@/utils/authentication';
 import {ModalForm, ModalChat} from "components/Modal";
 import config from '@/config';
 import userinfoColumns from './columns/userinfo';
+import Socket from '@/utils/socket';
 
 const {Content, Header} = Layout;
 
@@ -58,15 +59,17 @@ export default class BasicLayout extends React.PureComponent {
             chatTarget: null,
         };
 
-        props.dispatch({
+        const {dispatch} = props;
+        dispatch({
             type: 'global/getMenu'
         });
         const {token, authorities} = getAuth();
         if (token && authorities) {
-            props.dispatch({
+
+            dispatch({
                 type: 'global/getUserinfo'
             });
-            props.dispatch({
+            dispatch({
                 type: 'global/getStructure'
             });
         }
@@ -81,6 +84,59 @@ export default class BasicLayout extends React.PureComponent {
                 });
             }
         });
+        const {token} = getAuth();
+        const {dispatch} = this.props;
+        const socket = new Socket({
+            url: '//server01/endpoint?token='+token,
+            interval: 5000,
+            callback: ({client}) => {
+                client.subscribe('/user/topic/broadcast', ({body}) => {
+                    const data = JSON.parse(body);
+                    const {global} = this.props;
+                    const {broadcasts} = global;
+                    dispatch({
+                        type: 'global/@change',
+                        payload: {
+                            broadcasts: [data].concat(broadcasts)
+                        }
+                    });
+                });
+                client.subscribe('/user/topic/chat', ({body}) => {
+                    const data = JSON.parse(body);
+                    const {global} = this.props;
+                    let {chats} = global;
+                    const {sendUserId} = data;
+                    let chat = chats.find(({sendUserId: sendUserId_}) => sendUserId_===sendUserId);
+                    if (chat) {
+                        const {messages} = chat;
+                        chat = {
+                            sendUserId,
+                            messages: [data].concat(messages)
+                        };
+                        chats = chats.map(item => {
+                            const {sendUserId: sendUserId_} = item;
+                            if (sendUserId_===sendUserId) {
+                                return chat;
+                            }
+                            return item;
+                        });
+                    } else {
+                        chat = {
+                            sendUserId,
+                            messages: [data]
+                        };
+                        chats = chats.concat(chat);
+                    }
+                    dispatch({
+                        type: 'global/@change',
+                        payload: {
+                            chats
+                        }
+                    });
+                });
+            }
+        });
+        socket.connect();
     }
 
     componentWillMount() {
