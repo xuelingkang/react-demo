@@ -1,3 +1,4 @@
+import omit from 'object.omit';
 import modelEnhance from '@/utils/modelEnhance';
 import PageInfo from '@/utils/pageInfo';
 import {update, detail} from '../service';
@@ -32,7 +33,7 @@ export default modelEnhance({
                 type: 'refresh'
             });
         },
-        * update() {
+        * update({payload}, {call, put}) {
             const {recordKeys, success} = payload;
             const {code} = yield call(update, {ids: recordKeys});
             if (code === 200) {
@@ -49,7 +50,7 @@ export default modelEnhance({
             if (code === 200) {
                 const records = pageInfo.records.map(item => item.id === id ? {
                     ...item,
-                    ...data
+                    ...omit(data, 'readStatus')
                 } : item);
                 yield put({
                     type: '@change',

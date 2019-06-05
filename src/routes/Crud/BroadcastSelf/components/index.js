@@ -22,14 +22,37 @@ const Pagination = DataTable.Pagination;
 export default class extends BaseCrudComponent {
 
     modalHandlers = {
-        onSubmit: {
-            save: this.submitSave,
-            update: this.submitUpdate
-        },
         onCancel: {
             default: this.closeModel
         }
     };
+
+    updateReadStatus = records => {
+        const {dispatch} = this.props;
+        const unReads = records.filter(({readStatus}) => !readStatus);
+        if (unReads && unReads.length) {
+            const recordKeys = unReads.map(({rowKey}) => rowKey).join();
+            dispatch({
+                type: `${modelNamespace}/update`,
+                payload: {
+                    recordKeys,
+                    success: () => this.updateReadStatusSuccess(records)
+                }
+            });
+        } else {
+            this.updateReadStatusSuccess(records);
+        }
+    }
+
+    updateReadStatusSuccess = records => {
+        this.closeModel();
+        const { rows } = this.state;
+        this.setState({
+            rows: rows.filter(
+                item => !records.some(jtem => jtem.rowKey === item.rowKey)
+            )
+        });
+    }
 
     render() {
         const { modelState, loading } = this.props;
@@ -62,7 +85,15 @@ export default class extends BaseCrudComponent {
             visible,
             columns,
             modalOpts: {
-                width: 700
+                width: 700,
+                footer: [
+                    <Button key="back" onClick={this.closeModel}>
+                        关闭
+                    </Button>,
+                    <Button key="submit" type="primary" onClick={() => this.updateReadStatus([record])} loading={loading}>
+                        已读
+                    </Button>
+                ]
             },
             handlers: this.modalHandlers
         };
@@ -77,8 +108,8 @@ export default class extends BaseCrudComponent {
                                     resource='http./broadcast/*.PUT'
                                     component={
                                         <Button disabled={!rows.length}
-                                                icon="delete"
-                                                onClick={() => this.delete(rows)}>
+                                                icon="check"
+                                                onClick={() => this.updateReadStatus(rows)}>
                                             标为已读
                                         </Button>
                                     }

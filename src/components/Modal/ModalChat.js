@@ -345,7 +345,7 @@ class ModalChat extends Component {
     };
 
     bodyStyle = {
-        height: document.body.clientHeight/2-200,
+        height: 300,
         overflow: 'auto'
     };
 
@@ -359,6 +359,7 @@ class ModalChat extends Component {
             closable: false,
             destroyOnClose: true,
             width: 600,
+            onCancel: onClose,
             title: <Title target={target} />,
             footer: <Footer onSend={onSend} onClose={onClose} />,
         };

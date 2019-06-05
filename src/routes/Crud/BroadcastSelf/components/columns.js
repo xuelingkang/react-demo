@@ -7,11 +7,32 @@ import Icon from "components/Icon"
 
 export default (self, allUsers) => [
     {
+        title: '广播用户',
+        name: 'sendUserId',
+        dict: allUsers.map(({id, nickname}) => ({code: id, codeName: nickname})),
+        tableItem: {},
+        searchItem: {
+            type: 'select'
+        },
+        formItem: {
+            detail: {
+                type: 'select',
+                preview: true,
+            }
+        }
+    },
+    {
         title: '广播时间',
         name: 'sendTime',
         tableItem: {
             render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
         },
+        formItem: {
+            detail: {
+                type: 'datetime',
+                preview: true
+            }
+        }
     },
     {
         title: '广播内容',
@@ -20,14 +41,10 @@ export default (self, allUsers) => [
         searchItem: {
             group: 'close'
         },
-    },
-    {
-        title: '广播用户',
-        name: 'sendUserId',
-        dict: allUsers.map(({id, nickname}) => ({code: id, codeName: nickname})),
-        tableItem: {},
-        searchItem: {
-            type: 'select'
+        formItem: {
+            detail: {
+                preview: true,
+            }
         }
     },
     {
