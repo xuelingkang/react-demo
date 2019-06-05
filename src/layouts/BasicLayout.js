@@ -76,7 +76,6 @@ export default class BasicLayout extends React.PureComponent {
     }
 
     componentDidMount() {
-        console.log('componentDidMount', Socket.client);
         this.unregisterEnquire = enquireIsMobile(ismobile => {
             const {isMobile} = this.state;
             if (isMobile !== ismobile) {
@@ -178,7 +177,6 @@ export default class BasicLayout extends React.PureComponent {
     }
 
     beforeunload = () => {
-        console.log('beforeunload')
         // 关闭websocket
         Socket.disconnect();
     }
