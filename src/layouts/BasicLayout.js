@@ -76,6 +76,7 @@ export default class BasicLayout extends React.PureComponent {
     }
 
     componentDidMount() {
+        console.log('componentDidMount', Socket.client);
         this.unregisterEnquire = enquireIsMobile(ismobile => {
             const {isMobile} = this.state;
             if (isMobile !== ismobile) {
@@ -84,6 +85,7 @@ export default class BasicLayout extends React.PureComponent {
                 });
             }
         });
+        // 连接websocket
         const {token} = getAuth();
         const {dispatch} = this.props;
         const socket = new Socket({
@@ -145,6 +147,8 @@ export default class BasicLayout extends React.PureComponent {
         if (!token || !authorities) {
             this.props.dispatch(routerRedux.replace('/sign/login'));
         }
+        // 监听离开页面事件
+        window.addEventListener('beforeunload', this.beforeunload);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -161,6 +165,8 @@ export default class BasicLayout extends React.PureComponent {
     componentWillUnmount() {
         // 清理监听
         this.unregisterEnquire();
+        // 取消监听离开页面事件
+        window.removeEventListener('beforeunload', this.beforeunload);
     }
 
     getCurrentMenu(props) {
@@ -169,6 +175,12 @@ export default class BasicLayout extends React.PureComponent {
             global
         } = props || this.props;
         return this.getMeunMatchKeys(global.flatMenu, pathname)[0];
+    }
+
+    beforeunload = () => {
+        console.log('beforeunload')
+        // 关闭websocket
+        Socket.disconnect();
     }
 
     getMeunMatchKeys = (flatMenu, path) => {

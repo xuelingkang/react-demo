@@ -1,6 +1,7 @@
 import {login} from '../service';
 import {cacheAuth, removeAuth} from '@/utils/authentication';
 import modelEnhance from "@/utils/modelEnhance"
+import Socket from "@/utils/socket"
 
 export default modelEnhance({
     namespace: 'login',
@@ -17,6 +18,7 @@ export default modelEnhance({
         setup({history, dispatch}) {
             return history.listen(({pathname}) => {
                 if (pathname.indexOf('/sign/login') !== -1) {
+                    Socket.disconnect();
                     removeAuth();
                 }
             });

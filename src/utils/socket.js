@@ -9,6 +9,8 @@ export default class Socket {
     headers;
     callback;
     debug;
+    static client;
+    static timerId;
     /**
      * @param {string} url
      * @param {number} [interval]
@@ -27,18 +29,19 @@ export default class Socket {
         this.debug = debug;
     }
     connect() {
-        sockets[this.url] = {};
         const socket = new SockJS(this.url);
-        const client = Stomp.over(socket);
-        sockets[this.url]['client'] = client;
+        Socket.client = Stomp.over(socket);
         if (!this.debug) {
-            client.debug = null;
+            Socket.client.debug = null;
         }
-        client.connect(
+        Socket.client.connect(
             this.headers,
-            frame => (typeof this.callback==='function' && this.callback({client, frame})),
+            frame => (typeof this.callback==='function' && this.callback({client: Socket.client, frame})),
             () => {
-                sockets[this.url]['timer'] = setTimeout(() => this.connect({
+                if (Socket.timerId) {
+                    clearTimeout(Socket.timerId);
+                }
+                Socket.timerId = setTimeout(() => this.connect({
                     url: this.url,
                     interval: this.interval,
                     headers: this.headers,
@@ -47,23 +50,14 @@ export default class Socket {
                 }), this.interval);
             });
     }
-}
-
-export const disconnect = key => {
-    if (key) {
-        const {client, timer} = sockets[key];
-        if (client) {
-            client.disconnect();
+    static disconnect = () => {
+        if (Socket.client) {
+            Socket.client.disconnect();
+            Socket.client = null;
         }
-        if (timer) {
-            clearTimeout(timer);
-        }
-        sockets[key] = null;
-    } else {
-        for (const name in sockets) {
-            if (sockets.hasOwnProperty(name)) {
-                disconnect(name);
-            }
+        if (Socket.timerId) {
+            clearTimeout(Socket.timerId);
+            Socket.timerId = null;
         }
     }
 }
