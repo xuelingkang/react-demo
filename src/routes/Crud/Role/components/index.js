@@ -19,7 +19,6 @@ const Pagination = DataTable.Pagination;
     modelState,
     loading: isLoading(loading, modelNamespace)
 }))
-@Form.create()
 export default class extends BaseCrudComponent {
 
     expandedRowRender = (record) => {

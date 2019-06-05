@@ -279,7 +279,7 @@
       padding: 0;
       // 列表样式
       .list-group-item {
-        width: 100%;
+        width: 250px;
         border-bottom: 1px solid #e7e7e7;
         overflow: hidden;
         & > a {
@@ -296,6 +296,13 @@
           }
           & > i {
             padding-right: 5px;
+          }
+          .notice-preview {
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         }
         &.dropdown-footer {

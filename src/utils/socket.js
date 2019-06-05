@@ -1,8 +1,6 @@
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
-const sockets = {};
-
 export default class Socket {
     url;
     interval;

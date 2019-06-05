@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import Icon from '../Icon';
-import {Popover, Avatar} from 'antd';
+import {Popover, Avatar, Badge} from 'antd';
 import {Link} from 'dva/router';
 import cx from 'classnames';
 import './style/index.less';
@@ -15,6 +15,7 @@ class NavBar extends PureComponent {
         openSearchBox: false,
         userDropDownVisible: false,
         gitDropDownVisible: false,
+        noticeDropDownVisible: false,
     };
 
     static defaultProps = {
@@ -89,6 +90,18 @@ class NavBar extends PureComponent {
         });
     }
 
+    hideNoticeDropDown = () => {
+        this.setState({
+            noticeDropDownVisible: false
+        });
+    }
+
+    handleNoticeDropDownVisibleChange = visible => {
+        this.setState({
+            noticeDropDownVisible: visible
+        });
+    }
+
     render() {
         const {openSearchBox} = this.state;
         const {
@@ -98,7 +111,11 @@ class NavBar extends PureComponent {
             collapsed,
             isMobile,
             onCollapse,
-            user = {}
+            user = {},
+            broadcasts,
+            chats,
+            openBroadcast,
+            openChat
         } = this.props;
 
         let nickname, headImg;
@@ -116,6 +133,14 @@ class NavBar extends PureComponent {
             'navbar-sm': isMobile ? true : collapsed,
             ['bg-' + theme]: !!theme
         });
+
+        let noticeCount = 0;
+        if (broadcasts && broadcasts.length) {
+            noticeCount += broadcasts.length;
+        }
+        if (chats && chats.length) {
+            chats.forEach(({messages=[]}) => noticeCount += messages.length);
+        }
 
         return (
             <header className={classnames}>
@@ -177,11 +202,15 @@ class NavBar extends PureComponent {
                             placement="bottomRight"
                             title={'通知'}
                             overlayClassName={cx('navbar-popup', {[theme]: !!theme})}
-                            content={''}
+                            visible={this.state.noticeDropDownVisible}
+                            onVisibleChange={this.handleNoticeDropDownVisibleChange}
+                            content={<NoticeDropDown chats={chats} broadcasts={broadcasts} openChat={openChat} openBroadcast={openBroadcast} onClick={this.hideNoticeDropDown} />}
                             trigger="click"
                         >
                             <a className="dropdown-toggle">
-                                <Icon type="ring"/>
+                                <Badge count={noticeCount} title={`${noticeCount}条未读消息`} offset={[2,0]}>
+                                    <Icon type="ring" style={{fontSize: 18, lineHeight: 1}}/>
+                                </Badge>
                             </a>
                         </Popover>
                     </li>
@@ -214,8 +243,8 @@ class NavBar extends PureComponent {
     }
 }
 
-const GitDropDown = props => (
-    <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
+const GitDropDown = ({onClick}) => (
+    <ul className="dropdown-menu list-group dropdown-persist" onClick={onClick}>
         <li className="list-group-item">
             <a className="animated animated-short fadeInUp" href='https://gitee.com/xuelingkang/react-demo' target='_blank'>
                 前端项目
@@ -229,14 +258,14 @@ const GitDropDown = props => (
     </ul>
 );
 
-const UserDropDown = props => (
-    <ul className="dropdown-menu list-group dropdown-persist" onClick={props.onClick}>
-        <li className="list-group-item" onClick={() => props.showModal('userinfo', '帐户设置')}>
+const UserDropDown = ({onClick, showModal}) => (
+    <ul className="dropdown-menu list-group dropdown-persist" onClick={onClick}>
+        <li className="list-group-item" onClick={() => showModal('userinfo', '帐户设置')}>
             <a className="animated animated-short fadeInUp">
                 <Icon type="gear"/> 帐户设置
             </a>
         </li>
-        <li className="list-group-item" onClick={() => props.showModal('modpwd', '修改密码')}>
+        <li className="list-group-item" onClick={() => showModal('modpwd', '修改密码')}>
             <a className="animated animated-short fadeInUp">
                 <Icon type="password" font="iconfont"/> 修改密码
             </a>
@@ -247,6 +276,34 @@ const UserDropDown = props => (
             </Link>
         </li>
     </ul>
+);
+
+const NoticeDropDown = ({chats=[], broadcasts=[], openChat, openBroadcast, onClick}) => (
+    <ul className="dropdown-menu list-group dropdown-persist" onClick={onClick}>
+        {broadcasts.map(broadcast => (
+            <li key={broadcast.id} className="list-group-item" onClick={() => openBroadcast(broadcast)}>
+                <a className="animated animated-short fadeInUp">
+                    <NoticePreview user={broadcast.sendUser} content={`广播：${broadcast.content}`} />
+                </a>
+            </li>
+        ))}
+        {chats.map(({sendUserId, sendUser, messages}) => (
+            (messages && messages.length)?
+                <li key={sendUserId} className="list-group-item" onClick={() => openChat(sendUser)}>
+                    <a className="animated animated-short fadeInUp">
+                        <NoticePreview user={sendUser} content={`${messages.length}条：${messages[0].content}`} />
+                    </a>
+                </li>: null
+        ))}
+    </ul>
+)
+
+const NoticePreview = ({user, content}) => (
+    <span className='notice-preview'>
+        <Avatar src={user.headImg? user.headImg.attachmentAddress: null}>
+            {user.nickname}
+        </Avatar>&nbsp;&nbsp;{content}
+    </span>
 );
 
 export default NavBar;

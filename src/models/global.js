@@ -3,6 +3,7 @@ import menu from '../menu';
 import omit from 'object.omit';
 import {has, hasOne, hasAll} from '@/utils/authority';
 import {axiosGet, axiosPut, axiosPatch} from '@/utils/axios';
+import compare from '@/utils/compare';
 
 export default modelEnhance({
     namespace: 'global',
@@ -98,11 +99,78 @@ export default modelEnhance({
                 success && success();
             }
         },
-        * findUnreadBroadcasts({payload}, {call, put}) {
-
+        * findUnreadBroadcasts({payload}, {put}) {
+            const {code, data} = yield axiosGet('/broadcast/self/unread');
+            if (code===200) {
+                yield put({
+                    type: 'addBroadcasts',
+                    payload: {
+                        data
+                    }
+                });
+            }
         },
-        * findUnreadChats({payload}, {call, put}) {
-
+        * findUnreadChats({payload}, {put}) {
+            const {code, data} = yield axiosGet('/chat/self/unread');
+            if (code===200) {
+                yield put({
+                    type: 'addChats',
+                    payload: {
+                        data
+                    }
+                });
+            }
+        },
+        * addBroadcasts({payload}, {put, select}) {
+            const {data} = payload;
+            if (!data || !data.length) {
+                return;
+            }
+            const {broadcasts} = yield select(({global}) => global);
+            yield put({
+                type: '@change',
+                payload: {
+                    broadcasts: broadcasts.concat(data).sort(compare('sendTime', 'desc'))
+                }
+            });
+        },
+        * addChats({payload}, {put, select}) {
+            const {data} = payload;
+            if (!data || !data.length) {
+                return;
+            }
+            let {chats} = yield select(({global}) => global);
+            data.forEach(newdata => {
+                const {sendUserId, sendUser} = newdata;
+                let chat = chats.find(({sendUserId: sendUserId_}) => sendUserId_===sendUserId);
+                if (chat) {
+                    const {sendUser, messages} = chat;
+                    chat = {
+                        ...chat,
+                        messages: messages.concat(newdata).sort(compare('sendTime', 'desc'))
+                    };
+                    chats = chats.map(item => {
+                        const {sendUserId: sendUserId_} = item;
+                        if (sendUserId_===sendUserId) {
+                            return chat;
+                        }
+                        return item;
+                    });
+                } else {
+                    chat = {
+                        sendUserId,
+                        sendUser,
+                        messages: [newdata]
+                    };
+                    chats = chats.concat(chat);
+                }
+            });
+            yield put({
+                type: '@change',
+                payload: {
+                    chats
+                }
+            });
         }
     },
 

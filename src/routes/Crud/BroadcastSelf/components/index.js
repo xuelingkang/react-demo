@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import {Layout, Button, Form} from 'antd';
+import { Layout, Button } from 'antd';
 import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
@@ -33,8 +33,8 @@ export default class extends BaseCrudComponent {
 
     render() {
         const { modelState, loading } = this.props;
-        const { pageInfo, allCategorys } = modelState;
-        const columns = createColumns(this, allCategorys);
+        const { pageInfo, allUsers } = modelState;
+        const columns = createColumns(this, allUsers);
         const { modalType, modalTitle, rows, record, visible } = this.state;
 
         const searchBarProps = {
@@ -74,22 +74,12 @@ export default class extends BaseCrudComponent {
                         appendLeft={
                             <Button.Group>
                                 <CheckResource
-                                    resource='http./resource.POST'
-                                    component={
-                                        <Button type="primary"
-                                                icon="plus"
-                                                onClick={() => this.openModal('save', '保存权限')}>
-                                            新增
-                                        </Button>
-                                    }
-                                />
-                                <CheckResource
-                                    resource='http./resource/*.DELETE'
+                                    resource='http./broadcast/*.PUT'
                                     component={
                                         <Button disabled={!rows.length}
                                                 icon="delete"
                                                 onClick={() => this.delete(rows)}>
-                                            删除
+                                            标为已读
                                         </Button>
                                     }
                                 />

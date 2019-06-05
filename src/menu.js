@@ -24,6 +24,24 @@ export default [
         ]
     },
     {
+        name: '广播管理',
+        icon: 'wifi',
+        path: '/broadcast',
+        oneof: ['http./broadcast/*/*.GET', 'http./broadcast/self/*/*.GET'],
+        children: [
+            {
+                name: '所有消息',
+                path: '/broadcast',
+                resource: 'http./broadcast/*/*.GET'
+            },
+            {
+                name: '我的消息',
+                path: '/broadcastSelf',
+                resource: 'http./broadcast/self/*/*.GET'
+            },
+        ]
+    },
+    {
         name: '邮件管理',
         icon: 'mail',
         path: '/mail',

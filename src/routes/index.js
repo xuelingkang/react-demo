@@ -14,6 +14,8 @@ import Attachment from './Crud/Attachment';
 import Mail from './Crud/Mail';
 import JobTemplate from './Crud/JobTemplate';
 import Job from './Crud/Job';
+import Broadcast from './Crud/Broadcast';
+import BroadcastSelf from './Crud/BroadcastSelf';
 
 /**
  * 主路由配置
@@ -53,6 +55,8 @@ const routesConfig = app => [
             Mail(app),
             JobTemplate(app),
             Job(app),
+            Broadcast(app),
+            BroadcastSelf(app),
             NotFound()
         ]
     }

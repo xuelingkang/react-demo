@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import {Layout, Button, Form} from 'antd';
+import {Layout, Button, Form, Table} from 'antd';
 import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
@@ -21,10 +21,18 @@ const Pagination = DataTable.Pagination;
 }))
 export default class extends BaseCrudComponent {
 
+    expandedRowRender = (record) => {
+        const columns = [
+            {title: '目标用户名', dataIndex: 'username', key: 'username'},
+            {title: '目标用户昵称', dataIndex: 'nickname', key: 'nickname'},
+        ];
+        const {toUsers} = record;
+        return <Table rowKey='id' columns={columns} dataSource={toUsers} pagination={false} />;
+    }
+
     modalHandlers = {
         onSubmit: {
-            save: this.submitSave,
-            update: this.submitUpdate
+            save: this.submitSave
         },
         onCancel: {
             default: this.closeModel
@@ -33,8 +41,8 @@ export default class extends BaseCrudComponent {
 
     render() {
         const { modelState, loading } = this.props;
-        const { pageInfo, allCategorys } = modelState;
-        const columns = createColumns(this, allCategorys);
+        const { pageInfo, allUsers } = modelState;
+        const columns = createColumns(this, allUsers);
         const { modalType, modalTitle, rows, record, visible } = this.state;
 
         const searchBarProps = {
@@ -43,6 +51,9 @@ export default class extends BaseCrudComponent {
         };
 
         const dataTableProps = {
+            className: "components-table-demo-nested",
+            onExpand: (expanded, record) => expanded && this.requestDetail(record),
+            expandedRowRender: this.expandedRowRender,
             loading,
             columns,
             pageInfo,
@@ -74,17 +85,17 @@ export default class extends BaseCrudComponent {
                         appendLeft={
                             <Button.Group>
                                 <CheckResource
-                                    resource='http./resource.POST'
+                                    resource='http./broadcast.POST'
                                     component={
                                         <Button type="primary"
                                                 icon="plus"
-                                                onClick={() => this.openModal('save', '保存权限')}>
-                                            新增
+                                                onClick={() => this.openModal('save', '发送广播')}>
+                                            发送广播
                                         </Button>
                                     }
                                 />
                                 <CheckResource
-                                    resource='http./resource/*.DELETE'
+                                    resource='http./broadcast/*.DELETE'
                                     component={
                                         <Button disabled={!rows.length}
                                                 icon="delete"

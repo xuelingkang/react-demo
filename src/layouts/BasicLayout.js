@@ -65,12 +65,17 @@ export default class BasicLayout extends React.PureComponent {
         });
         const {token, authorities} = getAuth();
         if (token && authorities) {
-
             dispatch({
                 type: 'global/getUserinfo'
             });
             dispatch({
                 type: 'global/getStructure'
+            });
+            dispatch({
+                type: 'global/findUnreadBroadcasts'
+            });
+            dispatch({
+                type: 'global/findUnreadChats'
             });
         }
     }
@@ -93,45 +98,19 @@ export default class BasicLayout extends React.PureComponent {
             callback: ({client}) => {
                 client.subscribe('/user/topic/broadcast', ({body}) => {
                     const data = JSON.parse(body);
-                    const {global} = this.props;
-                    const {broadcasts} = global;
                     dispatch({
-                        type: 'global/@change',
+                        type: 'global/addBroadcasts',
                         payload: {
-                            broadcasts: [data].concat(broadcasts)
+                            data: [data]
                         }
                     });
                 });
                 client.subscribe('/user/topic/chat', ({body}) => {
                     const data = JSON.parse(body);
-                    const {global} = this.props;
-                    let {chats} = global;
-                    const {sendUserId} = data;
-                    let chat = chats.find(({sendUserId: sendUserId_}) => sendUserId_===sendUserId);
-                    if (chat) {
-                        const {messages} = chat;
-                        chat = {
-                            sendUserId,
-                            messages: [data].concat(messages)
-                        };
-                        chats = chats.map(item => {
-                            const {sendUserId: sendUserId_} = item;
-                            if (sendUserId_===sendUserId) {
-                                return chat;
-                            }
-                            return item;
-                        });
-                    } else {
-                        chat = {
-                            sendUserId,
-                            messages: [data]
-                        };
-                        chats = chats.concat(chat);
-                    }
                     dispatch({
-                        type: 'global/@change',
+                        type: 'global/addChats',
                         payload: {
-                            chats
+                            data: [data]
                         }
                     });
                 });
@@ -258,24 +237,21 @@ export default class BasicLayout extends React.PureComponent {
         });
     }
 
-    openChat = (node) => {
+    openChat = (target) => {
         const {global} = this.props;
         const {userinfo} = global;
         let selfId = null;
         if (userinfo) {
             selfId = userinfo.id;
         }
-        const {clickable, dataRef} = node.props;
-        if (clickable) {
-            const {id: targetId} = dataRef;
-            if (targetId===selfId) {
-                return;
-            }
-            this.setState({
-                chatVisible: true,
-                chatTarget: dataRef,
-            });
+        const {id: targetId} = target;
+        if (targetId===selfId) {
+            return;
         }
+        this.setState({
+            chatVisible: true,
+            chatTarget: target,
+        });
     }
 
     sendChat = () => {
@@ -286,6 +262,10 @@ export default class BasicLayout extends React.PureComponent {
         this.setState({
             chatVisible: false
         });
+    }
+
+    openBroadcast = broadcast => {
+        console.log(broadcast);
     }
 
     modalHandlers = {
@@ -339,7 +319,7 @@ export default class BasicLayout extends React.PureComponent {
             chatTarget,
         } = this.state;
         const {routerData, location, global} = this.props;
-        const {userinfo={}, structure=[]} = global;
+        const {userinfo={}, structure=[], broadcasts, chats} = global;
         const {menu, flatMenu} = global;
         const {childRoutes} = routerData;
         const classnames = cx('basic-layout', 'full-layout', {
@@ -382,6 +362,10 @@ export default class BasicLayout extends React.PureComponent {
                         toggleSidebarHeader={this.toggleSidebarHeader}
                         theme={theme.navbar}
                         user={userinfo}
+                        broadcasts={broadcasts}
+                        chats={chats}
+                        openBroadcast={this.openBroadcast}
+                        openChat={this.openChat}
                         isMobile={isMobile}
                         showModal={this.showModal}
                         onCollapse={this.toggleRightSide}

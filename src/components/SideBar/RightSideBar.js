@@ -68,7 +68,7 @@ class RightSideBar extends Component {
                 trigger={null}
             >
                 <div className="sidebar-right-content">
-                    <Tree showIcon={true} onClick={(e, node) => openChat(node)}>
+                    <Tree showIcon={true} onClick={(e, {props: {clickable, dataRef}}) => clickable && openChat(dataRef)}>
                         {this.renderTreeNodes(structure)}
                     </Tree>
                 </div>
