@@ -19,7 +19,7 @@ import config from '@/config';
 import userinfoColumns from './columns/userinfo';
 import broadcastColumns from './columns/broadcast';
 import Socket from '@/utils/socket';
-import {axiosGet} from '@/utils/axios';
+import {axiosGet, axiosPost} from '@/utils/axios';
 import unique from '@/utils/unique';
 import compare from '@/utils/compare';
 
@@ -63,6 +63,7 @@ export default class BasicLayout extends React.PureComponent {
             chatTarget: null,
             chatData: [],
             chatDataNoMore: false,
+            chatDataLoading: false,
             broadcast: null,
             broadcastModalVisible: false,
         };
@@ -98,7 +99,10 @@ export default class BasicLayout extends React.PureComponent {
             }
         });
         // 连接websocket
-        const {token} = getAuth();
+        const {token, user} = getAuth();
+        if (!token || !user) {
+            return;
+        }
         const {dispatch} = this.props;
         const socket = new Socket({
             url: `${endpoint}?token=${token}`,
@@ -115,15 +119,18 @@ export default class BasicLayout extends React.PureComponent {
                 });
                 client.subscribe(chat_topic, ({body}) => {
                     const data = JSON.parse(body);
-                    dispatch({
-                        type: 'global/addChats',
-                        payload: {
-                            data: [data]
-                        }
-                    });
-                    const {sendUserId} = data;
+                    if (data.sendUserId!==user.id) {
+                        dispatch({
+                            type: 'global/addChats',
+                            payload: {
+                                data: [data]
+                            }
+                        });
+                    }
+                    const {sendUserId, toUserId} = data;
                     const {chatTarget, chatData} = this.state;
-                    if (chatTarget && chatTarget.id===sendUserId) {
+                    if ((chatTarget && chatTarget.id===sendUserId && user.id===toUserId) ||
+                        (chatTarget && chatTarget.id===toUserId && user.id===sendUserId)) {
                         this.setState({
                             chatData: chatData.concat(data)
                         });
@@ -252,7 +259,7 @@ export default class BasicLayout extends React.PureComponent {
         });
     }
 
-    openChat = (target) => {
+    openChat = async (target) => {
         const {global} = this.props;
         const {userinfo, chats} = global;
         let selfId = null;
@@ -263,29 +270,27 @@ export default class BasicLayout extends React.PureComponent {
         if (targetId===selfId) {
             return;
         }
+        let messages = [];
         let chat = chats.find(({sendUserId}) => sendUserId===targetId);
-        if (!chat) {
-            chat = {
-                sendUserId: targetId,
-                sendUser: target,
-                messages: []
-            };
+        if (chat) {
+            messages = chat.messages;
         }
-        const {messages: chatData} = chat;
         this.setState({
             chatVisible: true,
-            chatTarget: target,
-            chatData
+            chatTarget: target
         });
         const params = {chatTargetId: targetId};
-        if (chatData && chatData.length) {
-            params.startId = chatData[0].id
+        if (messages && messages.length) {
+            params.size = messages.length>10? messages.length: 10;
         }
-        this.getHistoryChatData(params);
+        await this.getHistoryChatData(params);
     }
 
-    sendChat = () => {
-        console.log('发送消息');
+    sendChat = async (params, success) => {
+        const {code} = await axiosPost('/chat', params);
+        if (code===200) {
+            success && success();
+        }
     }
 
     closeChat = () => {
@@ -390,14 +395,18 @@ export default class BasicLayout extends React.PureComponent {
      * @param {number|string} chatTargetId 目标用户id
      * @param {number|string} [startId] 起始消息id
      * @param {number|string} [size=10] 查询条数
+     * @param {function} success 成功回调
      */
-    getHistoryChatData = async ({chatTargetId, startId, size=10}) => {
+    getHistoryChatData = async ({chatTargetId, startId, size=10, success}) => {
         let url = '/chat/{userId}/{current}/{size}';
         let params = {size, current: 1, userId: chatTargetId};
         if (startId) {
             url = '/chat/{userId}/{startId}/{current}/{size}';
             params = {...params, startId};
         }
+        this.setState({
+            chatDataLoading: true
+        });
         const {code, data} = await axiosGet(url, params);
         if (code===200) {
             const {records} = data;
@@ -416,6 +425,10 @@ export default class BasicLayout extends React.PureComponent {
                     });
                 }
             }
+            this.setState({
+                chatDataLoading: false
+            });
+            success && success();
         }
     }
 
@@ -470,6 +483,7 @@ export default class BasicLayout extends React.PureComponent {
             chatTarget,
             chatData,
             chatDataNoMore,
+            chatDataLoading,
             broadcast,
             broadcastModalVisible
         } = this.state;
@@ -508,8 +522,9 @@ export default class BasicLayout extends React.PureComponent {
             onClose: this.closeChat,
             getHistoryChatData: this.getHistoryChatData,
             updateChatReadStatus: this.updateChatReadStatus,
+            loading: chatDataLoading,
             chatData,
-            chatDataNoMore
+            chatDataNoMore,
         };
 
         let broadcast_ = {

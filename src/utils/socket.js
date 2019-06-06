@@ -49,13 +49,21 @@ export default class Socket {
             });
     }
     static disconnect = () => {
-        if (Socket.client) {
-            Socket.client.disconnect();
-            Socket.client = null;
+        try {
+            if (Socket.timerId) {
+                clearTimeout(Socket.timerId);
+                Socket.timerId = null;
+            }
+        } catch (e) {
+            console.log(e);
         }
-        if (Socket.timerId) {
-            clearTimeout(Socket.timerId);
-            Socket.timerId = null;
+        try {
+            if (Socket.client) {
+                Socket.client.disconnect();
+                Socket.client = null;
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 }

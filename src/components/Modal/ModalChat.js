@@ -1,26 +1,30 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'react-fast-compare';
 import {Modal, Button, Avatar, Input, List} from 'antd';
+import Icon from 'components/Icon';
 import moment from 'moment';
+import config from '@/config';
 import './style/chat.less';
 
-class ModalChat extends Component {
+const {notice} = config;
+
+class ModalChat extends PureComponent {
 
     state = {
         scrollBottom: true,
-        scrollHeight: null
+        content: ''
     };
 
     static propTypes = {
         visible: PropTypes.bool,
         self: PropTypes.object,
         target: PropTypes.object,
+        chatData: PropTypes.array,
         onSend: PropTypes.func,
         onClose: PropTypes.func,
         updateChatReadStatus: PropTypes.func,
         getHistoryChatData: PropTypes.func,
-        chatData: PropTypes.array,
     };
 
     bodyStyle = {
@@ -38,56 +42,53 @@ class ModalChat extends Component {
             if (scrollBottom) {
                 this.toBottom();
                 this.handleReadStatus();
-            } else {
-                const {scrollHeight: oldScrollHeight} = this.state;
-                if (oldScrollHeight) {
-                    const chatBodyDom = document.querySelector('.chat-modal .ant-modal-body');
-                    if (chatBodyDom) {
-                        const scrollHeight = chatBodyDom.scrollHeight;
-                        chatBodyDom.scrollTop = scrollHeight - oldScrollHeight;
-                    }
-                }
             }
         }
     }
 
     handleScroll = () => {
-        const chatBodyDom = document.querySelector('.chat-modal .ant-modal-body');
+        const chatBodyDom = this.chatBodyDom();
         if (chatBodyDom) {
             const scrollTop = chatBodyDom.scrollTop;
             const scrollHeight = chatBodyDom.scrollHeight;
             const clientHeight = chatBodyDom.clientHeight;
             if (scrollTop===0) {
-                const {getHistoryChatData, target, chatData, chatDataNoMore} = this.props;
-                const {id: chatTargetId} = target;
-                let startId;
-                if (chatData && chatData.length) {
-                    startId = chatData[0].id;
-                }
-                !chatDataNoMore && getHistoryChatData && getHistoryChatData({chatTargetId, startId});
-                this.setState({
-                    scrollHeight
-                });
+                this.getHistoryData();
             }
             let scrollBottom = false;
             if (scrollTop+clientHeight===scrollHeight) {
                 scrollBottom = true;
                 this.handleReadStatus();
             }
-            const {scrollBottom: scrollBottom_} = this.state;
-            if (scrollBottom!==scrollBottom_) {
-                this.setState({
-                    scrollBottom
-                });
-            }
+            this.setState({
+                scrollBottom
+            });
         }
     }
 
     handleReadStatus = () => {
-        const {chatData, updateChatReadStatus} = this.props;
-        if (chatData && chatData.length) {
-            updateChatReadStatus && updateChatReadStatus(chatData);
+        const {chatData, updateChatReadStatus, target} = this.props;
+        if (chatData && chatData.length && target) {
+            const {id} = target;
+            updateChatReadStatus && updateChatReadStatus(chatData.filter(data => data.sendUserId===id));
         }
+    }
+
+    handleSend = () => {
+        const {content} = this.state;
+        if (!content) {
+            notice.error('不能发送空消息！');
+            return;
+        }
+        const {target, onSend} = this.props;
+        onSend && onSend({
+            content,
+            toUserId: target.id
+        }, () => {
+            this.setState({
+                content: ''
+            });
+        });
     }
 
     handleClose = () => {
@@ -98,8 +99,38 @@ class ModalChat extends Component {
         onClose && onClose();
     }
 
+    handleChangeContent = content => {
+        this.setState({
+            content
+        });
+    }
+
+    getHistoryData = () => {
+        const chatBodyDom = this.chatBodyDom();
+        if (chatBodyDom) {
+            const scrollHeight = chatBodyDom.scrollHeight;
+            const {getHistoryChatData, target, chatData, chatDataNoMore} = this.props;
+            const {id: chatTargetId} = target;
+            let startId;
+            if (chatData && chatData.length) {
+                startId = chatData[0].id;
+            }
+            !chatDataNoMore &&
+            getHistoryChatData &&
+            getHistoryChatData({
+                chatTargetId,
+                startId,
+                success: () => {
+                    const newChatBodyDom = this.chatBodyDom();
+                    const newScrollHeight = newChatBodyDom.scrollHeight;
+                    newChatBodyDom.scrollTop = newScrollHeight - scrollHeight;
+                }
+            });
+        }
+    }
+
     toBottom = () => {
-        const chatBodyDom = document.querySelector('.chat-modal .ant-modal-body');
+        const chatBodyDom = this.chatBodyDom();
         if (chatBodyDom) {
             const scrollHeight = chatBodyDom.scrollHeight;
             const clientHeight = chatBodyDom.clientHeight;
@@ -107,9 +138,11 @@ class ModalChat extends Component {
         }
     }
 
+    chatBodyDom = () => document.querySelector('.chat-modal .ant-modal-body');
+
     render() {
-        // TODO 加上loading
-        const {visible, self, target, onSend, chatData, chatDataNoMore} = this.props;
+        const {visible, self, target, chatData, chatDataNoMore, loading} = this.props;
+        const {content} = this.state;
         const modalProps = {
             className: 'chat-modal',
             visible,
@@ -120,13 +153,17 @@ class ModalChat extends Component {
             width: 600,
             onCancel: this.handleClose,
             title: <Title target={target} />,
-            footer: <Footer onSend={onSend} onClose={this.handleClose} />,
+            footer: <Footer onSend={this.handleSend}
+                            onClose={this.handleClose}
+                            onChange={this.handleChangeContent}
+                            content={content} />,
             wrapProps: {
                 onScroll: this.handleScroll
             }
         };
         return (
             <Modal {...modalProps}>
+                {loading? <Loading />: null}
                 {chatDataNoMore? <NoMore />: null}
                 {chatData&&chatData.length?
                     <List
@@ -171,11 +208,16 @@ const Title = props => {
 }
 
 const Footer = props => {
-    const {onSend, onClose} = props;
+    const {onSend, onClose, onChange, content} = props;
     return (
         <div className='chat-footer'>
             <div className='editor'>
-                <Input.TextArea />
+                <Input.TextArea value={content}
+                                onChange={e => onChange(e.target.value)}
+                                onPressEnter={(e) => {
+                                    e.preventDefault();
+                                    onSend();
+                                }} />
             </div>
             <div>
                 <Button onClick={onClose}>关闭</Button>
@@ -208,8 +250,12 @@ const HeadImg = props => {
 
 const NoMore = props => {
     return (
-        <p style={{textAlign: 'center'}}>没有了。。。</p>
+        <p style={{textAlign: 'center', color: '#bbb'}}>没有了。。。</p>
     );
 }
+
+const Loading = () => (
+    <p style={{textAlign: 'center'}}><Icon type="loading" antd /></p>
+);
 
 export default ModalChat;
