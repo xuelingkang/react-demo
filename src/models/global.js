@@ -4,6 +4,8 @@ import omit from 'object.omit';
 import {has, hasOne, hasAll} from '@/utils/authority';
 import {axiosGet, axiosPut, axiosPatch} from '@/utils/axios';
 import compare from '@/utils/compare';
+import unique from '@/utils/unique';
+import {update as updateBroadcast} from "@/routes/Crud/BroadcastSelf/service";
 
 export default modelEnhance({
     namespace: 'global',
@@ -130,7 +132,7 @@ export default modelEnhance({
             yield put({
                 type: '@change',
                 payload: {
-                    broadcasts: broadcasts.concat(data).sort(compare('sendTime', 'desc'))
+                    broadcasts: unique(broadcasts.concat(data), 'id').sort(compare('sendTime', 'desc'))
                 }
             });
         },
@@ -144,10 +146,10 @@ export default modelEnhance({
                 const {sendUserId, sendUser} = newdata;
                 let chat = chats.find(({sendUserId: sendUserId_}) => sendUserId_===sendUserId);
                 if (chat) {
-                    const {sendUser, messages} = chat;
+                    const {messages} = chat;
                     chat = {
                         ...chat,
-                        messages: messages.concat(newdata).sort(compare('sendTime', 'desc'))
+                        messages: unique(messages.concat(newdata), 'id').sort(compare('sendTime', 'asc'))
                     };
                     chats = chats.map(item => {
                         const {sendUserId: sendUserId_} = item;
@@ -168,9 +170,56 @@ export default modelEnhance({
             yield put({
                 type: '@change',
                 payload: {
-                    chats
+                    chats: unique(chats, 'sendUserId')
                 }
             });
+        },
+        * delBroadcasts({payload}, {put, select}) {
+            const {ids} = payload;
+            if (!ids || !ids.length) {
+                return;
+            }
+            const {broadcasts} = yield select(({global}) => global);
+            yield put({
+                type: '@change',
+                payload: {
+                    broadcasts: unique(broadcasts.filter(({id}) => !ids.includes(id)), 'id').sort(compare('sendTime', 'desc'))
+                }
+            });
+        },
+        * delChats({payload}, {put, select}) {
+            const {ids} = payload;
+            if (!ids || !ids.length) {
+                return;
+            }
+            let {chats} = yield select(({global}) => global);
+            chats = chats.map(chat => {
+                const {messages} = chat;
+                return {
+                    ...chat,
+                    messages: unique(messages.filter(({id}) => !ids.includes(id)), 'id').sort(compare('sendTime', 'asc'))
+                };
+            });
+            yield put({
+                type: '@change',
+                payload: {
+                    chats: unique(chats, 'sendUserId')
+                }
+            });
+        },
+        * updateBroadcastReadStatus({payload}, {call}) {
+            const {ids, success} = payload;
+            const {code} = yield call(updateBroadcast, {ids});
+            if (code === 200) {
+                success && success();
+            }
+        },
+        * updateChatReadStatus({payload}) {
+            const {ids, success} = payload;
+            const {code} = yield axiosPut('/chat/{ids}', {ids})
+            if (code===200) {
+                success && success();
+            }
         }
     },
 

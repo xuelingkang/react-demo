@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'react-fast-compare';
 import {Modal, Button, Avatar, Input, List} from 'antd';
 import moment from 'moment';
 import './style/chat.less';
@@ -7,341 +8,19 @@ import './style/chat.less';
 class ModalChat extends Component {
 
     state = {
-        data: [
-            {
-                "content": "12121214222222222222222222222222227777777777777777777777777777777777777777777777777777777777777777777",
-                "id": 15,
-                "readStatus": 0,
-                "sendTime": 1559529895372,
-                "toUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": 120,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "toUserId": 9,
-                "sendUser": {
-                    "birth": 689529600315,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "952649292@qq.com",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794732206.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 119,
-                        "linkInfo": ""
-                    },
-                    "headImgId": null,
-                    "id": 25,
-                    "logintime": 1559529291545,
-                    "newpassword": "",
-                    "nickname": "刘世红",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "liushihong"
-                },
-                "sendUserId": 25
-            },
-            {
-                "content": "12121214222222222222222222222222227777777777777777777777777777777777777777777777777777777777777777777",
-                "id": 14,
-                "readStatus": 0,
-                "sendTime": 1559529331563,
-                "sendUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": 120,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "sendUserId": 9,
-                "toUser": {
-                    "birth": 689529600315,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "952649292@qq.com",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794732206.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 119,
-                        "linkInfo": ""
-                    },
-                    "headImgId": null,
-                    "id": 25,
-                    "logintime": 1559529291545,
-                    "newpassword": "",
-                    "nickname": "刘世红",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "liushihong"
-                },
-                "toUserId": 25
-            },
-            {
-                "content": "叽叽咕咕过过过过过过过过过过过过过过过过过过过柔柔弱弱若若若若若若若若若若若若若额定的多多多多多多多多多多多多多多多多多多",
-                "id": 13,
-                "readStatus": 0,
-                "sendTime": 1559529314538,
-                "sendUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": 120,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "sendUserId": 9,
-                "toUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "xuelingkang@163.com",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": null,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "toUserId": 9
-            },
-            {
-                "content": "12121214222222222222222222222222227777777777777777777777777777777777777777777777777777777777777777777",
-                "id": 15,
-                "readStatus": 0,
-                "sendTime": 1559529895372,
-                "sendUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": 120,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "sendUserId": 9,
-                "toUser": {
-                    "birth": 689529600315,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "952649292@qq.com",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794732206.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 119,
-                        "linkInfo": ""
-                    },
-                    "headImgId": null,
-                    "id": 25,
-                    "logintime": 1559529291545,
-                    "newpassword": "",
-                    "nickname": "刘世红",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "liushihong"
-                },
-                "toUserId": 25
-            },
-            {
-                "content": "12121214222222222222222222222222227777777777777777777777777777777777777777777777777777777777777777777",
-                "id": 14,
-                "readStatus": 0,
-                "sendTime": 1559529331563,
-                "sendUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": 120,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "sendUserId": 9,
-                "toUser": {
-                    "birth": 689529600315,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "952649292@qq.com",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794732206.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 119,
-                        "linkInfo": ""
-                    },
-                    "headImgId": null,
-                    "id": 25,
-                    "logintime": 1559529291545,
-                    "newpassword": "",
-                    "nickname": "刘世红",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "liushihong"
-                },
-                "toUserId": 25
-            },
-            {
-                "content": "12121214222222222222222222222222227777777777777777777777777777777777777777777777777777777777777777777",
-                "id": 13,
-                "readStatus": 0,
-                "sendTime": 1559529314538,
-                "sendUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": 120,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "sendUserId": 9,
-                "toUser": {
-                    "birth": 650736000736,
-                    "dept": null,
-                    "deptId": 1,
-                    "email": "xuelingkang@163.com",
-                    "headImg": {
-                        "attachmentAddress": "/demofile/head/2019/5/1558794820025.png",
-                        "attachmentName": "",
-                        "attachmentPath": "",
-                        "createTime": null,
-                        "id": 120,
-                        "linkInfo": ""
-                    },
-                    "headImgId": null,
-                    "id": 9,
-                    "logintime": 1559540934686,
-                    "newpassword": "",
-                    "nickname": "薛凌康",
-                    "password": "",
-                    "roles": [],
-                    "sex": null,
-                    "username": "admin"
-                },
-                "toUserId": 9
-            }
-        ]
+        scrollBottom: true,
+        scrollHeight: null
     };
 
     static propTypes = {
         visible: PropTypes.bool,
         self: PropTypes.object,
         target: PropTypes.object,
-        dataUrl: PropTypes.string,
         onSend: PropTypes.func,
-        onClose: PropTypes.func
+        onClose: PropTypes.func,
+        updateChatReadStatus: PropTypes.func,
+        getHistoryChatData: PropTypes.func,
+        chatData: PropTypes.array,
     };
 
     bodyStyle = {
@@ -349,43 +28,129 @@ class ModalChat extends Component {
         overflow: 'auto'
     };
 
+    static getDerivedStateFromProps(props, state) {
+        return state;
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!isEqual(this.props, prevProps)) {
+            const {scrollBottom} = prevState;
+            if (scrollBottom) {
+                this.toBottom();
+                this.handleReadStatus();
+            } else {
+                const {scrollHeight: oldScrollHeight} = this.state;
+                if (oldScrollHeight) {
+                    const chatBodyDom = document.querySelector('.chat-modal .ant-modal-body');
+                    if (chatBodyDom) {
+                        const scrollHeight = chatBodyDom.scrollHeight;
+                        chatBodyDom.scrollTop = scrollHeight - oldScrollHeight;
+                    }
+                }
+            }
+        }
+    }
+
+    handleScroll = () => {
+        const chatBodyDom = document.querySelector('.chat-modal .ant-modal-body');
+        if (chatBodyDom) {
+            const scrollTop = chatBodyDom.scrollTop;
+            const scrollHeight = chatBodyDom.scrollHeight;
+            const clientHeight = chatBodyDom.clientHeight;
+            if (scrollTop===0) {
+                const {getHistoryChatData, target, chatData, chatDataNoMore} = this.props;
+                const {id: chatTargetId} = target;
+                let startId;
+                if (chatData && chatData.length) {
+                    startId = chatData[0].id;
+                }
+                !chatDataNoMore && getHistoryChatData && getHistoryChatData({chatTargetId, startId});
+                this.setState({
+                    scrollHeight
+                });
+            }
+            let scrollBottom = false;
+            if (scrollTop+clientHeight===scrollHeight) {
+                scrollBottom = true;
+                this.handleReadStatus();
+            }
+            const {scrollBottom: scrollBottom_} = this.state;
+            if (scrollBottom!==scrollBottom_) {
+                this.setState({
+                    scrollBottom
+                });
+            }
+        }
+    }
+
+    handleReadStatus = () => {
+        const {chatData, updateChatReadStatus} = this.props;
+        if (chatData && chatData.length) {
+            updateChatReadStatus && updateChatReadStatus(chatData);
+        }
+    }
+
+    handleClose = () => {
+        this.setState({
+            scrollBottom: true
+        });
+        const {onClose} = this.props;
+        onClose && onClose();
+    }
+
+    toBottom = () => {
+        const chatBodyDom = document.querySelector('.chat-modal .ant-modal-body');
+        if (chatBodyDom) {
+            const scrollHeight = chatBodyDom.scrollHeight;
+            const clientHeight = chatBodyDom.clientHeight;
+            chatBodyDom.scrollTop = scrollHeight - clientHeight;
+        }
+    }
+
     render() {
-        const {visible, self, target, onSend, onClose} = this.props;
+        // TODO 加上loading
+        const {visible, self, target, onSend, chatData, chatDataNoMore} = this.props;
         const modalProps = {
+            className: 'chat-modal',
             visible,
             bodyStyle: this.bodyStyle,
             centered: true,
             maskClosable: false,
-            closable: false,
             destroyOnClose: true,
             width: 600,
-            onCancel: onClose,
+            onCancel: this.handleClose,
             title: <Title target={target} />,
-            footer: <Footer onSend={onSend} onClose={onClose} />,
+            footer: <Footer onSend={onSend} onClose={this.handleClose} />,
+            wrapProps: {
+                onScroll: this.handleScroll
+            }
         };
         return (
             <Modal {...modalProps}>
-                <List
-                    dataSource={this.state.data.reverse()}
-                    renderItem={item => {
-                        if (item.sendUserId===self.id) {
-                            return (
-                                <List.Item key={item.id} className='self-message'>
-                                    <Content time={item.sendTime} content={item.content} />
-                                    <HeadImg user={item.sendUser}/>
-                                </List.Item>
-                            );
-                        } else {
-                            return (
-                                <List.Item key={item.id}  className='target-message'>
-                                    <HeadImg user={item.sendUser}/>
-                                    <Content time={item.sendTime} content={item.content} />
-                                </List.Item>
-                            );
-                        }
-                    }}
-                >
-                </List>
+                {chatDataNoMore? <NoMore />: null}
+                {chatData&&chatData.length?
+                    <List
+                        dataSource={chatData}
+                        renderItem={item => {
+                            if (item.sendUserId===self.id) {
+                                return (
+                                    <List.Item key={item.id} className='self-message'>
+                                        <Content time={item.sendTime} content={item.content} />
+                                        <HeadImg user={item.sendUser}/>
+                                    </List.Item>
+                                );
+                            } else {
+                                return (
+                                    <List.Item key={item.id}  className='target-message'>
+                                        <HeadImg user={item.sendUser}/>
+                                        <Content time={item.sendTime} content={item.content} />
+                                    </List.Item>
+                                );
+                            }
+                        }}
+                    >
+                    </List>: null
+                }
             </Modal>
         );
     }
@@ -438,6 +203,12 @@ const HeadImg = props => {
         <Avatar src={user.headImg? user.headImg.attachmentAddress: null}>
             {user.nickname}
         </Avatar>
+    );
+}
+
+const NoMore = props => {
+    return (
+        <p style={{textAlign: 'center'}}>没有了。。。</p>
     );
 }
 

@@ -57,7 +57,7 @@ export default class extends React.Component {
     /**
      * 关闭模态框
      */
-    closeModel = () => {
+    closeModal = () => {
         this.setState({
             modalType: '',
             modalTitle: '',
@@ -97,7 +97,7 @@ export default class extends React.Component {
         });
     };
 
-    saveSuccess = this.closeModel;
+    saveSuccess = this.closeModal;
 
     /**
      * 更新
@@ -116,7 +116,7 @@ export default class extends React.Component {
         });
     };
 
-    updateSuccess = this.closeModel;
+    updateSuccess = this.closeModal;
 
     /**
      * 删除

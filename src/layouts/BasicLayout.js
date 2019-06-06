@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'dva';
-import {Layout} from 'antd';
+import {Button, Layout} from 'antd';
 import {routerRedux, Switch} from 'dva/router';
 import NavBar from 'components/NavBar';
 import {LeftSideBar, RightSideBar} from 'components/SideBar';
@@ -17,11 +17,15 @@ import {getAuth} from '@/utils/authentication';
 import {ModalForm, ModalChat} from "components/Modal";
 import config from '@/config';
 import userinfoColumns from './columns/userinfo';
+import broadcastColumns from './columns/broadcast';
 import Socket from '@/utils/socket';
+import {axiosGet} from '@/utils/axios';
+import unique from '@/utils/unique';
+import compare from '@/utils/compare';
 
 const {Content, Header} = Layout;
-
-const notice = config.notice;
+const {notice, websocket} = config;
+const {endpoint, broadcast_topic, chat_topic} = websocket;
 
 /**
  * 基本部局
@@ -57,6 +61,10 @@ export default class BasicLayout extends React.PureComponent {
             modalLoading: false,
             chatVisible: false,
             chatTarget: null,
+            chatData: [],
+            chatDataNoMore: false,
+            broadcast: null,
+            broadcastModalVisible: false,
         };
 
         const {dispatch} = props;
@@ -93,10 +101,10 @@ export default class BasicLayout extends React.PureComponent {
         const {token} = getAuth();
         const {dispatch} = this.props;
         const socket = new Socket({
-            url: '//server01/endpoint?token='+token,
+            url: `${endpoint}?token=${token}`,
             interval: 5000,
             callback: ({client}) => {
-                client.subscribe('/user/topic/broadcast', ({body}) => {
+                client.subscribe(broadcast_topic, ({body}) => {
                     const data = JSON.parse(body);
                     dispatch({
                         type: 'global/addBroadcasts',
@@ -105,7 +113,7 @@ export default class BasicLayout extends React.PureComponent {
                         }
                     });
                 });
-                client.subscribe('/user/topic/chat', ({body}) => {
+                client.subscribe(chat_topic, ({body}) => {
                     const data = JSON.parse(body);
                     dispatch({
                         type: 'global/addChats',
@@ -113,6 +121,13 @@ export default class BasicLayout extends React.PureComponent {
                             data: [data]
                         }
                     });
+                    const {sendUserId} = data;
+                    const {chatTarget, chatData} = this.state;
+                    if (chatTarget && chatTarget.id===sendUserId) {
+                        this.setState({
+                            chatData: chatData.concat(data)
+                        });
+                    }
                 });
             }
         });
@@ -239,7 +254,7 @@ export default class BasicLayout extends React.PureComponent {
 
     openChat = (target) => {
         const {global} = this.props;
-        const {userinfo} = global;
+        const {userinfo, chats} = global;
         let selfId = null;
         if (userinfo) {
             selfId = userinfo.id;
@@ -248,10 +263,25 @@ export default class BasicLayout extends React.PureComponent {
         if (targetId===selfId) {
             return;
         }
+        let chat = chats.find(({sendUserId}) => sendUserId===targetId);
+        if (!chat) {
+            chat = {
+                sendUserId: targetId,
+                sendUser: target,
+                messages: []
+            };
+        }
+        const {messages: chatData} = chat;
         this.setState({
             chatVisible: true,
             chatTarget: target,
+            chatData
         });
+        const params = {chatTargetId: targetId};
+        if (chatData && chatData.length) {
+            params.startId = chatData[0].id
+        }
+        this.getHistoryChatData(params);
     }
 
     sendChat = () => {
@@ -260,12 +290,133 @@ export default class BasicLayout extends React.PureComponent {
 
     closeChat = () => {
         this.setState({
-            chatVisible: false
+            chatVisible: false,
+            chatTarget: null,
+            chatData: [],
+            chatDataNoMore: false
         });
     }
 
     openBroadcast = broadcast => {
-        console.log(broadcast);
+        this.setState({
+            broadcastModalVisible: true,
+            broadcast
+        });
+    }
+
+    closeBroadcastModal = () => {
+        this.setState({
+            broadcastModalVisible: false,
+            broadcast: null
+        });
+    }
+
+    updateBroadcastReadStatus = records => {
+        const {dispatch} = this.props;
+        const unReads = records.filter(({readStatus}) => !readStatus);
+        if (unReads && unReads.length) {
+            const ids = unReads.map(({id}) => id).join();
+            dispatch({
+                type: 'global/updateBroadcastReadStatus',
+                payload: {
+                    ids,
+                    success: () => this.updateBroadcastReadStatusSuccess(records)
+                }
+            });
+        } else {
+            this.updateBroadcastReadStatusSuccess(records);
+        }
+    }
+
+    updateBroadcastReadStatusSuccess = records => {
+        this.closeBroadcastModal();
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'global/delBroadcasts',
+            payload: {
+                ids: records.map(({id}) => id)
+            }
+        });
+        if (this.props.history.location.pathname==='/broadcastSelf') {
+            dispatch({
+                type: 'broadcastself/search'
+            });
+        }
+    }
+
+    updateChatReadStatus = records => {
+        const {dispatch} = this.props;
+        const unReads = records.filter(({readStatus}) => !readStatus);
+        if (unReads && unReads.length) {
+            const ids = unReads.map(({id}) => id).join();
+            dispatch({
+                type: 'global/updateChatReadStatus',
+                payload: {
+                    ids,
+                    success: () => this.updateChatReadStatusSuccess(records)
+                }
+            });
+        } else {
+            this.updateChatReadStatusSuccess(records);
+        }
+    }
+
+    updateChatReadStatusSuccess = records => {
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'global/delChats',
+            payload: {
+                ids: records.map(({id}) => id)
+            }
+        });
+        const {chatData} = this.state;
+        const newChatData = chatData.map(data => {
+            const {id: id_} = data;
+            if (records.some(({id}) => id===id_)) {
+                return {
+                    ...data,
+                    readStatus: 1
+                }
+            }
+            return data;
+        });
+        this.setState({
+            chatData: newChatData
+        });
+    }
+
+    /**
+     * 查询历史聊天消息
+     * @param {number|string} chatTargetId 目标用户id
+     * @param {number|string} [startId] 起始消息id
+     * @param {number|string} [size=10] 查询条数
+     */
+    getHistoryChatData = async ({chatTargetId, startId, size=10}) => {
+        let url = '/chat/{userId}/{current}/{size}';
+        let params = {size, current: 1, userId: chatTargetId};
+        if (startId) {
+            url = '/chat/{userId}/{startId}/{current}/{size}';
+            params = {...params, startId};
+        }
+        const {code, data} = await axiosGet(url, params);
+        if (code===200) {
+            const {records} = data;
+            if (records && records.length) {
+                const {chatVisible, chatTarget, chatData} = this.state;
+                const newData = unique(chatData.concat(records), 'id').sort(compare('sendTime', 'asc'));
+                if (chatVisible && chatTarget && chatTarget.id===chatTargetId) {
+                    this.setState({
+                        chatData: newData
+                    });
+                }
+            } else {
+                if (!records || !records.length) {
+                    this.setState({
+                        chatDataNoMore: true
+                    });
+                }
+            }
+        }
     }
 
     modalHandlers = {
@@ -317,6 +468,10 @@ export default class BasicLayout extends React.PureComponent {
             modalLoading,
             chatVisible,
             chatTarget,
+            chatData,
+            chatDataNoMore,
+            broadcast,
+            broadcastModalVisible
         } = this.state;
         const {routerData, location, global} = this.props;
         const {userinfo={}, structure=[], broadcasts, chats} = global;
@@ -350,7 +505,41 @@ export default class BasicLayout extends React.PureComponent {
             self: userinfo,
             target: chatTarget,
             onSend: this.sendChat,
-            onClose: this.closeChat
+            onClose: this.closeChat,
+            getHistoryChatData: this.getHistoryChatData,
+            updateChatReadStatus: this.updateChatReadStatus,
+            chatData,
+            chatDataNoMore
+        };
+
+        let broadcast_ = {
+            ...broadcast,
+        };
+        if (broadcast) {
+            broadcast_.sendUserNickname = broadcast.sendUser.nickname
+        }
+        const modalBroadcastProps = {
+            title: '查看广播',
+            modalType: 'broadcast',
+            record: broadcast_,
+            visible: broadcastModalVisible,
+            columns: broadcastColumns(),
+            modalOpts: {
+                width: 700,
+                footer: [
+                    <Button key="back" onClick={this.closeBroadcastModal}>
+                        关闭
+                    </Button>,
+                    <Button key="submit" type="primary" onClick={() => this.updateBroadcastReadStatus([broadcast_])}>
+                        已读
+                    </Button>
+                ]
+            },
+            handlers: {
+                onCancel: {
+                    default: this.closeBroadcastModal
+                }
+            }
         };
 
         return (
@@ -416,6 +605,7 @@ export default class BasicLayout extends React.PureComponent {
                 <SkinToolbox onChangeTheme={this.onChangeTheme} theme={theme}/>
                 <ModalForm {...modalFormProps} />
                 <ModalChat {...modalChatProps} />
+                <ModalForm {...modalBroadcastProps} />
             </Layout>
         );
     }

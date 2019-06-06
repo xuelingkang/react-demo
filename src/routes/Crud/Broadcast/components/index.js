@@ -35,7 +35,7 @@ export default class extends BaseCrudComponent {
             save: this.submitSave
         },
         onCancel: {
-            default: this.closeModel
+            default: this.closeModal
         }
     };
 

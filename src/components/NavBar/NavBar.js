@@ -291,7 +291,7 @@ const NoticeDropDown = ({chats=[], broadcasts=[], openChat, openBroadcast, onCli
             (messages && messages.length)?
                 <li key={sendUserId} className="list-group-item" onClick={() => openChat(sendUser)}>
                     <a className="animated animated-short fadeInUp">
-                        <NoticePreview user={sendUser} content={`${messages.length}条：${messages[0].content}`} />
+                        <NoticePreview user={sendUser} content={`${messages.length}条未读：${messages[0].content}`} />
                     </a>
                 </li>: null
         ))}

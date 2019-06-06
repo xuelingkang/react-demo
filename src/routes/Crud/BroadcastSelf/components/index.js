@@ -23,7 +23,7 @@ export default class extends BaseCrudComponent {
 
     modalHandlers = {
         onCancel: {
-            default: this.closeModel
+            default: this.closeModal
         }
     };
 
@@ -45,12 +45,19 @@ export default class extends BaseCrudComponent {
     }
 
     updateReadStatusSuccess = records => {
-        this.closeModel();
+        this.closeModal();
         const { rows } = this.state;
         this.setState({
             rows: rows.filter(
                 item => !records.some(jtem => jtem.rowKey === item.rowKey)
             )
+        });
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'global/delBroadcasts',
+            payload: {
+                ids: records.map(({id}) => id)
+            }
         });
     }
 
@@ -87,7 +94,7 @@ export default class extends BaseCrudComponent {
             modalOpts: {
                 width: 700,
                 footer: [
-                    <Button key="back" onClick={this.closeModel}>
+                    <Button key="back" onClick={this.closeModal}>
                         关闭
                     </Button>,
                     <Button key="submit" type="primary" onClick={() => this.updateReadStatus([record])} loading={loading}>

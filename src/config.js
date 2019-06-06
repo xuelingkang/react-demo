@@ -25,4 +25,10 @@ export default {
         loading: <PageLoading loading/>
     },
 
+    websocket: {
+        endpoint: '//server01/endpoint',
+        broadcast_topic: '/user/topic/broadcast',
+        chat_topic: '/user/topic/chat',
+    }
+
 };
