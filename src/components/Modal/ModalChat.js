@@ -250,7 +250,7 @@ const HeadImg = props => {
 
 const NoMore = props => {
     return (
-        <p style={{textAlign: 'center', color: '#bbb'}}>没有了。。。</p>
+        <p style={{textAlign: 'center', color: '#bbb'}}>无更多消息</p>
     );
 }
 

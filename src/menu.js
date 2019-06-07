@@ -1,7 +1,7 @@
 // 导航菜单
 export default [
     {
-        name: '仪表盘',
+        name: 'dashboard',
         icon: 'dashboard',
         path: '/dashboard',
     },
