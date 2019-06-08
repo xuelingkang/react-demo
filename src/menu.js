@@ -1,9 +1,16 @@
 // 导航菜单
 export default [
     {
-        name: 'dashboard',
+        name: '统计图表',
         icon: 'dashboard',
         path: '/dashboard',
+        oneof: [
+            'http./summary/broadcast/month.GET',
+            'http./summary/mail/month.GET',
+            'http./summary/broadcast/senduser.GET',
+            'http./summary/mail/senduser.GET',
+            'http./summary/user/sex.GET'
+        ]
     },
     {
         name: '任务管理',
@@ -51,7 +58,13 @@ export default [
         name: '系统管理',
         icon: 'desktop',
         path: '/system',
-        oneof: ['http./dept/*/*.GET', 'http./user/*/*.GET', 'http./role/*/*.GET', 'http./resource/*/*.GET', 'http./attachment/*/*.GET'],
+        oneof: [
+            'http./dept/*/*.GET',
+            'http./user/*/*.GET',
+            'http./role/*/*.GET',
+            'http./resource/*/*.GET',
+            'http./attachment/*/*.GET'
+        ],
         children: [
             {
                 name: '部门管理',

@@ -46,7 +46,6 @@ const routesConfig = app => [
         indexRoute: '/dashboard',
         childRoutes: [
             Dashboard(app),
-
             Dept(app),
             User(app),
             Role(app),
