@@ -203,8 +203,8 @@ const BroadcastMonth = props => {
     dv.transform({
         type: 'fold',
         fields: ['count'], // 展开字段集
-        key: 'city', // key字段
-        value: 'temperature' // value字段
+        key: 'time', // key字段
+        value: 'summary' // value字段
     });
 
     const cols = {
@@ -216,15 +216,15 @@ const BroadcastMonth = props => {
         <Chart data={dv} scale={cols}>
             <Legend/>
             <Axis name="date" />
-            <Axis name="temperature" />
+            <Axis name="summary" />
             <Tooltip crosshairs={{type: 'y'}} />
-            <Geom type="line" position="date*temperature" size={2} color={'city'} />
+            <Geom type="line" position="date*summary" size={2} color={'time'} />
             <Geom
                 type="point"
-                position="date*temperature"
+                position="date*summary"
                 size={4}
                 shape={'circle'}
-                color={'city'}
+                color={'time'}
                 style={{stroke: '#fff', lineWidth: 1}}
             />
         </Chart>
@@ -241,8 +241,8 @@ const MailMonth = props => {
     dv.transform({
         type: 'fold',
         fields: ['count'], // 展开字段集
-        key: 'city', // key字段
-        value: 'temperature' // value字段
+        key: 'time', // key字段
+        value: 'summary' // value字段
     });
 
     const cols = {
@@ -254,15 +254,15 @@ const MailMonth = props => {
         <Chart data={dv} scale={cols}>
             <Legend/>
             <Axis name="date" />
-            <Axis name="temperature" />
+            <Axis name="summary" />
             <Tooltip crosshairs={{type: 'y'}} />
-            <Geom type="line" position="date*temperature" size={2} color={'city'} />
+            <Geom type="line" position="date*summary" size={2} color={'time'} />
             <Geom
                 type="point"
-                position="date*temperature"
+                position="date*summary"
                 size={4}
                 shape={'circle'}
-                color={'city'}
+                color={'time'}
                 style={{stroke: '#fff', lineWidth: 1}}
             />
         </Chart>
