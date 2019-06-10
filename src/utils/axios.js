@@ -4,6 +4,8 @@ import qs from 'qs';
 import { getAuth } from '@/utils/authentication';
 import config from '@/config';
 
+const baseURL = '/api';
+const timeout = 20000;
 const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
 const JSON_CONTENT_TYPE = 'application/json; charset=utf-8';
 const JSON_HEADER = {headers: {'Content-Type': JSON_CONTENT_TYPE}};
@@ -11,8 +13,8 @@ const JSON_HEADER = {headers: {'Content-Type': JSON_CONTENT_TYPE}};
 const notice = config.notice;
 
 let instance = axios.create({
-    timeout: 20000,
-    baseURL: '/',
+    baseURL,
+    timeout,
     headers: {
         'Content-Type': FORM_CONTENT_TYPE,
     }

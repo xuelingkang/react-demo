@@ -8,7 +8,7 @@ const notice = normal;
 
 let endpoint;
 if (process.env.NODE_ENV === 'development') {
-    endpoint = '//server01/endpoint';
+    endpoint = '//server01/api/endpoint';
 } else if (process.env.NODE_ENV === 'production') {
     endpoint = '/endpoint';
 }
