@@ -126,13 +126,13 @@ class Panel extends Component {
                         </a>
                         <a
                             className="panel-control-fullscreen"
-                            onClick={this.onExpand(expand ? false : true)}
+                            onClick={this.onExpand(!expand)}
                         >
                           <Icon type={`${expand ? 'shrink' : 'enlarge'}`}/>
                         </a>
                         <a
                             className="panel-control-collapsed"
-                            onClick={this.onCollapse(collapse ? false : true)}
+                            onClick={this.onCollapse(!collapse)}
                         >
                           <Icon type={`${collapse ? 'plus' : 'minus'}`}/>
                         </a>
