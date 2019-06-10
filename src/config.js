@@ -10,7 +10,7 @@ let endpoint;
 if (process.env.NODE_ENV === 'development') {
     endpoint = '//server01/api/endpoint';
 } else if (process.env.NODE_ENV === 'production') {
-    endpoint = '/endpoint';
+    endpoint = '/api/endpoint';
 }
 
 /**
