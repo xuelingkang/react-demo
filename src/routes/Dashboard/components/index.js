@@ -8,6 +8,7 @@ import G2 from 'components/Charts/G2';
 import DataSet from '@antv/data-set';
 import { modelNamespace } from '../constant';
 import CheckResource from '@/utils/checkResource';
+import Condition from '@/utils/condition';
 import './index.less';
 
 const {Content} = Layout;
@@ -20,64 +21,134 @@ const {Html} = Guide;
     loading: isLoading(loading, modelNamespace)
 }))
 export default class Dashboard extends BaseCrudComponent {
+    state = {
+        broadcastMonthVisible: true,
+        mailMonthVisible: true,
+        broadcastSendUserVisible: true,
+        mailSendUserVisible: true,
+        userSexVisible: true,
+    };
+    hidePanel = key => {
+        this.setState({
+            [key]: false
+        });
+    }
+    refreshPanel = key => {
+        const {dispatch} = this.props;
+        dispatch({
+            type: `${modelNamespace}/${key}`
+        });
+    }
     render() {
+        const {broadcastMonthVisible, mailMonthVisible, broadcastSendUserVisible, mailSendUserVisible, userSexVisible} = this.state;
         const {modelState} = this.props;
         const {broadcastMonth, mailMonth, broadcastSendUser, mailSendUser, userSex} = modelState;
         return (
             <Layout className="full-layout page dashboard-page">
                 <Content>
-                    <CheckResource
-                        resource='http./summary/broadcast/month.GET'
+                    <Condition
+                        condition={broadcastMonthVisible}
                         component={
-                        <Row>
-                            <Col>
-                                <Panel title="近一个月广播统计" height={300}>
-                                    <BroadcastMonth data={broadcastMonth} />
-                                </Panel>
-                            </Col>
-                        </Row>
-                    } />
-                    <CheckResource
-                        resource='http./summary/mail/month.GET'
+                            <CheckResource
+                                resource='http./summary/broadcast/month.GET'
+                                component={
+                                    <Row>
+                                        <Col>
+                                            <Panel
+                                                title="近一个月广播统计"
+                                                height={300}
+                                                onClose={() => this.hidePanel('broadcastMonthVisible')}
+                                                onRefresh={() => this.refreshPanel('broadcastMonth')}
+                                            >
+                                                <BroadcastMonth data={broadcastMonth} />
+                                            </Panel>
+                                        </Col>
+                                    </Row>
+                                }
+                            />
+                        }
+                    />
+                    <Condition
+                        condition={mailMonthVisible}
                         component={
-                            <Row>
-                                <Col>
-                                    <Panel title="近一个月邮件统计" height={300}>
-                                        <MailMonth data={mailMonth} />
-                                    </Panel>
-                                </Col>
-                            </Row>
+                            <CheckResource
+                                resource='http./summary/mail/month.GET'
+                                component={
+                                    <Row>
+                                        <Col>
+                                            <Panel
+                                                title="近一个月邮件统计"
+                                                height={300}
+                                                onClose={() => this.hidePanel('mailMonthVisible')}
+                                                onRefresh={() => this.refreshPanel('mailMonth')}
+                                            >
+                                                <MailMonth data={mailMonth} />
+                                            </Panel>
+                                        </Col>
+                                    </Row>
+                                }
+                            />
                         }
                     />
                     <Row gutter={20}>
-                        <CheckResource
-                            resource='http./summary/broadcast/senduser.GET'
+                        <Condition
+                            condition={broadcastSendUserVisible}
                             component={
-                                <Col md={8}>
-                                    <Panel title="用户广播占比" height={260}>
-                                        <BroadcastSendUser data={broadcastSendUser} />
-                                    </Panel>
-                                </Col>
+                                <CheckResource
+                                    resource='http./summary/broadcast/senduser.GET'
+                                    component={
+                                        <Col md={8}>
+                                            <Panel
+                                                title="用户广播占比"
+                                                height={260}
+                                                onClose={() => this.hidePanel('broadcastSendUserVisible')}
+                                                onRefresh={() => this.refreshPanel('broadcastSendUser')}
+                                            >
+                                                <BroadcastSendUser data={broadcastSendUser} />
+                                            </Panel>
+                                        </Col>
+                                    }
+                                />
                             }
                         />
-                        <CheckResource
-                            resource='http./summary/broadcast/senduser.GET'
+                        <Condition
+                            condition={mailSendUserVisible}
                             component={
-                                <Col md={8}>
-                                    <Panel title="用户邮件占比" height={260}>
-                                        <MailSendUser data={mailSendUser} />
-                                    </Panel>
-                                </Col>
+                                <CheckResource
+                                    resource='http./summary/broadcast/senduser.GET'
+                                    component={
+                                        <Col md={8}>
+                                            <Panel
+                                                title="用户邮件占比"
+                                                height={260}
+                                                onClose={() => this.hidePanel('mailSendUserVisible')}
+                                                onRefresh={() => this.refreshPanel('mailSendUser')}
+                                            >
+                                                <MailSendUser data={mailSendUser} />
+                                            </Panel>
+                                        </Col>
+                                    }
+                                />
                             }
                         />
-                        <CheckResource
-                            resource='http./summary/broadcast/senduser.GET'
+                        <Condition
+                            condition={userSexVisible}
                             component={
-                                <Col md={8}>
-                                    <Panel title="用户性别占比" height={260}>
-                                        <UserSex data={userSex} />
-                                    </Panel>
-                                </Col>
+                                <CheckResource
+                                    resource='http./summary/broadcast/senduser.GET'
+                                    component={
+                                        <Col md={8}>
+                                            <Panel
+                                                title="用户性别占比"
+                                                height={260}
+                                                onClose={() => this.hidePanel('userSexVisible')}
+                                                onRefresh={() => this.refreshPanel('userSex')}
+                                            >
+                                                <UserSex data={userSex} />
+                                            </Panel>
+                                        </Col>
+                                    }
+                                />
                             }
                         />
                     </Row>

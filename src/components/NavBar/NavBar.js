@@ -169,18 +169,18 @@ class NavBar extends PureComponent {
                         </li>
                     )}
                 </ul>
-                {isMobile ? null : (
-                    <form className="navbar-form navbar-search clearfix">
-                        <div className="form-group">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="全文检索"
-                                onClick={this.onOpenSearchBox}
-                            />
-                        </div>
-                    </form>
-                )}
+                {/*{isMobile ? null : (*/}
+                {/*    <form className="navbar-form navbar-search clearfix">*/}
+                {/*        <div className="form-group">*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                className="form-control"*/}
+                {/*                placeholder="全文检索"*/}
+                {/*                onClick={this.onOpenSearchBox}*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*    </form>*/}
+                {/*)}*/}
                 <ul className="nav navbar-nav navbar-right clearfix">
                     <li className="dropdown">
                         <Popover
