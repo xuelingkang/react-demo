@@ -29,6 +29,11 @@ export default {
         endpoint: '//server01/endpoint',
         broadcast_topic: '/user/topic/broadcast',
         chat_topic: '/user/topic/chat',
+    },
+
+    attachmentSizeLimit: {
+        headImg: 0.01,
+        mail: 20
     }
 
 };

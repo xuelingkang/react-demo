@@ -1,11 +1,13 @@
 import React from 'react';
-import {message} from "antd";
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
 import Condition from '@/utils/condition';
+import config from '@/config';
+
+const {notice, attachmentSizeLimit: {mail}} = config;
 
 export default (self, allUsers) => [
     {
@@ -152,9 +154,9 @@ export default (self, allUsers) => [
                     }
                 },
                 beforeUpload: file => {
-                    const validSize = file.size / 1024 / 1024 < 20;
+                    const validSize = file.size / 1024 / 1024 < mail;
                     if (!validSize) {
-                        message.error('单个附件必须小于20M');
+                        notice.error(`单个附件必须小于${mail}M`);
                     }
                     return validSize;
                 },

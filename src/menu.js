@@ -37,7 +37,7 @@ export default [
         oneof: ['http./broadcast/*/*.GET', 'http./broadcast/self/*/*.GET'],
         children: [
             {
-                name: '所有消息',
+                name: '广播管理',
                 path: '/broadcast',
                 resource: 'http./broadcast/*/*.GET'
             },

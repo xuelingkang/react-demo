@@ -1,4 +1,6 @@
-import {message} from 'antd';
+import config from '@/config';
+
+const {notice, attachmentSizeLimit: {headImg}} = config;
 
 export default (self) => [
     {
@@ -155,11 +157,11 @@ export default (self) => [
                 beforeUpload: file => {
                     const validType = file.type === 'image/jpeg' || file.type === 'image/png';
                     if (!validType) {
-                        message.error('请上传JPG、PNG图片');
+                        notice.error('请上传JPG、PNG图片');
                     }
-                    const isLt10M = file.size / 1024 / 1024 < 10;
+                    const isLt10M = file.size / 1024 / 1024 < headImg;
                     if (!isLt10M) {
-                        message.error('图片必须小于10M');
+                        notice.error(`图片必须小于${headImg}M`);
                     }
                     return validType && isLt10M;
                 }
