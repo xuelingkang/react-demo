@@ -6,11 +6,13 @@ import {normal} from 'components/Notification';
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
 const notice = normal;
 
+const baseURL = '/api';
+
 let endpoint;
 if (process.env.NODE_ENV === 'development') {
-    endpoint = '//server01/api/endpoint';
+    endpoint = `//server01${baseURL}/endpoint`;
 } else if (process.env.NODE_ENV === 'production') {
-    endpoint = '/api/endpoint';
+    endpoint = `${baseURL}/endpoint`;
 }
 
 /**
@@ -31,6 +33,8 @@ export default {
     router: {
         loading: <PageLoading loading/>
     },
+
+    baseURL,
 
     websocket: {
         endpoint,

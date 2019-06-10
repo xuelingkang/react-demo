@@ -4,7 +4,7 @@ import qs from 'qs';
 import { getAuth } from '@/utils/authentication';
 import config from '@/config';
 
-const baseURL = '/api';
+const {baseURL} = config;
 const timeout = 20000;
 const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8';
 const JSON_CONTENT_TYPE = 'application/json; charset=utf-8';
