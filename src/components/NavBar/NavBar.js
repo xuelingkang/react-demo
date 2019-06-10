@@ -155,13 +155,20 @@ class NavBar extends PureComponent {
           </span>
                 </div>
                 <ul className="nav navbar-nav navbar-left clearfix">
-                    {isMobile ? (
-                        <li className="mini-search" onClick={this.onOpenSearchBox}>
-                            <a>
-                                <Icon type="search" antd/>
-                            </a>
-                        </li>
-                    ) : (
+                    {/*{isMobile ? (*/}
+                    {/*    <li className="mini-search" onClick={this.onOpenSearchBox}>*/}
+                    {/*        <a>*/}
+                    {/*            <Icon type="search" antd/>*/}
+                    {/*        </a>*/}
+                    {/*    </li>*/}
+                    {/*) : (*/}
+                    {/*    <li onClick={this.toggleFullScreen}>*/}
+                    {/*        <a className="request-fullscreen">*/}
+                    {/*            <Icon type="screen-full"/>*/}
+                    {/*        </a>*/}
+                    {/*    </li>*/}
+                    {/*)}*/}
+                    {isMobile ? null: (
                         <li onClick={this.toggleFullScreen}>
                             <a className="request-fullscreen">
                                 <Icon type="screen-full"/>
