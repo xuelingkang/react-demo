@@ -25,7 +25,7 @@ import compare from '@/utils/compare';
 
 const {Content, Header} = Layout;
 const {notice, websocket} = config;
-const {endpoint, broadcast_topic, chat_topic} = websocket;
+const {endpoint, broadcastTopic, chatTopic} = websocket;
 
 /**
  * 基本部局
@@ -108,7 +108,7 @@ export default class BasicLayout extends React.PureComponent {
             url: `${endpoint}?token=${token}`,
             interval: 5000,
             callback: ({client}) => {
-                client.subscribe(broadcast_topic, ({body}) => {
+                client.subscribe(broadcastTopic, ({body}) => {
                     const data = JSON.parse(body);
                     dispatch({
                         type: 'global/addBroadcasts',
@@ -117,7 +117,7 @@ export default class BasicLayout extends React.PureComponent {
                         }
                     });
                 });
-                client.subscribe(chat_topic, ({body}) => {
+                client.subscribe(chatTopic, ({body}) => {
                     const data = JSON.parse(body);
                     if (data.sendUserId!==user.id) {
                         dispatch({

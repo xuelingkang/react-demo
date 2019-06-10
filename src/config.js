@@ -6,6 +6,13 @@ import {normal} from 'components/Notification';
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
 const notice = normal;
 
+let endpoint;
+if (process.env.NODE_ENV === 'development') {
+    endpoint = '//server01/endpoint';
+} else if (process.env.NODE_ENV === 'production') {
+    endpoint = '/endpoint';
+}
+
 /**
  * 应用配置 如请求格式，反回格式，异常处理方式，分页格式等
  */
@@ -26,13 +33,13 @@ export default {
     },
 
     websocket: {
-        endpoint: '//server01/endpoint',
-        broadcast_topic: '/user/topic/broadcast',
-        chat_topic: '/user/topic/chat',
+        endpoint,
+        broadcastTopic: '/user/topic/broadcast',
+        chatTopic: '/user/topic/chat',
     },
 
     attachmentSizeLimit: {
-        headImg: 0.01,
+        headImg: 10,
         mail: 20
     }
 
