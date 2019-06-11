@@ -1,9 +1,9 @@
 :: 将编译好的文件打包到桌面
 @echo off
-:: 编译输出目录
-set buildDir=%cd%\build
 :: 最终压缩包路径
 set zipFile=%USERPROFILE%\Desktop\build.zip
+:: 编译输出目录
+set buildDir=%cd%\build
 :: zip程序路径
 set zipExe=%cd%\win\zip.exe
 
