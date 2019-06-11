@@ -19,7 +19,7 @@ echo clean %zipFile%
 echo.
 call del %zipFile%
 )
-:: 变异
+:: 编译
 echo build...
 echo.
 call npm run-script build
