@@ -1,6 +1,6 @@
 import config from '@/config';
 
-const {notice, attachmentSizeLimit: {headImg}} = config;
+const {notice, baseURL, attachmentSizeLimit: {headImg}} = config;
 
 export default (self) => [
     {
@@ -135,7 +135,7 @@ export default (self) => [
                         message: '请上传头像'
                     }
                 ],
-                action: '/file/head/1',
+                action: `${baseURL}/file/head/1`,
                 fileName: 'file',
                 onChange: (form, info) => {
                     if (info.file.status === 'uploading') {

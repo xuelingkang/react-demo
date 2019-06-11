@@ -7,7 +7,7 @@ import CheckResource from '@/utils/checkResource';
 import Condition from '@/utils/condition';
 import config from '@/config';
 
-const {notice, attachmentSizeLimit: {mail}} = config;
+const {notice, baseURL, attachmentSizeLimit: {mail}} = config;
 
 export default (self, allUsers) => [
     {
@@ -143,7 +143,7 @@ export default (self, allUsers) => [
         formItem: {
             default: {
                 type: 'upload',
-                action: '/file/mail/1',
+                action: `${baseURL}/file/mail/1`,
                 fileName: 'file',
                 max: 3,
                 onChange: (form, info) => {
