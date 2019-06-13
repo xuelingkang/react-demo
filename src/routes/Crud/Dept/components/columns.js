@@ -81,6 +81,31 @@ export default (self, allDepts) => [
         }
     },
     {
+        title: '新用户部门',
+        name: 'isDefault',
+        dict: [
+            {code: 1, codeName: '是'},
+            {code: 0, codeName: '否'}
+        ],
+        tableItem: {},
+        formItem: {
+            default: {
+                type: 'radio',
+                rules: [
+                    {
+                        required: true,
+                        message: '请选择是否新用户默认部门'
+                    },
+                ]
+            },
+            save: {},
+            update: {}
+        },
+        searchItem: {
+            type: 'select'
+        }
+    },
+    {
         title: '操作',
         tableItem: {
             width: 180,
