@@ -8,12 +8,15 @@ import config from '@/config';
 import './style/chat.less';
 
 const {notice} = config;
+const minSendInterval = 1000;
 
 class ModalChat extends PureComponent {
 
     state = {
         scrollBottom: true,
-        content: ''
+        content: '',
+        sendWait: false,
+        sendWaitTimer: null,
     };
 
     static propTypes = {
@@ -75,9 +78,13 @@ class ModalChat extends PureComponent {
     }
 
     handleSend = () => {
-        const {content} = this.state;
+        const {content, sendWait} = this.state;
         if (!content) {
             notice.error('不能发送空消息！');
+            return;
+        }
+        if (sendWait) {
+            notice.warn('发送过快，请稍后');
             return;
         }
         const {target, onSend} = this.props;
@@ -85,8 +92,15 @@ class ModalChat extends PureComponent {
             content,
             toUserId: target.id
         }, () => {
+            const sendWaitTimer = setTimeout(() => {
+                this.setState({
+                    sendWait: false
+                });
+            }, minSendInterval);
             this.setState({
-                content: ''
+                sendWaitTimer,
+                content: '',
+                sendWait: true,
             });
         });
     }
