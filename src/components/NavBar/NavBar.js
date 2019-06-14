@@ -286,7 +286,7 @@ const UserDropDown = ({onClick, showModal}) => (
 );
 
 const NoticeDropDown = ({chats=[], broadcasts=[], openChat, openBroadcast, onClick}) => (
-    <ul className="dropdown-menu list-group dropdown-persist" onClick={onClick}>
+    <ul className="dropdown-menu list-group dropdown-persist" style={{maxHeight: 300, overflow: 'auto'}} onClick={onClick}>
         {broadcasts.map(broadcast => (
             <li key={broadcast.id} className="list-group-item" onClick={() => openBroadcast(broadcast)}>
                 <a className="animated animated-short fadeInUp">
