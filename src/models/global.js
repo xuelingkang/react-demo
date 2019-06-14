@@ -208,17 +208,21 @@ export default modelEnhance({
             });
         },
         * updateBroadcastReadStatus({payload}, {call}) {
-            const {ids, success} = payload;
-            const {code} = yield call(updateBroadcast, {ids});
-            if (code === 200) {
-                success && success();
+            if (payload) {
+                const {ids, success} = payload;
+                const {code} = yield call(updateBroadcast, {ids});
+                if (code === 200) {
+                    success && success();
+                }
             }
         },
         * updateChatReadStatus({payload}) {
-            const {ids, success} = payload;
-            const {code} = yield axiosPut('/chat/{ids}', {ids})
-            if (code===200) {
-                success && success();
+            if (payload) {
+                const {ids, success} = payload;
+                const {code} = yield axiosPut('/chat/{ids}', {ids});
+                if (code===200) {
+                    success && success();
+                }
             }
         }
     },
