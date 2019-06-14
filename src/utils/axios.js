@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
+import index from '@/index';
 import { getAuth } from '@/utils/authentication';
 import config from '@/config';
 
@@ -37,6 +38,9 @@ instance.interceptors.response.use(response => {
     const {code, message} = response.data;
     if (code !== 200) {
         notice.error('错误码：'+code+'，错误信息：'+message);
+        if (code===401) {
+            toLogin();
+        }
     }
     return response.data;
 }, error => {
@@ -44,8 +48,16 @@ instance.interceptors.response.use(response => {
     const message = error.response.data.message || error.response.statusText;
     notice.error('错误码：'+code+'，错误信息：'+message);
     // return Promise.reject(error);
+    if (code===401) {
+        toLogin();
+    }
     return {code, message};
 });
+
+const toLogin = () => {
+    const {app: {_history: history}} = index;
+    history.replace('/sign/login');
+}
 
 const pathVariableReg = new RegExp('{\\w+}', 'g');
 

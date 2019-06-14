@@ -55,7 +55,7 @@ export default class Socket {
                 Socket.timerId = null;
             }
         } catch (e) {
-            console.log(e);
+            Socket.timerId = null;
         }
         try {
             if (Socket.client) {
@@ -63,7 +63,7 @@ export default class Socket {
                 Socket.client = null;
             }
         } catch (e) {
-            console.log(e);
+            Socket.client = null;
         }
     }
 }

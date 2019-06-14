@@ -22,9 +22,11 @@ export function getAuth() {
     return {token, authorities, user};
 }
 export function removeAuth() {
-    axiosGet('/logout')
-        .then(() => (removeLocalAuth()), () => (removeLocalAuth()))
-        .catch(() => (removeLocalAuth()));
+    const {token} = getAuth();
+    if (token) {
+        removeLocalAuth();
+        axiosGet(`/logout?token=${token}`);
+    }
 }
 function removeLocalAuth() {
     cache.remove(TOKEN);
