@@ -10,7 +10,7 @@ const baseURL = '/api';
 
 let endpoint;
 if (process.env.NODE_ENV === 'development') {
-    endpoint = `//server01${baseURL}/endpoint`;
+    endpoint = `//ali-server01${baseURL}/endpoint`;
 } else if (process.env.NODE_ENV === 'production') {
     endpoint = `${baseURL}/endpoint`;
 }
