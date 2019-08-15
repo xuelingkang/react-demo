@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import {Layout, Button, Modal} from 'antd';
+import Editor from 'for-editor';
 import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
@@ -21,6 +22,23 @@ const Pagination = DataTable.Pagination;
 }))
 export default class extends BaseCrudComponent {
 
+    openIntro = async (record, prepareRecord) => {
+        if (record && prepareRecord) {
+            record = await prepareRecord(record);
+        }
+        this.setState({
+            recordIntro: record,
+            visibleIntro: true
+        });
+    }
+
+    closeIntro = () => {
+        this.setState({
+            recordIntro: null,
+            visibleIntro: false
+        })
+    }
+
     modalHandlers = {
         onSubmit: {
             save: this.submitSave,
@@ -35,7 +53,7 @@ export default class extends BaseCrudComponent {
         const { modelState, loading } = this.props;
         const { pageInfo, allUsers } = modelState;
         const columns = createColumns(this, allUsers);
-        const { modalType, modalTitle, modalLoading, rows, record, visible } = this.state;
+        const { modalType, modalTitle, modalLoading, rows, record, visible, visibleIntro, recordIntro } = this.state;
 
         const searchBarProps = {
             columns,
@@ -62,9 +80,31 @@ export default class extends BaseCrudComponent {
             visible,
             columns,
             modalOpts: {
-                width: '90%'
+                width: '80%'
             },
             handlers: this.modalHandlers
+        };
+
+        const modalReadmeProps = {
+            loading,
+            title: '说明文档',
+            centered: true,
+            destroyOnClose: true,
+            width: '80%',
+            visible: visibleIntro,
+            footer: null,
+            onCancel: this.closeIntro
+        };
+
+        const readme = recordIntro && recordIntro.intro && recordIntro.intro.readme || null;
+
+        const editorReadmeProps = {
+            value: readme,
+            preview: true,
+            height: (document.body.offsetHeight-110<600)? (document.body.offsetHeight-110): 600,
+            toolbar: {
+                expand: true
+            }
         };
 
         return (
@@ -107,6 +147,9 @@ export default class extends BaseCrudComponent {
                     <Pagination {...dataTableProps} />
                 </Footer>
                 <ModalForm {...modalFormProps} />
+                <Modal {...modalReadmeProps} >
+                    <Editor {...editorReadmeProps} />
+                </Modal>
             </Layout>
         );
     }

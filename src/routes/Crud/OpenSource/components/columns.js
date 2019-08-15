@@ -43,8 +43,8 @@ export default (self, allUsers) => [
             default: {
                 col: { span: 16 },
                 formItemLayout: {
-                    labelCol: { span: 4 },
-                    wrapperCol: { span: 18 }
+                    labelCol: { span: 3 },
+                    wrapperCol: { span: 19 }
                 },
                 rules: [
                     {
@@ -60,7 +60,13 @@ export default (self, allUsers) => [
     {
         title: 'gitee地址',
         name: 'giteeUrl',
-        tableItem: {},
+        tableItem: {
+            render: (text) => (
+                <div style={{wordBreak:'break-all'}}>
+                    {text}
+                </div>
+            )
+        },
         searchItem: {},
         formItem: {
             default: {
@@ -83,7 +89,13 @@ export default (self, allUsers) => [
     {
         title: 'github地址',
         name: 'githubUrl',
-        tableItem: {},
+        tableItem: {
+            render: (text) => (
+                <div style={{wordBreak:'break-all'}}>
+                    {text}
+                </div>
+            )
+        },
         searchItem: {},
         formItem: {
             default: {
@@ -103,46 +115,46 @@ export default (self, allUsers) => [
             update: {}
         }
     },
-    {
-        title: '录入人',
-        name: 'saveUserId',
-        dict: allUsers.map(({id, nickname}) => ({code: id, codeName: nickname})),
-        tableItem: {
-            type: 'select'
-        },
-        searchItem: {
-            type: 'select'
-        }
-    },
-    {
-        title: '录入时间',
-        name: 'saveTime',
-        tableItem: {
-            render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
-        }
-    },
-    {
-        title: '最后修改人',
-        name: 'updateUserId',
-        dict: allUsers.map(({id, nickname}) => ({code: id, codeName: nickname})),
-        tableItem: {
-            type: 'select'
-        },
-        searchItem: {
-            type: 'select'
-        }
-    },
-    {
-        title: '最后修改时间',
-        name: 'updateTime',
-        tableItem: {
-            render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
-        }
-    },
+    // {
+    //     title: '录入人',
+    //     name: 'saveUserId',
+    //     dict: allUsers.map(({id, nickname}) => ({code: id, codeName: nickname})),
+    //     tableItem: {
+    //         type: 'select'
+    //     },
+    //     searchItem: {
+    //         type: 'select'
+    //     }
+    // },
+    // {
+    //     title: '录入时间',
+    //     name: 'saveTime',
+    //     tableItem: {
+    //         render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
+    //     }
+    // },
+    // {
+    //     title: '最后修改人',
+    //     name: 'updateUserId',
+    //     dict: allUsers.map(({id, nickname}) => ({code: id, codeName: nickname})),
+    //     tableItem: {
+    //         type: 'select'
+    //     },
+    //     searchItem: {
+    //         type: 'select'
+    //     }
+    // },
+    // {
+    //     title: '最后修改时间',
+    //     name: 'updateTime',
+    //     tableItem: {
+    //         render: text => text? moment(text).format('YYYY-MM-DD HH:mm'): null
+    //     }
+    // },
     {
         title: '顺序',
         name: 'sourceSeq',
-        tableItem: {},
+        // tableItem: {},
         formItem: {
             default: {
                 col: { span: 8 },
@@ -181,12 +193,27 @@ export default (self, allUsers) => [
                 rules: [
                     {
                         required: true,
-                        message: '请输入说明文档'
+                        message: '请输入说明'
                     }
                 ],
                 markdownProps: {
                     preview: true,
-                    subfield: true
+                    subfield: true,
+                    height: (document.body.offsetHeight-310<600)? (document.body.offsetHeight-310): 600,
+                    toolbar: {
+                        h1: true, // h1
+                        h2: true, // h2
+                        h3: true, // h3
+                        h4: true, // h4
+                        img: true, // 图片
+                        link: true, // 链接
+                        code: true, // 代码块
+                        preview: true, // 预览
+                        expand: true, // 全屏
+                        undo: true, // 撤销
+                        redo: true, // 重做
+                        subfield: true, // 单双栏模式
+                    }
                 }
             },
             save: {},
@@ -212,8 +239,8 @@ export default (self, allUsers) => [
                         <CheckResource
                             resource='http./open/*.GET'
                             component={
-                                <Button tooltip='查看'
-                                        onClick={e => self.openModal('detail', '查看组件', record, self.requestDetail)}>
+                                <Button tooltip='查看说明'
+                                        onClick={e => self.openIntro(record, self.requestDetail)}>
                                     <Icon type="search" font='iconfont' />
                                 </Button>
                             }

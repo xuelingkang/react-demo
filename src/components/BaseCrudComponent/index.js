@@ -38,20 +38,13 @@ export default class extends React.Component {
     openModal = async (modalType, modalTitle, record, prepareRecord) => {
         if (record && prepareRecord) {
             record = await prepareRecord(record);
-            this.setState({
-                modalType,
-                modalTitle,
-                record,
-                visible: true
-            });
-        } else {
-            this.setState({
-                modalType,
-                modalTitle,
-                record,
-                visible: true
-            });
         }
+        this.setState({
+            modalType,
+            modalTitle,
+            record,
+            visible: true
+        });
     };
 
     /**
