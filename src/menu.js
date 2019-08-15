@@ -13,6 +13,12 @@ export default [
         ]
     },
     {
+        name: '开源组件',
+        icon: 'share-alt',
+        path: '/openSource',
+        resource: 'http./open/*/*.GET'
+    },
+    {
         name: '任务管理',
         icon: 'book',
         path: '/job',

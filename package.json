@@ -28,6 +28,7 @@
     "dva-loading": "^1.0.4",
     "echarts": "^4.1.0",
     "enquire.js": "^2.1.6",
+    "for-editor": "^0.3.0",
     "lazysizes": "^4.0.4",
     "masonry-layout": "^4.2.1",
     "object.omit": "^3.0.0",
