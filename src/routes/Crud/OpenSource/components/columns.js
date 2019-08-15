@@ -63,7 +63,7 @@ export default (self, allUsers) => [
         tableItem: {
             render: (text) => (
                 <div style={{wordBreak:'break-all'}}>
-                    {text}
+                    <a href={text} target="_blank">{text}</a>
                 </div>
             )
         },
@@ -92,7 +92,7 @@ export default (self, allUsers) => [
         tableItem: {
             render: (text) => (
                 <div style={{wordBreak:'break-all'}}>
-                    {text}
+                    <a href={text} target="_blank">{text}</a>
                 </div>
             )
         },
