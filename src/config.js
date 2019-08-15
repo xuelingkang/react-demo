@@ -3,6 +3,8 @@ import React from 'react';
 import PageLoading from 'components/Loading/PageLoading';
 import {normal} from 'components/Notification';
 
+import {proxy} from '../package.json';
+
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
 const notice = normal;
 
@@ -10,7 +12,7 @@ const baseURL = '/api';
 
 let endpoint;
 if (process.env.NODE_ENV === 'development') {
-    endpoint = `//ali-server01${baseURL}/endpoint`;
+    endpoint = `${proxy}${baseURL}/endpoint`;
 } else if (process.env.NODE_ENV === 'production') {
     endpoint = `${baseURL}/endpoint`;
 }

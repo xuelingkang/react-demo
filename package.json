@@ -62,5 +62,5 @@
     "last 2 versions",
     "not ie <= 10"
   ],
-  "proxy": "http://ali-server01/"
+  "proxy": "https://new.dxnbr.com"
 }
