@@ -199,7 +199,7 @@ export default (self, allUsers) => [
                 markdownProps: {
                     preview: true,
                     subfield: true,
-                    height: (document.body.offsetHeight-310<600)? (document.body.offsetHeight-310): 600,
+                    height: (document.body.offsetHeight-310<600 && document.body.offsetHeight-310>300)? (document.body.offsetHeight-310): 600,
                     toolbar: {
                         h1: true, // h1
                         h2: true, // h2

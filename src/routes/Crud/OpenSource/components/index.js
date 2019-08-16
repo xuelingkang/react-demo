@@ -101,7 +101,7 @@ export default class extends BaseCrudComponent {
         const editorReadmeProps = {
             value: readme,
             preview: true,
-            height: (document.body.offsetHeight-110<600)? (document.body.offsetHeight-110): 600,
+            height: (document.body.offsetHeight-110<600 && document.body.offsetHeight-110>300)? (document.body.offsetHeight-110): 600,
             toolbar: {
                 expand: true
             }
