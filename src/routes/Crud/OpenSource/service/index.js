@@ -1,4 +1,4 @@
-import { axiosGet, axiosDelete, axiosPost, axiosPut, axiosPatch, JSON_HEADER } from '@/utils/axios';
+import { axiosGet, axiosDelete, axiosPost, axiosPut, JSON_HEADER } from '@/utils/axios';
 
 export const save = payload => axiosPost('/open', payload, JSON_HEADER);
 
