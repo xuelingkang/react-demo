@@ -19,22 +19,16 @@ export default [
         resource: 'http./open/*/*.GET'
     },
     {
-        name: '任务管理',
-        icon: 'book',
-        path: '/job',
-        oneof: ['http./jobTemplate/*/*.GET', 'http./job/*/*.GET'],
-        children: [
-            {
-                name: '任务模板',
-                path: '/jobTemplate',
-                resource: 'http./jobTemplate/*/*.GET'
-            },
-            {
-                name: '定时任务',
-                path: '/job',
-                resource: 'http./job/*/*.GET'
-            },
-        ]
+        name: '留言管理',
+        icon: 'form',
+        path: '/letter',
+        resource: 'http./letter/*/*.GET'
+    },
+    {
+        name: '邮件管理',
+        icon: 'mail',
+        path: '/mail',
+        resource: 'http./mail/*/*.GET'
     },
     {
         name: '广播管理',
@@ -55,10 +49,22 @@ export default [
         ]
     },
     {
-        name: '邮件管理',
-        icon: 'mail',
-        path: '/mail',
-        resource: 'http./mail/*/*.GET'
+        name: '任务管理',
+        icon: 'book',
+        path: '/job',
+        oneof: ['http./jobTemplate/*/*.GET', 'http./job/*/*.GET'],
+        children: [
+            {
+                name: '任务模板',
+                path: '/jobTemplate',
+                resource: 'http./jobTemplate/*/*.GET'
+            },
+            {
+                name: '定时任务',
+                path: '/job',
+                resource: 'http./job/*/*.GET'
+            },
+        ]
     },
     {
         name: '系统管理',

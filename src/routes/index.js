@@ -17,6 +17,7 @@ import Job from './Crud/Job';
 import Broadcast from './Crud/Broadcast';
 import BroadcastSelf from './Crud/BroadcastSelf';
 import OpenSource from './Crud/OpenSource';
+import Letter from './Crud/Letter';
 
 /**
  * 主路由配置
@@ -58,6 +59,7 @@ const routesConfig = app => [
             Broadcast(app),
             BroadcastSelf(app),
             OpenSource(app),
+            Letter(app),
             NotFound()
         ]
     }
