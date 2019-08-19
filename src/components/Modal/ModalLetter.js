@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Modal, Button} from 'antd';
-import Editor from 'for-editor';
+import Editor from 'components/Markdown';
 import Icon from 'components/Icon';
 import moment from 'moment';
 import config from '@/config';
 import './style/letter.less';
-import $$ from "cmn-utils/lib"
 
 const {notice} = config;
 

@@ -200,6 +200,13 @@ export default (self, allUsers) => [
                     preview: true,
                     subfield: true,
                     height: (document.body.offsetHeight-310<600 && document.body.offsetHeight-310>300)? (document.body.offsetHeight-310): 600,
+                    addImg: (editor, file) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => {
+                            editor.current.$img2Url(file.name, reader.result);
+                        }
+                    },
                     toolbar: {
                         h1: true, // h1
                         h2: true, // h2

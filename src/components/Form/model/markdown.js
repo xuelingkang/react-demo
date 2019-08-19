@@ -1,5 +1,5 @@
 import React from 'react';
-import Editor from 'for-editor';
+import Editor from 'components/Markdown';
 import $$ from 'cmn-utils';
 import getValueFromRecord from "@/utils/getValueFromRecord";
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
 import {Layout, Button, Modal} from 'antd';
-import Editor from 'for-editor';
 import BaseCrudComponent, { isLoading } from 'components/BaseCrudComponent';
+import Editor from 'components/Markdown';
 import Toolbar from 'components/Toolbar';
 import SearchBar from 'components/SearchBar';
 import DataTable from 'components/DataTable';

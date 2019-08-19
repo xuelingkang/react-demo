@@ -105,6 +105,13 @@ export default (self, currentUser, allUsers) => [
                 ],
                 markdownProps: {
                     height: 400,
+                    addImg: (editor, file) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => {
+                            editor.current.$img2Url(file.name, reader.result);
+                        }
+                    },
                     toolbar: {
                         h1: true, // h1
                         h2: true, // h2
