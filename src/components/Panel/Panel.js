@@ -11,10 +11,18 @@ import './style/index.less';
  */
 class Panel extends Component {
     static propTypes = {
-        onClose: PropTypes.func.isRequired,
+        canRefresh: PropTypes.bool,
+        canExpand: PropTypes.bool,
+        canCollapse: PropTypes.bool,
+        canClose: PropTypes.bool,
+        onClose: PropTypes.func,
         onRefresh: PropTypes.func,
     };
     static defaultProps = {
+        canRefresh: true,
+        canExpand: true,
+        canCollapse: true,
+        canClose: true,
         prefix: 'antui-panel'
     };
 
@@ -83,6 +91,10 @@ class Panel extends Component {
     render() {
         const {expand, collapse, refresh, animationName} = this.state;
         const {
+            canRefresh,
+            canExpand,
+            canCollapse,
+            canClose,
             theme,
             prefix,
             className,
@@ -121,30 +133,42 @@ class Panel extends Component {
                 <div className={`${prefix}-header`}>
                     <span className={`${prefix}-header-title`}>{title}</span>
                     <span className={`${prefix}-header-controls`}>
-                        <a className="panel-control-loader" onClick={this.onRefresh}>
-                          <Icon type="refresh"/>
-                        </a>
-                        <a
-                            className="panel-control-fullscreen"
-                            onClick={this.onExpand(!expand)}
-                        >
-                          <Icon type={`${expand ? 'shrink' : 'enlarge'}`}/>
-                        </a>
-                        <a
-                            className="panel-control-collapsed"
-                            onClick={this.onCollapse(!collapse)}
-                        >
-                          <Icon type={`${collapse ? 'plus' : 'minus'}`}/>
-                        </a>
-                        <Popconfirm
-                            title="您确认要关闭这个面板？"
-                            onConfirm={onClose}
-                            placement="topRight"
-                        >
-                          <a className="panel-control-remove">
-                            <Icon type="close"/>
-                          </a>
-                        </Popconfirm>
+                        {
+                            canRefresh &&
+                            <a className="panel-control-loader" onClick={this.onRefresh}>
+                                <Icon type="refresh"/>
+                            </a>
+                        }
+                        {
+                            canExpand &&
+                            <a
+                                className="panel-control-fullscreen"
+                                onClick={this.onExpand(!expand)}
+                            >
+                                <Icon type={`${expand ? 'shrink' : 'enlarge'}`}/>
+                            </a>
+                        }
+                        {
+                            canCollapse &&
+                            <a
+                                className="panel-control-collapsed"
+                                onClick={this.onCollapse(!collapse)}
+                            >
+                                <Icon type={`${collapse ? 'plus' : 'minus'}`}/>
+                            </a>
+                        }
+                        {
+                            canClose &&
+                            <Popconfirm
+                                title="您确认要关闭这个面板？"
+                                onConfirm={onClose}
+                                placement="topRight"
+                            >
+                                <a className="panel-control-remove">
+                                    <Icon type="close"/>
+                                </a>
+                            </Popconfirm>
+                        }
                     </span>
                 </div>
             ) : (

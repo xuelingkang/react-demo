@@ -4,8 +4,9 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
+import Condition from '@/utils/condition';
 
-export default (self, allUsers) => [
+export default (self, currentUser, allUsers) => [
     {
         title: '留言描述',
         name: 'description',
@@ -143,12 +144,17 @@ export default (self, allUsers) => [
                                 />
                             }
                         />
-                        <CheckResource
-                            resource='http./letter/*.DELETE'
+                        <Condition
+                            condition={record.letterUserId===currentUser.id}
                             component={
-                                <Button tooltip='删除' onClick={e => self.delete(record)}>
-                                    <Icon type="trash" />
-                                </Button>
+                                <CheckResource
+                                    resource='http./letter/*.DELETE'
+                                    component={
+                                        <Button tooltip='删除' onClick={e => self.delete(record)}>
+                                            <Icon type="trash" />
+                                        </Button>
+                                    }
+                                />
                             }
                         />
                     </DataTable.Oper>

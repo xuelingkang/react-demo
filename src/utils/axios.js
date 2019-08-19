@@ -36,6 +36,9 @@ instance.interceptors.request.use((config) => {
 // 全局异常处理
 instance.interceptors.response.use(response => {
     const {code, message} = response.data;
+    if (code===200 && message) {
+        notice.success(message);
+    }
     if (code !== 200) {
         notice.error('错误码：'+code+'，错误信息：'+message);
         if (code===401) {

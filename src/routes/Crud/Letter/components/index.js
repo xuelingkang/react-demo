@@ -9,10 +9,12 @@ import { ModalForm, ModalLetter } from 'components/Modal';
 import createColumns from './columns';
 import { modelNamespace } from '../constant';
 import CheckResource from '@/utils/checkResource';
+import { getAuth } from '@/utils/authentication';
 import './index.less';
 
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
+const { user: currentUser } = getAuth();
 
 @connect(({ [modelNamespace]: modelState, loading }) => ({
     modelNamespace,
@@ -31,13 +33,14 @@ export default class extends BaseCrudComponent {
             letterReplySize: 0,
             letterReplyMore: true
         });
+        this.searchReply(true);
     }
 
     closeLetter = () => {
         this.setState({
-            letterReplySize: null,
+            letterReplySize: 0,
             letterId: null,
-            recordLetter: null,
+            recordLetter: {},
             visibleLetter: false
         });
         const { dispatch } = this.props;
@@ -46,12 +49,18 @@ export default class extends BaseCrudComponent {
         });
     }
 
-    saveReply = values => {
+    saveReply = replyContent => {
+        const { recordLetter } = this.state;
+        const { id } = recordLetter;
         const { dispatch } = this.props;
         dispatch({
             type: `${modelNamespace}/saveReply`,
             payload: {
-                values
+                values: {
+                    replyContent,
+                    letterId: id
+                },
+                success: () => this.searchReply(false)
             }
         });
     }
@@ -61,33 +70,40 @@ export default class extends BaseCrudComponent {
         dispatch({
             type: `${modelNamespace}/deleteReply`,
             payload: {
-                ids
+                ids,
+                success: () => this.searchReply(false)
             }
         });
     }
 
-    searchReply = async () => {
-        let { recordLetter, letterReplySize=0, letterReplyMore=true } = this.state;
-        if (letterReplyMore) {
-            const {id} = recordLetter;
+    searchReply = async next => {
+        let { recordLetter, letterReplySize=0 } = this.state;
+        const {id} = recordLetter;
+        if (next) {
             letterReplySize += 10;
-            const { dispatch } = this.props;
-            await dispatch({
-                type: `${modelNamespace}/searchReply`,
-                payload: {
-                    params: {
-                        letterId: id,
-                        size: letterReplySize
-                    }
+        }
+        const { dispatch } = this.props;
+        await dispatch({
+            type: `${modelNamespace}/searchReply`,
+            payload: {
+                params: {
+                    letterId: id,
+                    current: 1,
+                    size: letterReplySize
                 }
-            });
-            const { modelState } = this.props;
-            const { replys } = modelState;
-            if (replys.length < letterReplySize) {
-                this.setState({
-                    letterReplyMore: false
-                });
             }
+        });
+        const { modelState } = this.props;
+        const { replys } = modelState;
+        if (replys.length < letterReplySize) {
+            this.setState({
+                letterReplyMore: false,
+                letterReplySize: replys.length
+            });
+        } else {
+            this.setState({
+                letterReplyMore: true
+            });
         }
     }
 
@@ -103,8 +119,8 @@ export default class extends BaseCrudComponent {
 
     render() {
         const { modelState, loading } = this.props;
-        const { pageInfo, allUsers } = modelState;
-        const columns = createColumns(this, allUsers);
+        const { pageInfo, allUsers, replys } = modelState;
+        const columns = createColumns(this, currentUser, allUsers);
         const { modalType, modalTitle, modalLoading, rows, record, visible, visibleLetter, recordLetter, letterReplyMore } = this.state;
 
         const searchBarProps = {
@@ -138,15 +154,14 @@ export default class extends BaseCrudComponent {
         };
 
         const modalLetterProps = {
+            currentUser,
             letterReplyMore,
             loading,
+            replys,
             title: '查看留言',
             record: recordLetter,
             visible: visibleLetter,
-            centered: true,
-            destroyOnClose: true,
             width: 700,
-            footer: null,
             onSave: this.saveReply,
             onDelele: this.deleteReply,
             onSearch: this.searchReply,
@@ -172,7 +187,7 @@ export default class extends BaseCrudComponent {
                                 <CheckResource
                                     resource='http./letter/*.DELETE'
                                     component={
-                                        <Button disabled={!rows.length}
+                                        <Button disabled={!rows.length || rows.some(({letterUserId}) => letterUserId!==currentUser.id)}
                                                 icon='delete'
                                                 onClick={() => this.delete(rows)}>
                                             删除

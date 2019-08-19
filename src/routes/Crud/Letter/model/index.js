@@ -86,25 +86,19 @@ export default modelEnhance({
             });
         },
         // 保存回复
-        * saveReply({payload}, {call, put}) {
+        * saveReply({payload}, {call}) {
             const {values, success} = payload;
             const {code} = yield call(saveReply, values);
             if (code === 200) {
                 success && success();
-                yield put({
-                    type: 'searchReply'
-                });
             }
         },
         // 删除回复
-        * deleteReply({payload}, {call, put}) {
+        * deleteReply({payload}, {call}) {
             const {ids, success} = payload;
             const {code} = yield call(delReply, {ids});
             if (code === 200) {
                 success && success();
-                yield put({
-                    type: 'searchReply'
-                });
             }
         },
         // 查询回复列表
