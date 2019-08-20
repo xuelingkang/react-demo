@@ -24,9 +24,16 @@ export default self => [
     },
     {
         title: '引用信息',
+        dict: [{code: 't_user.head_img_id', codeName: '用户头像'},
+            {code: 't_mail_attachment_link.attachment_id', codeName: '邮件附件'},
+            {code: 't_open_source_attachment_link.attachment_id', codeName: '开源组件图片'},
+            {code: 't_letter_attachment_link.attachment_id', codeName: '留言图片'},
+            {code: 't_letter_reply_attachment_link.attachment_id', codeName: '留言回复图片'}],
         name: 'linkInfo',
         tableItem: {},
-        searchItem: {}
+        searchItem: {
+            type: 'select'
+        }
     },
     {
         title: '操作',
