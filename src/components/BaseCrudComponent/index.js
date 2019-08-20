@@ -35,7 +35,7 @@ export default class extends React.Component {
      * @param {object} [record] 要操作的记录
      * @param {function} [prepareRecord] 预处理record的方法
      */
-    openModal = async (modalType, modalTitle, record, prepareRecord) => {
+    openModal = async (modalType, modalTitle, record={}, prepareRecord) => {
         if (record && prepareRecord) {
             record = await prepareRecord(record);
         }
