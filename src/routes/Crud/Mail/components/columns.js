@@ -172,7 +172,7 @@ export default (self, allUsers) => [
                                     return {
                                         ...file,
                                         id,
-                                        url: `http://server01${attachmentAddress}`
+                                        url: attachmentAddress
                                     };
                                 } else {
                                     return {
@@ -193,7 +193,7 @@ export default (self, allUsers) => [
                     uid: `fs_${id}`,
                     name: attachmentName,
                     status: 'done',
-                    url: `http://server01${attachmentAddress}`
+                    url: attachmentAddress
                 }))
             },
             detail: {
@@ -202,7 +202,7 @@ export default (self, allUsers) => [
                     uid: `fs_${id}`,
                     name: attachmentName,
                     status: 'done',
-                    url: `http://server01${attachmentAddress}`
+                    url: attachmentAddress
                 })),
                 preview: true
             }
