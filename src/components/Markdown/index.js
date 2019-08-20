@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import { Progress } from 'antd';
 import Editor from 'for-editor';
-import config from '@/config';
+import CSSAnimate from 'components/CSSAnimate';
 import { axiosPost } from '@/utils/axios';
+import config from '@/config';
 
 const { notice } = config;
 
 export default class extends Component {
     state = {
-        timerId: null,
+        // timerId: null,
         progressVisible: false,
-        progressPercent: 0
+        progressPercent: 0,
+        progressAnimate: ''
     }
     constructor() {
         super();
@@ -33,13 +35,16 @@ export default class extends Component {
         });
     }
     handleAddImg = async file => {
-        const {upload} = this.props;
-        const {action, name, maxSize, accepts, getUrl, success} = upload;
-        if (!accepts.includes(file.type)) {
+        const {upload={}} = this.props;
+        const {action, name, getUrl, accepts, maxSize, success} = upload;
+        if (!action || !name || !getUrl) {
+            return;
+        }
+        if (accepts && !accepts.includes(file.type)) {
             notice.error(`文件类型必须是${accepts.join('、')}中的一种`);
             return;
         }
-        if (file.size / 1024 /1024 > maxSize) {
+        if (maxSize && file.size / 1024 /1024 > maxSize) {
             notice.error(`文件不能大于${maxSize}M`);
             return;
         }
@@ -59,23 +64,36 @@ export default class extends Component {
             this.$vm.current.$img2Url(file.name, url);
             success && success(data);
         }
-        const timerId = setTimeout(() => {
-            this.setState({
-                progressVisible: false,
-                timerId: null
-            });
-        }, 1000);
         this.setState({
-            timerId
+            progressAnimate: 'fadeOut'
+        });
+        // const timerId = setTimeout(() => {
+        //     this.setState({
+        //         progressVisible: false,
+        //         timerId: null
+        //     });
+        // }, 1000);
+        // this.setState({
+        //     timerId
+        // });
+    }
+    handleProgressAnimate = () => {
+        this.setState({
+            progressVisible: false,
+            progressAnimate: ''
         });
     }
     render() {
-        const {progressVisible, progressPercent} = this.state;
-        const {addImg, ...otherProps} = this.props;
+        const {progressVisible, progressPercent, progressAnimate} = this.state;
+        const {addImg, upload, ...otherProps} = this.props;
         return (
             <div>
                 <Editor ref={this.$vm} addImg={this.handleAddImg} {...otherProps} />
-                {progressVisible && <Progress type='circle' default='default' percent={progressPercent} style={this.progressStyle} />}
+                {progressVisible &&
+                    <CSSAnimate type={progressAnimate} callback={this.handleProgressAnimate} duration={500}>
+                        <Progress type='circle' default='default' percent={progressPercent} style={this.progressStyle} />
+                    </CSSAnimate>
+                }
             </div>
         );
     }
