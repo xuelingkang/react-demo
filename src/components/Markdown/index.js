@@ -9,7 +9,6 @@ const { notice } = config;
 
 export default class extends Component {
     state = {
-        // timerId: null,
         progressVisible: false,
         progressPercent: 0,
         progressAnimate: ''
@@ -67,15 +66,6 @@ export default class extends Component {
         this.setState({
             progressAnimate: 'fadeOut'
         });
-        // const timerId = setTimeout(() => {
-        //     this.setState({
-        //         progressVisible: false,
-        //         timerId: null
-        //     });
-        // }, 1000);
-        // this.setState({
-        //     timerId
-        // });
     }
     handleProgressAnimate = () => {
         this.setState({
