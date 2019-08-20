@@ -7,7 +7,7 @@ import CheckResource from '@/utils/checkResource';
 import Condition from '@/utils/condition';
 import config from '@/config';
 
-const {proxy, notice, baseURL, attachmentSizeLimit: {mail}} = config;
+const {fileHost, notice, baseURL, attachmentSizeLimit: {mail}} = config;
 
 export default (self, allUsers) => [
     {
@@ -172,7 +172,7 @@ export default (self, allUsers) => [
                                     return {
                                         ...file,
                                         id,
-                                        url: proxy+attachmentAddress
+                                        url: fileHost+attachmentAddress
                                     };
                                 } else {
                                     return {
@@ -193,7 +193,7 @@ export default (self, allUsers) => [
                     uid: `fs_${id}`,
                     name: attachmentName,
                     status: 'done',
-                    url: proxy+attachmentAddress
+                    url: fileHost+attachmentAddress
                 }))
             },
             detail: {
@@ -202,7 +202,7 @@ export default (self, allUsers) => [
                     uid: `fs_${id}`,
                     name: attachmentName,
                     status: 'done',
-                    url: proxy+attachmentAddress
+                    url: fileHost+attachmentAddress
                 })),
                 preview: true
             }

@@ -22,9 +22,6 @@ if (process.env.NODE_ENV === 'development') {
  */
 export default {
 
-    // 代理地址
-    proxy,
-
     /**
      * HTML的title模板
      */
@@ -51,6 +48,9 @@ export default {
     attachmentSizeLimit: {
         headImg: 10,
         mail: 20
-    }
+    },
+
+    // 文件域名
+    fileHost: 'https://new.dxnbr.com'
 
 };
