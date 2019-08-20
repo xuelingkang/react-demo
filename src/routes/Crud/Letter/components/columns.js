@@ -5,6 +5,9 @@ import Button from 'components/Button';
 import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
 import Condition from '@/utils/condition';
+import config from '@/config';
+
+const {fileHost, attachmentSizeLimit: {letter}} = config;
 
 export default (self, currentUser, allUsers) => [
     {
@@ -105,12 +108,13 @@ export default (self, currentUser, allUsers) => [
                 ],
                 markdownProps: {
                     height: 400,
-                    addImg: (editor, file) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = () => {
-                            editor.current.$img2Url(file.name, reader.result);
-                        }
+                    upload: {
+                        action: '/file/letter/1',
+                        name: 'file',
+                        maxSize: letter,
+                        accepts: ['image/jpeg', 'image/png'],
+                        getUrl: ({attachmentAddress}) => fileHost+attachmentAddress,
+                        success: self.addAttachment
                     },
                     toolbar: {
                         h1: true, // h1

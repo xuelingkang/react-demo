@@ -49,17 +49,12 @@ export default class extends BaseCrudComponent {
         });
     }
 
-    saveReply = replyContent => {
-        const { recordLetter } = this.state;
-        const { id } = recordLetter;
+    saveReply = values => {
         const { dispatch } = this.props;
         dispatch({
             type: `${modelNamespace}/saveReply`,
             payload: {
-                values: {
-                    replyContent,
-                    letterId: id
-                },
+                values,
                 success: () => this.searchReply(false)
             }
         });
@@ -105,6 +100,17 @@ export default class extends BaseCrudComponent {
                 letterReplyMore: true
             });
         }
+    }
+
+    addAttachment = ({id}) => {
+        const {record={}} = this.state;
+        const {attachments=[]} = record;
+        this.setState({
+            record: {
+                ...record,
+                attachments: attachments.concat({id})
+            }
+        });
     }
 
     modalHandlers = {

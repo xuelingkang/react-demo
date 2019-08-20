@@ -7,13 +7,14 @@ import moment from 'moment';
 import config from '@/config';
 import './style/letter.less';
 
-const {notice} = config;
+const {notice, fileHost, attachmentSizeLimit: {letterReply}} = config;
 
 class ModalLetter extends Component {
 
     state = {
         expanded: false,
-        replyContent: ''
+        replyContent: '',
+        attachments: []
     };
 
     static propTypes = {
@@ -36,6 +37,15 @@ class ModalLetter extends Component {
         record: {}
     };
 
+    handleClose = () => {
+        const {onCancel} = this.props;
+        onCancel && onCancel();
+        this.setState({
+            replyContent: '',
+            attachments: []
+        });
+    }
+
     handleChange = replyContent => {
         this.setState({
             replyContent
@@ -43,15 +53,21 @@ class ModalLetter extends Component {
     }
 
     handleSave = () => {
-        const {replyContent} = this.state;
+        const {replyContent, attachments} = this.state;
         if (!replyContent) {
             notice.warn('回复内容不能为空！');
             return;
         }
-        const {onSave} = this.props;
-        onSave(replyContent);
+        const {onSave, record} = this.props;
+        const {id: letterId} = record;
+        onSave({
+            letterId,
+            replyContent,
+            attachments
+        });
         this.setState({
-            replyContent: ''
+            replyContent: '',
+            attachments: []
         });
     }
 
@@ -65,6 +81,13 @@ class ModalLetter extends Component {
             },
             onCancel() {
             }
+        });
+    }
+
+    addAttachment = ({id}) => {
+        const {attachments=[]} = this.state;
+        this.setState({
+            attachments: attachments.concat({id})
         });
     }
 
@@ -82,7 +105,7 @@ class ModalLetter extends Component {
 
     render() {
         const {expanded, replyContent} = this.state;
-        const {title, loading, visible, letterReplyMore, record, replys, width, onSearch, onCancel, currentUser} = this.props;
+        const {title, loading, visible, letterReplyMore, record, replys, width, onSearch, currentUser} = this.props;
         const {letterUser={}, letterTime, letterContent} = record;
         const {nickname} = letterUser;
         const bodyStyle = {
@@ -93,10 +116,10 @@ class ModalLetter extends Component {
         const modalProps = {
             visible,
             loading,
-            onCancel,
+            onCancel: this.handleClose,
             bodyStyle,
             width: expanded? '100%': width,
-            title: <Title value={title} expanded={expanded} onExpand={this.expand} onReset={this.reset} onClose={onCancel} />,
+            title: <Title value={title} expanded={expanded} onExpand={this.expand} onReset={this.reset} onClose={this.handleClose} />,
             centered: true,
             maskClosable: true,
             destroyOnClose: true,
@@ -108,6 +131,14 @@ class ModalLetter extends Component {
             height: 200,
             placeholder: '发表回复',
             onChange: this.handleChange,
+            upload: {
+                action: '/file/letterreply/1',
+                name: 'file',
+                maxSize: letterReply,
+                accepts: ['image/jpeg', 'image/png'],
+                getUrl: ({attachmentAddress}) => fileHost+attachmentAddress,
+                success: this.addAttachment
+            },
             toolbar: {
                 h1: true, // h1
                 h2: true, // h2

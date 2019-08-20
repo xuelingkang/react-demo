@@ -35,8 +35,9 @@ export default modelEnhance({
             });
         },
         * save({payload}, {call, put}) {
-            const {values, success} = payload;
-            const {code} = yield call(save, values);
+            const {values, record, success} = payload;
+            const {attachments} = record;
+            const {code} = yield call(save, {...values, attachments});
             if (code === 200) {
                 success && success();
                 yield put({
