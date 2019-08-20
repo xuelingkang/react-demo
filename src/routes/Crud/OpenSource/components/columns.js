@@ -2,13 +2,12 @@ import React from 'react';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import moment from 'moment';
 import CheckResource from '@/utils/checkResource';
+import config from '@/config';
 
-// import config from '@/config';
-// const {notice, baseURL, attachmentSizeLimit: {mail}} = config;
+const {fileHost, attachmentSizeLimit: {openSource}} = config;
 
-export default (self, allUsers) => [
+export default (self) => [
     {
         title: '名称',
         name: 'sourceName',
@@ -200,11 +199,14 @@ export default (self, allUsers) => [
                     preview: true,
                     subfield: true,
                     height: (document.body.offsetHeight-310<600 && document.body.offsetHeight-310>300)? (document.body.offsetHeight-310): 600,
-                    addImg: (editor, file) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = () => {
-                            editor.current.$img2Url(file.name, reader.result);
+                    upload: {
+                        action: '/file/opensource/1',
+                        name: 'file',
+                        maxSize: openSource,
+                        accepts: ['image/jpeg', 'image/png'],
+                        getUrl: ({attachmentAddress}) => fileHost+attachmentAddress,
+                        success: ({id}) => {
+                            self.addAttachment({id});
                         }
                     },
                     toolbar: {

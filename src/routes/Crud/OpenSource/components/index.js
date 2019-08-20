@@ -39,6 +39,17 @@ export default class extends BaseCrudComponent {
         })
     }
 
+    addAttachment = attachment => {
+        const {record={}} = this.state;
+        const {attachments=[]} = record;
+        this.setState({
+            record: {
+                ...record,
+                attachments: attachments.concat(attachment)
+            }
+        });
+    }
+
     modalHandlers = {
         onSubmit: {
             save: this.submitSave,
@@ -52,7 +63,7 @@ export default class extends BaseCrudComponent {
     render() {
         const { modelState, loading } = this.props;
         const { pageInfo, allUsers } = modelState;
-        const columns = createColumns(this, allUsers);
+        const columns = createColumns(this);
         const { modalType, modalTitle, modalLoading, rows, record, visible, visibleIntro, recordIntro } = this.state;
 
         const searchBarProps = {

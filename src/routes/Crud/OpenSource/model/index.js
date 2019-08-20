@@ -34,8 +34,9 @@ export default modelEnhance({
             });
         },
         * save({payload}, {call, put}) {
-            const {values, success} = payload;
-            const {code} = yield call(save, values);
+            const {values, record, success} = payload;
+            const {attachments} = record;
+            const {code} = yield call(save, {...values, attachments});
             if (code === 200) {
                 success && success();
                 yield put({
@@ -45,13 +46,13 @@ export default modelEnhance({
         },
         * update({payload}, {call, put}) {
             const {values, record, success} = payload;
-            const {id, intro: {id: introId}} = record;
+            const {id, intro: {id: introId}, attachments} = record;
             let {intro} = values;
             intro = {
                 ...intro,
                 id: introId
             }
-            const {code} = yield call(update, {...values, id, intro});
+            const {code} = yield call(update, {...values, id, intro, attachments});
             if (code === 200) {
                 success && success();
                 yield put({
