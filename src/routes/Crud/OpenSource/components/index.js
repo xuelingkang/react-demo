@@ -39,13 +39,13 @@ export default class extends BaseCrudComponent {
         })
     }
 
-    addAttachment = attachment => {
+    addAttachment = ({id}) => {
         const {record={}} = this.state;
         const {attachments=[]} = record;
         this.setState({
             record: {
                 ...record,
-                attachments: attachments.concat(attachment)
+                attachments: attachments.concat({id})
             }
         });
     }

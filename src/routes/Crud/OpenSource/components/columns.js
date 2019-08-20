@@ -205,9 +205,7 @@ export default (self) => [
                         maxSize: openSource,
                         accepts: ['image/jpeg', 'image/png'],
                         getUrl: ({attachmentAddress}) => fileHost+attachmentAddress,
-                        success: ({id}) => {
-                            self.addAttachment({id});
-                        }
+                        success: self.addAttachment
                     },
                     toolbar: {
                         h1: true, // h1
