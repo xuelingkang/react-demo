@@ -21,6 +21,10 @@ if (process.env.NODE_ENV === 'development') {
  * 应用配置 如请求格式，反回格式，异常处理方式，分页格式等
  */
 export default {
+
+    // 代理地址
+    proxy,
+
     /**
      * HTML的title模板
      */
