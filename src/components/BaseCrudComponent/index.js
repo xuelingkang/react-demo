@@ -78,13 +78,15 @@ export default class extends React.Component {
     /**
      * 保存
      * @param values 表单数据
+     * @param record 原数据
      */
-    submitSave = async values => {
+    submitSave = async (values, record) => {
         const { modelNamespace, dispatch } = this.props;
         await dispatch({
             type: `${modelNamespace}/save`,
             payload: {
                 values,
+                record,
                 success: this.saveSuccess
             }
         });
