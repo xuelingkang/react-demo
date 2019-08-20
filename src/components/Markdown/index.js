@@ -60,7 +60,7 @@ export default class extends Component {
         const {code, data} = await axiosPost(action, formData, config);
         if (code===200) {
             const url = getUrl(data);
-            this.$vm.current.$img2Url(file.name, url);
+            this.$vm.current.$img2Url(file.name, `${url} "${file.name}"`);
             success && success(data);
         }
         this.setState({
