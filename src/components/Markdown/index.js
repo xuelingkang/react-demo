@@ -3,7 +3,6 @@ import { Progress } from 'antd';
 import Editor from 'for-editor';
 import config from '@/config';
 import { axiosPost } from '@/utils/axios';
-import { checkExt } from '@/utils/fileUtil';
 
 const { notice } = config;
 
@@ -36,8 +35,8 @@ export default class extends Component {
     handleAddImg = async file => {
         const {upload} = this.props;
         const {action, name, maxSize, accepts, getUrl, success} = upload;
-        if (!checkExt(file, accepts)) {
-            notice.error(`文件类型必须是${accepts.join()}中的一种`);
+        if (!accepts.includes(file.type)) {
+            notice.error(`文件类型必须是${accepts.join('、')}中的一种`);
             return;
         }
         if (file.size / 1024 /1024 > maxSize) {
