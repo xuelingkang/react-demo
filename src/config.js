@@ -47,7 +47,10 @@ export default {
 
     attachmentSizeLimit: {
         headImg: 10,
-        mail: 20
+        mail: 20,
+        openSource: 10,
+        letter: 10,
+        letterReply: 10
     },
 
     // 文件域名
