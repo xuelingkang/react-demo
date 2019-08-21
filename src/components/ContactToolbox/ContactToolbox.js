@@ -40,11 +40,6 @@ export default class extends Component {
             wechatVisible: false
         });
     }
-    handleQQ = () => {
-        this.setState({
-            qqIframeSrc: `http://wpa.qq.com/msgrd?v=3&uin=574290057&site=qq&menu=yes&_=${new Date().valueOf()}`
-        });
-    }
     showLetter = () => {
         this.setState({
             letterVisible: true,
@@ -229,7 +224,7 @@ export default class extends Component {
                                 <span className='contact-menu-item'>微信联系</span>
                                 <span className='contact-menu-item-comment'>查看站长微信二维码</span>
                             </a>
-                            <a onClick={this.handleQQ}>
+                            <a href='http://wpa.qq.com/msgrd?v=3&uin=574290057&site=qq&menu=yes' target='_blank'>
                                 <Icon type='qq' antd className='contact-menu-item-icon' />
                                 <span className='contact-menu-item'>QQ联系</span>
                                 <span className='contact-menu-item-comment'>打开QQ临时通讯</span>
