@@ -7,7 +7,7 @@ import CheckResource from '@/utils/checkResource';
 import Condition from '@/utils/condition';
 import config from '@/config';
 
-const {fileHost, attachmentSizeLimit: {letter}} = config;
+const {attachmentSizeLimit: {letter}} = config;
 
 export default (self, currentUser, allUsers) => [
     {
@@ -113,7 +113,7 @@ export default (self, currentUser, allUsers) => [
                         name: 'file',
                         maxSize: letter,
                         accepts: ['image/jpeg', 'image/png'],
-                        getUrl: ({attachmentAddress}) => fileHost+attachmentAddress,
+                        getUrl: ({attachmentAddress}) => attachmentAddress,
                         success: self.addAttachment
                     },
                     toolbar: {

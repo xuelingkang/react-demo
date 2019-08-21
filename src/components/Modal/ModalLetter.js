@@ -7,7 +7,7 @@ import moment from 'moment';
 import config from '@/config';
 import './style/letter.less';
 
-const {notice, fileHost, attachmentSizeLimit: {letterReply}} = config;
+const {notice, attachmentSizeLimit: {letterReply}} = config;
 
 class ModalLetter extends Component {
 
@@ -136,7 +136,7 @@ class ModalLetter extends Component {
                 name: 'file',
                 maxSize: letterReply,
                 accepts: ['image/jpeg', 'image/png'],
-                getUrl: ({attachmentAddress}) => fileHost+attachmentAddress,
+                getUrl: ({attachmentAddress}) => attachmentAddress,
                 success: this.addAttachment
             },
             toolbar: {
