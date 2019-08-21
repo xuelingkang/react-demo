@@ -6,6 +6,7 @@ import NavBar from 'components/NavBar';
 import {LeftSideBar, RightSideBar} from 'components/SideBar';
 import TopBar from 'components/TopBar';
 import SkinToolbox from 'components/SkinToolbox';
+import ContactToolbox from 'components/ContactToolbox';
 import pathToRegexp from 'path-to-regexp';
 import {enquireIsMobile} from '@/utils/enquireScreen';
 import TabsLayout from './TabsLayout';
@@ -618,6 +619,7 @@ export default class BasicLayout extends React.PureComponent {
                     />
                 </Layout>
                 <SkinToolbox onChangeTheme={this.onChangeTheme} theme={theme}/>
+                <ContactToolbox />
                 <ModalForm {...modalFormProps} />
                 <ModalChat {...modalChatProps} />
                 <ModalForm {...modalBroadcastProps} />

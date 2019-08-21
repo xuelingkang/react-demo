@@ -1,0 +1,72 @@
+@import "~antd/lib/style/themes/default.less";
+.contact-container {
+  position: fixed;
+  bottom: 100px;
+  right: 0;
+  .contact-icon {
+    color: @primary-color;
+    i {
+      transition: all .4s;
+      transform: rotate(0deg);
+    }
+  }
+  &:hover .contact-icon i {
+    transform: rotate(-360deg);
+  }
+  .contact-menu-container {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 230px;
+    transition: all 0.3s ease-in-out;
+    .contact-menu {
+      position: relative;
+      box-shadow: rgba(0, 0, 0, 0.247059) 0 1px 4px 0;
+      background-color: rgb(255, 255, 255);
+      color: #555;
+      font-size: 12px;
+      padding: 16px;
+      width: 180px;
+      height: 190px;
+      a {
+        position: relative;
+        margin-bottom: 16px;
+        padding: 0 0 0 36px;
+        cursor: pointer;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+        outline: medium;
+        background: none;
+        overflow: hidden;
+        color: rgb(17, 17, 17);
+        .contact-menu-item-icon {
+          position: absolute;
+          top: 10px;
+          left: 0;
+          font-size: 24px;
+          color: @primary-color;
+        }
+        .contact-menu-item {
+          display: block;
+          margin-bottom: 4px;
+          font-size: 14px;
+        }
+        .contact-menu-item-comment {
+          display: block;
+          color: rgb(136, 136, 136);
+        }
+      }
+      .contact-menu-close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        z-index: 100;
+      }
+    }
+  }
+}
