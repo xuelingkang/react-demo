@@ -192,21 +192,6 @@ class NavBar extends PureComponent {
                     <li className="dropdown">
                         <Popover
                             placement="bottomRight"
-                            title={'项目源码'}
-                            overlayClassName={cx('navbar-popup', {[theme]: !!theme})}
-                            visible={this.state.gitDropDownVisible}
-                            onVisibleChange={this.handleGitDropDownVisibleChange}
-                            content={<GitDropDown onClick={this.hideGitDropDown} />}
-                            trigger="click"
-                        >
-                            <a className="dropdown-toggle">
-                                <Icon type="github" antd/>
-                            </a>
-                        </Popover>
-                    </li>
-                    <li className="dropdown">
-                        <Popover
-                            placement="bottomRight"
                             title={'通知'}
                             overlayClassName={cx('navbar-popup', {[theme]: !!theme})}
                             visible={this.state.noticeDropDownVisible}
@@ -249,21 +234,6 @@ class NavBar extends PureComponent {
         );
     }
 }
-
-const GitDropDown = ({onClick}) => (
-    <ul className="dropdown-menu list-group dropdown-persist" onClick={onClick}>
-        <li className="list-group-item">
-            <a className="animated animated-short fadeInUp" href='https://gitee.com/xuelingkang/react-demo' target='_blank'>
-                前端项目
-            </a>
-        </li>
-        <li className="list-group-item">
-            <a className="animated animated-short fadeInUp" href='https://gitee.com/xuelingkang/spring-boot-demo' target='_blank'>
-                后端项目
-            </a>
-        </li>
-    </ul>
-);
 
 const UserDropDown = ({onClick, showModal}) => (
     <ul className="dropdown-menu list-group dropdown-persist" onClick={onClick}>
