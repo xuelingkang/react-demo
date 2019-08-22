@@ -18,8 +18,19 @@ export default class extends Component {
         letterVisible: false,
         letterType: '',
         letterTitle: '',
-        letterRecord: {}
+        letterRecord: {},
+        timerId: null
     };
+    componentDidMount() {
+        const timerId = setTimeout(() => this.showLetter(), 5000);
+        this.setState({
+            timerId
+        });
+    }
+    componentWillUnmount() {
+        const {timerId} = this.state;
+        timerId && clearTimeout(timerId);
+    }
     showMenu = () => {
         this.setState({
             menuVisible: true
@@ -211,7 +222,7 @@ export default class extends Component {
         };
         return (
             <div className='contact-container' onMouseOver={this.showMenu} onMouseOut={this.hideMenu}>
-                <Button tooltip='联系站长' shape='circle' size='large' onClick={this.showMenu}>
+                <Button tooltip='联系站长' shape='circle' size='large' onTouchStart={this.showMenu} onClick={this.showMenu}>
                     <span className='contact-icon'>
                         <Icon type='phone' antd theme='filled' />
                     </span>
@@ -219,7 +230,7 @@ export default class extends Component {
                 <div className='contact-menu-container' style={menuStyle}>
                     <div className='contact-menu'>
                         <div>
-                            <a onClick={this.showWechat}>
+                            <a onTouchStart={this.showWechat} onClick={this.showWechat}>
                                 <Icon type='wechat' antd className='contact-menu-item-icon' />
                                 <span className='contact-menu-item'>微信联系</span>
                                 <span className='contact-menu-item-comment'>查看站长微信二维码</span>
@@ -229,13 +240,13 @@ export default class extends Component {
                                 <span className='contact-menu-item'>QQ联系</span>
                                 <span className='contact-menu-item-comment'>打开QQ临时通讯</span>
                             </a>
-                            <a onClick={this.showLetter}>
+                            <a onTouchStart={this.showLetter} onClick={this.showLetter}>
                                 <Icon type='highlight' antd className='contact-menu-item-icon' />
                                 <span className='contact-menu-item'>站内留言</span>
                                 <span className='contact-menu-item-comment'>在本站添加留言</span>
                             </a>
                         </div>
-                        <Icon type='close' antd className='contact-menu-close' onClick={this.hideMenu} />
+                        <Icon type='close' antd className='contact-menu-close' onTouchStart={this.hideMenu} onClick={this.hideMenu} />
                     </div>
                 </div>
                 <Modal {...wechatModalProps}>
