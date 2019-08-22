@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'dva';
 import { Layout } from 'antd';
 import { Switch } from 'dva/router';
+import BeiAnHao from 'components/BeiAnHao';
+
 const { Content } = Layout;
 
 @connect()
@@ -14,7 +16,8 @@ export default class UserLayout extends React.PureComponent {
     return (
       <Layout className="full-layout user-layout fixed">
         <Content>
-          <Switch>{childRoutes}</Switch> 
+          <Switch>{childRoutes}</Switch>
+            <BeiAnHao />
         </Content>
       </Layout>
     );
