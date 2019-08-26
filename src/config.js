@@ -54,6 +54,6 @@ export default {
     },
 
     // 文件域名
-    fileHost: 'https://new.dxnbr.com'
+    fileHost: 'https://demo.xzixi.com'
 
 };
