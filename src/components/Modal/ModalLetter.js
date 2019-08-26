@@ -166,12 +166,12 @@ class ModalLetter extends Component {
                 <Editor {...editorProps} />
                 <Footer onClick={this.handleSave} />
                 <div className='letter-preview'>
-                    <Head name={nickname} time={letterTime} />
+                    <Header name={nickname} time={letterTime} />
                     <Editor {...letterProps} value={letterContent} />
                 </div>
                 {replys.map(({id, replyContent, replyTime, replyUser: {id: userId, nickname}}) => (
                     <div key={id} className='letter-preview'>
-                        <Head name={nickname} time={replyTime} remove={userId===currentUser.id} onRemove={() => this.handleDelete(id)} />
+                        <Header name={nickname} time={replyTime} remove={userId===currentUser.id} onRemove={() => this.handleDelete(id)} />
                         <Editor {...letterProps} value={replyContent} />
                     </div>
                 ))}
@@ -196,7 +196,7 @@ const Title = props => (
     </div>
 );
 
-const Head = props => (
+const Header = props => (
     <div className='letter-head'>
         {
             props.name &&

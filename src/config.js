@@ -1,12 +1,12 @@
 import React from 'react';
 
 import PageLoading from 'components/Loading/PageLoading';
-import {normal} from 'components/Notification';
+import {antdNotice} from 'components/Notification';
 
 import {proxy} from '../package.json';
 
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
-const notice = normal;
+const notice = antdNotice;
 
 const baseURL = '/api';
 

@@ -5,6 +5,7 @@ import './antdNotice.less';
 
 const prefixCls = 'antui-notification';
 const defaultConfig = {
+  placement: 'topLeft'
 };
 
 function notice(config, type, title) {
