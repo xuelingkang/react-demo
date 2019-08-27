@@ -1,9 +1,9 @@
 import { notification } from 'antd';
 import $$ from 'cmn-utils';
 import Notification from './Notification';
-import './antdNotice.less';
+// import './antdNotice.less';
 
-const prefixCls = 'antui-notification';
+// const prefixCls = 'antui-notification';
 const defaultConfig = {
   placement: 'topLeft'
 };
@@ -11,13 +11,13 @@ const defaultConfig = {
 function notice(config, type, title) {
   if ($$.isObject(config)) {
     notification[type]({
-      className: `${prefixCls} ${prefixCls}-${type}`,
+      // className: `${prefixCls} ${prefixCls}-${type}`,
       ...defaultConfig,
       ...config
     });
   } else {
     notification[type]({
-      className: `${prefixCls} ${prefixCls}-${type}`,
+      // className: `${prefixCls} ${prefixCls}-${type}`,
       message: title,
       description: config,
       ...defaultConfig
