@@ -14,7 +14,7 @@ export default [
     },
     {
         name: '开源组件',
-        icon: 'share-alt',
+        icon: 'github',
         path: '/openSource',
         resource: 'http./open/*/*.GET'
     },
