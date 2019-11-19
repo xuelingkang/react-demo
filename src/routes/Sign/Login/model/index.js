@@ -7,8 +7,8 @@ export default modelEnhance({
     namespace: 'login',
 
     state: {
-        username: 'admin',
-        password: 'admin',
+        username: '',
+        password: '',
         remember: true,
         code: undefined,
         message: ''
