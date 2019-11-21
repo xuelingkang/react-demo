@@ -22,10 +22,7 @@ export default class extends Component {
         timerId: null
     };
     componentDidMount() {
-        const timerId = setTimeout(() => this.showLetter(), 5000);
-        this.setState({
-            timerId
-        });
+        this.showLetter();
     }
     componentWillUnmount() {
         const {timerId} = this.state;
